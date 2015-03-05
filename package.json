@@ -1,0 +1,34 @@
+{
+  "name": "react-masked-input",
+  "main": "src/masked_input.cjsx",
+  "peerDependencies": {
+    "react": "^0.12.2"
+  },
+  "devDependencies": {
+    "browserify": "^9.0.3",
+    "chai": "^2.1.1",
+    "coffee-reactify": "^2.4.1",
+    "coffee-script": "^1.9.1",
+    "envify": "^3.2.0",
+    "karma": "^0.12.31",
+    "karma-browserify": "^4.0.0",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-mocha": "^0.1.10",
+    "mocha": "^2.1.0",
+    "sinon": "^1.12.2",
+    "sinon-chai": "^2.7.0",
+    "watchify": "^2.4.0"
+  },
+  "scripts": {
+    "start": "./node_modules/.bin/watchify --extension=\".cjsx\" -o dist/masked_input.js -v -d spec/masked_input_component_spec.cjsx",
+    "test-watch": "karma start",
+    "build": "NODE_ENV=production browserify . | uglifyjs -cm > dist/masked_input.min.js",
+    "test": "jest"
+  },
+  "browserify": {
+    "transform": [
+      "coffee-reactify",
+      "envify"
+    ]
+  }
+}
