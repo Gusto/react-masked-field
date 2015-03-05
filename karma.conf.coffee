@@ -32,7 +32,6 @@ module.exports = (config) ->
 
     browserify: {
       debug: true
-      transform: [ 'coffee-reactify' ]
       extensions: [ '.cjsx' ]
     }
 

@@ -20,8 +20,7 @@
     "watchify": "^2.4.0"
   },
   "scripts": {
-    "start": "./node_modules/.bin/watchify --extension=\".cjsx\" -o dist/masked_input.js -v -d spec/masked_input_component_spec.cjsx",
-    "test-watch": "karma start",
+    "start": "karma start karma.conf.coffee",
     "build": "NODE_ENV=production browserify . | uglifyjs -cm > dist/masked_input.min.js",
     "test": "jest"
   },
