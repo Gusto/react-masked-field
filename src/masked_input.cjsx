@@ -1,7 +1,7 @@
-React = require 'react'
+React = window?.React || require 'react'
 
 MaskedInput = React.createClass
-  displayName: 'Controls.Inputs.MaskedInput'
+  displayName: 'MaskedInput'
 
   # TODO: Add _ for private methods?
 

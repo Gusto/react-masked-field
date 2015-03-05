@@ -16,12 +16,11 @@
     "karma-mocha": "^0.1.10",
     "mocha": "^2.1.0",
     "sinon": "^1.12.2",
-    "sinon-chai": "^2.7.0",
-    "watchify": "^2.4.0"
+    "sinon-chai": "^2.7.0"
   },
   "scripts": {
     "start": "karma start karma.conf.coffee",
-    "build": "NODE_ENV=production browserify . | uglifyjs -cm > dist/masked_input.min.js",
+    "build": "NODE_ENV=production browserify --external react --standalone MaskedInput -o dist/masked_input.js . && uglifyjs dist/masked_input.js -cm -o dist/masked_input.min.js",
     "test": "jest"
   },
   "browserify": {
