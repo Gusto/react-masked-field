@@ -21,7 +21,7 @@ MaskedInput = React.createClass
     return null unless @props.mask?
 
     @buffer =
-      for char, idx in @props.mask.split('') # TODO: Do we need to split?
+      for char, idx in @props.mask
         if @translations[char] # TODO: Should we just call getPattern instead of translations?
           @firstNonMaskIdx ?= idx
           @getFormat(idx)
@@ -33,7 +33,22 @@ MaskedInput = React.createClass
 
   componentDidUpdate: ->
     @setCursorPos(@cursorPos) if @cursorPos?
-    # @cursorPos = null
+
+  render: ->
+    props = {}
+    if @props.mask?
+      props.onChange = @handleChange
+      props.onKeyPress = @handleKeyPress
+      props.onKeyDown = @handleKeyDown
+      props.onFocus = @handleFocus
+      props.value =
+        # TODO: Is this right? Should the initial state transform the @props.value?
+        if @props.value? && @props.value isnt @state.value
+          @maskedValue(@props.value)
+        else
+          @state.value
+
+    <input {...@props} {...props} />
 
   translations:
     '9': /\d/
@@ -212,21 +227,5 @@ MaskedInput = React.createClass
 
     @cursorPos = i
     @buffer.join('')
-
-  render: ->
-    props = {}
-    if @props.mask?
-      props.onChange = @handleChange
-      props.onKeyPress = @handleKeyPress
-      props.onKeyDown = @handleKeyDown
-      props.onFocus = @handleFocus
-      props.value =
-        # TODO: Is this right? Should the initial state transform the @props.value?
-        if @props.value? && @props.value isnt @state.value
-          @maskedValue(@props.value)
-        else
-          @state.value
-
-    <input {...@props} {...props} />
 
 module.exports = MaskedInput
