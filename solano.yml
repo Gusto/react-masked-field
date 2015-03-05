@@ -1,0 +1,6 @@
+hooks:
+  pre: npm install
+nodejs:
+  version: '0.12.0'
+tests:
+  - npm test
