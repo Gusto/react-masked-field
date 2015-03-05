@@ -19,9 +19,9 @@
     "sinon-chai": "^2.7.0"
   },
   "scripts": {
-    "start": "karma start karma.conf.coffee",
+    "start": "./node_modules/karma/bin/karma start karma.dev.coffee",
     "build": "NODE_ENV=production browserify --external react --standalone MaskedInput -o dist/masked_input.js . && uglifyjs dist/masked_input.js -cm -o dist/masked_input.min.js",
-    "test": "jest"
+    "test": "./node_modules/karma/bin/karma start karma.ci.coffee"
   },
   "browserify": {
     "transform": [
