@@ -71,7 +71,9 @@ MaskedInput = React.createClass
   setCursorPos: (begin, end=begin) -> # TODO: Do we need begin and end?
     node = @getDOMNode()
     if node.setSelectionRange?
-      node.setSelectionRange(begin, end)
+      # node.setSelectionRange(begin, end)
+      node.selectionStart = begin
+      node.selectionEnd = end
     else
       range = node.createTextRange()
       range.collapse true
