@@ -7,6 +7,7 @@ sinon = require 'sinon'
 chai.use(require 'sinon-chai')
 
 describe 'MaskedInput', ->
+  container = null
   mask = null
   component = null
   domNode = null
@@ -442,6 +443,11 @@ describe 'MaskedInput', ->
         it 'moves the cursor to the correct position', ->
           expect(getInput().getCursorPos()).to.eql begin: 6, end: 6
 
+  beforeEach ->
+    document.body.removeChild(container) if container?
+    container = document.createElement('container')
+    document.body.appendChild(container)
+
   context "when the component isn't controlled", ->
     before ->
       initialVal = null
@@ -456,8 +462,7 @@ describe 'MaskedInput', ->
       props.onKeyPress = handleKeyPress if handleKeyPress?
       props.onComplete = handleComplete if handleComplete?
       props.readOnly = true if initialVal? && not handleChange?
-      component =
-        TestUtils.renderIntoDocument <MaskedInput {...props} />
+      component = React.render(<MaskedInput {...props} />, container)
       domNode = component.getDOMNode()
 
       simulateFocus -> done()
@@ -502,7 +507,7 @@ describe 'MaskedInput', ->
       props.onKeyDown = handleKeyDown if handleKeyDown?
       props.onKeyPress = handleKeyPress if handleKeyPress?
       props.onComplete = handleComplete if handleComplete?
-      component = TestUtils.renderIntoDocument <ControlledWrapper {...props} />
+      component = React.render(<ControlledWrapper {...props} />, container)
       domNode = component.getDOMNode()
 
       simulateFocus -> done()
