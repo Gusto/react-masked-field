@@ -41,7 +41,6 @@ describe 'MaskedInput', ->
       preventDefault: -> defaultPrevented = true
 
     unless defaultPrevented || key.length > 1
-      # key = if typeof key is 'number' then String.fromCharCode(key) else key
       prevVal = getInputValue()
       newVal = prevVal.substring(0, cursorPos) + key + prevVal.substr(cursorPos)
       getInput()._setSelection(cursorPos + 1)
@@ -470,7 +469,7 @@ describe 'MaskedInput', ->
       simulateFocus -> done()
 
     setupTests ->
-      describe 'setting an initial value', -> # TODO: Is this the name for this test?
+      describe 'the placeholder', ->
         context 'when a format is given', ->
           before ->
             format = 'mm/dd/yyyy'
