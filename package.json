@@ -1,5 +1,11 @@
 {
   "name": "react-masked-input",
+  "description": "A masked input component built in React",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZenPayroll/react-masked-input.git"
+  },
   "main": "src/masked_input.cjsx",
   "peerDependencies": {
     "react": "^0.12.2"
@@ -18,11 +24,12 @@
     "mocha": "^2.2.4",
     "react": "^0.12.2",
     "sinon": "^1.14.1",
-    "sinon-chai": "^2.7.0"
+    "sinon-chai": "^2.7.0",
+    "uglify-js": "^2.4.21"
   },
   "scripts": {
     "start": "./node_modules/karma/bin/karma start karma.dev.coffee",
-    "build": "NODE_ENV=production browserify --external react --standalone MaskedInput -o dist/masked_input.js . && uglifyjs dist/masked_input.js -cm -o dist/masked_input.min.js",
+    "build": "NODE_ENV=production browserify --external react --standalone MaskedInput -o dist/masked_input.js . && ./node_modules/uglify-js/bin/uglifyjs dist/masked_input.js -cm -o dist/masked_input.min.js",
     "test": "./node_modules/karma/bin/karma start karma.ci.coffee"
   },
   "browserify": {
