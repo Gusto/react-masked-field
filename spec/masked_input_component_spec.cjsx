@@ -434,7 +434,9 @@ describe 'MaskedInput', ->
 
       describe 'typing keys', ->
         beforeEach ->
+          value = '1a2b3c'
           getInput().getDOMNode().value = '1a2b3c'
+          getInput().setCursorPos(value.length)
           TestUtils.Simulate.change domNode
 
         it 'adds the characters to the value', ->
@@ -445,7 +447,7 @@ describe 'MaskedInput', ->
 
   beforeEach ->
     document.body.removeChild(container) if container?
-    container = document.createElement('container')
+    container = document.createElement('div')
     document.body.appendChild(container)
 
   context "when the component isn't controlled", ->
