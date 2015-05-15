@@ -3,8 +3,6 @@ React = window?.React || require 'react'
 MaskedInput = React.createClass
   displayName: 'MaskedInput'
 
-  # TODO: Add _ for private methods?
-
   propTypes:
     mask: React.PropTypes.string
     format: React.PropTypes.string
@@ -14,49 +12,47 @@ MaskedInput = React.createClass
     onComplete: React.PropTypes.func
 
   getDefaultProps: ->
-    # TODO: Maybe "fill"? or "fillWith"?
     format: '_'
 
   getInitialState: ->
     return null unless @props.mask?
 
-    @buffer =
+    @_buffer =
       for char, idx in @props.mask
-        if @translations[char] # TODO: Should we just call getPattern instead of translations?
-          @firstNonMaskIdx ?= idx
-          @getFormat(idx)
+        if @_getPattern(idx)
+          @_firstNonMaskIdx ?= idx
+          @_getFormatChar(idx)
         else
           char
 
-    @cursorPos = @firstNonMaskIdx
-    value: @buffer.join('')
+    @_cursorPos = @_firstNonMaskIdx
+    value: @_buffer.join('')
 
   componentDidUpdate: ->
-    @setCursorPos(@cursorPos) if @cursorPos?
+    @_setSelection(@_cursorPos) if @_cursorPos?
 
   render: ->
     props = {}
     if @props.mask?
-      props.onChange = @handleChange
-      props.onKeyPress = @handleKeyPress
-      props.onKeyDown = @handleKeyDown
-      props.onFocus = @handleFocus
+      props.onChange = @_handleChange
+      props.onKeyPress = @_handleKeyPress
+      props.onKeyDown = @_handleKeyDown
+      props.onFocus = @_handleFocus
       props.value =
         # TODO: Is this right? Should the initial state transform the @props.value?
         if @props.value? && @props.value isnt @state.value
-          @maskedValue(@props.value)
+          @_maskedValue(@props.value)
         else
           @state.value
 
     <input {...@props} {...props} />
 
-  translations:
+  _translations:
     '9': /\d/
     'a': /[A-Za-z]/
     '*': /[A-Za-z0-9]/
 
-  # TODO: getSelection?
-  getCursorPos: ->
+  _getSelection: ->
     node = @getDOMNode()
     if node.setSelectionRange?
       begin = node.selectionStart
@@ -68,12 +64,10 @@ MaskedInput = React.createClass
 
     {begin, end}
 
-  setCursorPos: (begin, end=begin) -> # TODO: Do we need begin and end?
+  _setSelection: (begin, end=begin) ->
     node = @getDOMNode()
     if node.setSelectionRange?
-      # node.setSelectionRange(begin, end)
-      node.selectionStart = begin
-      node.selectionEnd = end
+      node.setSelectionRange(begin, end)
     else
       range = node.createTextRange()
       range.collapse true
@@ -81,153 +75,145 @@ MaskedInput = React.createClass
       range.moveStart 'character', end
       range.select()
 
-  getPattern: (idx) ->
-    @translations[@props.mask[idx]]
+  _getPattern: (idx) ->
+    @_translations[@props.mask[idx]]
 
-  # TODO: getFormatChar? getFormatCharacter?
-  getFormat: (idx) ->
+  _getFormatChar: (idx) ->
     idx = if idx < @props.format.length then idx else 0
     @props.format[idx]
 
-  clearBuffer: (start, end) ->
-    @buffer[i] = @getFormat(i) for i in [start...end] when @getPattern(i)?
+  _resetBuffer: (start, end) ->
+    @_buffer[i] = @_getFormatChar(i) for i in [start...end] when @_getPattern(i)?
     true
 
-  seekNext: (pos) ->
-    # for idx in [pos+1...@props.mask.length]
-    #   break if @getPattern(idx)?
-    # idx
-    true while ++pos < @props.mask.length && not @getPattern(pos)?
+  _seekNext: (pos) ->
+    true while ++pos < @props.mask.length && not @_getPattern(pos)?
     pos
 
-  seekPrev: (pos) ->
-    # for idx in [pos-1...0]
-      # break if @getPattern(idx)?
+  _seekPrev: (pos) ->
     # TODO: Not a big fan of this...
-    true while --pos >= 0 && not @getPattern(pos)?
+    true while --pos >= 0 && not @_getPattern(pos)?
     pos
 
-  shiftLeft: (begin, end) ->
-    @clearBuffer(begin, end)
+  _shiftLeft: (begin, end) ->
+    @_resetBuffer(begin, end)
     return if begin < 0
 
-    next = @seekNext(end - 1)
+    next = @_seekNext(end - 1)
     for i in [begin...@props.mask.length]
-      pattern = @getPattern(i)
+      pattern = @_getPattern(i)
       if pattern?
-        if next < @props.mask.length && pattern.test(@buffer[next])
-          @buffer[i] = @buffer[next]
-          @buffer[next] = @getFormat(next)
+        if next < @props.mask.length && pattern.test(@_buffer[next])
+          @_buffer[i] = @_buffer[next]
+          @_buffer[next] = @_getFormatChar(next)
         else
           break
 
-        next = @seekNext(next)
+        next = @_seekNext(next)
 
-    @cursorPos = Math.max(begin, @firstNonMaskIdx) # TODO: Right spot for this?
-    # @cursorPos = i
+    @_cursorPos = Math.max(begin, @_firstNonMaskIdx) # TODO: Right spot for this?
 
-  shiftRight: (pos) ->
-    c = @getFormat(pos)
+  _shiftRight: (pos) ->
+    c = @_getFormatChar(pos)
     for i in [pos...@props.mask.length]
-      pattern = @getPattern(i)
+      pattern = @_getPattern(i)
       if pattern?
-        next = @seekNext(i)
-        t = @buffer[i]
-        @buffer[i] = c
+        next = @_seekNext(i)
+        t = @_buffer[i]
+        @_buffer[i] = c
         if next < @props.mask.length && pattern.test(t)
           c = t
         else
           break
     true
 
-  # TODO: callOnComplete?
-  fireOnComplete: (value) ->
+  _callOnComplete: (value) ->
     return unless @props.onComplete?
     for i in [0...@props.mask.length]
-      return if @getPattern(i)? && @buffer[i] is @getFormat(i)
+      return if @_getPattern(i)? && @_buffer[i] is @_getFormatChar(i)
 
     @props.onComplete value
 
-  setValue: (value) ->
+  _setValue: (value) ->
     @props.onChange?(target: {value})
     @setState {value}
     value
 
-  handleFocus: (e) ->
+  _handleFocus: (e) ->
     setTimeout =>
-      @setCursorPos @cursorPos
+      @_setSelection @_cursorPos
     , 0
 
     @props.onFocus?(e)
 
-  handleKeyDown: (e) ->
+  _handleKeyDown: (e) ->
     if e.key is 'Backspace' || e.key is 'Delete'
-      {begin, end} = @getCursorPos()
+      {begin, end} = @_getSelection()
 
       if begin is end
         if e.key is 'Delete'
-          begin = @seekNext(begin - 1)
-          end = @seekNext(begin)
+          begin = @_seekNext(begin - 1)
+          end = @_seekNext(begin)
         else
-          begin = @seekPrev(begin)
+          begin = @_seekPrev(begin)
 
-      @shiftLeft(begin, end)
-      @setValue @buffer.join('')
+      @_shiftLeft(begin, end)
+      @_setValue @_buffer.join('')
 
       e.preventDefault()
 
     @props.onKeyDown?(e)
 
-  handleKeyPress: (e) ->
+  _handleKeyPress: (e) ->
     if e.key.length is 1
-      {begin, end} = @getCursorPos()
-      @cursorPos = begin
+      {begin, end} = @_getSelection()
+      @_cursorPos = begin
       bufferChanged = false
 
       if begin isnt end
-        @shiftLeft(begin, end)
+        @_shiftLeft(begin, end)
         bufferChanged = true
 
-      next = @seekNext(@cursorPos - 1)
-      if next < @props.mask.length && @getPattern(next).test(e.key)
-        @shiftRight(next)
+      next = @_seekNext(@_cursorPos - 1)
+      if next < @props.mask.length && @_getPattern(next).test(e.key)
+        @_shiftRight(next)
 
-        @buffer[next] = e.key
-        @cursorPos = @seekNext(next)
-        value = @setValue @buffer.join('')
-        @fireOnComplete value
+        @_buffer[next] = e.key
+        @_cursorPos = @_seekNext(next)
+        value = @_setValue @_buffer.join('')
+        @_callOnComplete value
       else if bufferChanged
-        @setValue @buffer.join('')
+        @_setValue @_buffer.join('')
 
       e.preventDefault()
 
     @props.onKeyPress?(e)
 
-  handleChange: (e) ->
-    value = @maskedValue e.target.value
-    @setValue value
-    @fireOnComplete value
+  _handleChange: (e) ->
+    value = @_maskedValue e.target.value
+    @_setValue value
+    @_callOnComplete value
 
-  maskedValue: (input) ->
+  _maskedValue: (input) ->
     pos = 0
     for i in [0...@props.mask.length]
-      pattern = @getPattern(i)
+      pattern = @_getPattern(i)
       if pattern?
-        @buffer[i] = @getFormat(i)
+        @_buffer[i] = @_getFormatChar(i)
         while pos++ < input.length
           c = input[pos - 1]
           if pattern.test(c)
-            @buffer[i] = c
+            @_buffer[i] = c
             break
 
         if pos > input.length
-          @clearBuffer(i + 1, @props.mask.length)
+          @_resetBuffer(i + 1, @props.mask.length)
           break
 
-      else if @buffer[i] is input[pos]
+      else if @_buffer[i] is input[pos]
         pos++
 
-    @cursorPos = i
-    @buffer.join('')
+    @_cursorPos = i
+    @_buffer.join('')
 
 module.exports = MaskedInput
