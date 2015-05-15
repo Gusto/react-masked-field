@@ -39,7 +39,6 @@ MaskedInput = React.createClass
       props.onKeyDown = @_handleKeyDown
       props.onFocus = @_handleFocus
       props.value =
-        # TODO: Is this right? Should the initial state transform the @props.value?
         if @props.value? && @props.value isnt @state.value
           @_maskedValue(@props.value)
         else
@@ -111,7 +110,7 @@ MaskedInput = React.createClass
 
         next = @_seekNext(next)
 
-    @_cursorPos = Math.max(begin, @_firstNonMaskIdx) # TODO: Right spot for this?
+    @_cursorPos = Math.max(begin, @_firstNonMaskIdx)
 
   _shiftRight: (pos) ->
     c = @_getFormatChar(pos)
