@@ -102,9 +102,22 @@ describe 'MaskedInput', ->
             expect(handleComplete).to.have.not.been.called
 
           context 'when the next character is a mask character', ->
+            # TODO: be?
             it 'moves the cursor past the mask character', ->
               simulateKeyPress '3'
               expect(getInputValue()).to.equal '23/__/____'
+              expect(getInput()._getSelection()).to.eql begin: 3, end: 3
+
+          context 'when the cursor is in the middle of the value', ->
+            beforeEach ->
+              simulateKeyPress key for key in '34'.split('')
+              getInput()._setSelection 1
+              simulateKeyPress '5'
+
+            it 'adds the character to the value', ->
+              expect(getInputValue()[1]).to.equal '5'
+
+            it 'moves the cursor to the correct position', ->
               expect(getInput()._getSelection()).to.eql begin: 3, end: 3
 
           context 'when input text is selected', ->
@@ -145,6 +158,18 @@ describe 'MaskedInput', ->
 
           it "doesn't call the onChange callback", ->
             expect(handleChange).to.have.not.been.called
+
+          context 'when the cursor is in the middle of the value', ->
+            beforeEach ->
+              simulateKeyPress key for key in '123'.split('')
+              getInput()._setSelection 1
+              simulateKeyPress 'A'
+
+            it "doesn't change the value", ->
+              expect(getInputValue()).to.equal '12/3_/____'
+
+            it "doesn't change the cursor position", ->
+              expect(getInput()._getSelection()).to.eql begin: 1, end: 1
 
           context 'when input text is selected', ->
             beforeEach ->
