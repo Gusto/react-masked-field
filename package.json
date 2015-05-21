@@ -16,6 +16,8 @@
     "coffee-reactify": "^3.0.0",
     "coffee-script": "^1.9.3",
     "envify": "^3.4.0",
+    "eslint": "^0.21.2",
+    "eslint-plugin-react": "^2.3.0",
     "karma": "^0.12.33",
     "karma-browserify": "^4.2.1",
     "karma-chrome-launcher": "^0.1.12",
