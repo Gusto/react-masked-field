@@ -1,11 +1,18 @@
 React = window?.React || require 'react'
 
+DEFAULT_TRANSLATIONS =
+  '9': /\d/
+  'a': /[A-Za-z]/
+  '*': /[A-Za-z0-9]/
+
 MaskedInput = React.createClass
   displayName: 'MaskedInput'
 
+  # TODO: format validation
   propTypes:
     mask: React.PropTypes.string
     format: React.PropTypes.string
+    translations: React.PropTypes.object
     onChange: React.PropTypes.func
     onKeyDown: React.PropTypes.func
     onKeyPress: React.PropTypes.func
@@ -46,11 +53,6 @@ MaskedInput = React.createClass
 
     <input {...@props} {...props} />
 
-  _translations:
-    '9': /\d/
-    'a': /[A-Za-z]/
-    '*': /[A-Za-z0-9]/
-
   _getSelection: ->
     node = @getDOMNode()
     if node.setSelectionRange?
@@ -75,7 +77,8 @@ MaskedInput = React.createClass
       range.select()
 
   _getPattern: (idx) ->
-    @_translations[@props.mask[idx]]
+    maskChar = @props.mask[idx]
+    @props.translations?[maskChar] || DEFAULT_TRANSLATIONS[maskChar]
 
   _getFormatChar: (idx) ->
     idx = if idx < @props.format.length then idx else 0

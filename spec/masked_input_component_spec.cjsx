@@ -14,6 +14,7 @@ describe 'MaskedInput', ->
   initialVal = null
   getInput = null
   format = null
+  translations = null
 
   handleChange = null
   handleKeyDown = null
@@ -444,6 +445,33 @@ describe 'MaskedInput', ->
         it 'moves the cursor to the correct position', ->
           expect(getInput()._getSelection()).to.eql begin: 6, end: 6
 
+    context 'when there is a pattern provided', ->
+      before ->
+        mask = 'FFF'
+        translations =
+          'F': /[F]/
+
+      describe 'typing a key', ->
+        context 'when the character matches the mask', ->
+          beforeEach ->
+            simulateKeyPress 'F'
+
+          it 'adds the character to the value', ->
+            expect(getInputValue()[0]).to.equal 'F'
+
+          it 'moves the cursor to the correct position', ->
+            expect(getInput()._getSelection()).to.eql begin: 1, end: 1
+
+        context "when the character doesn't match the mask", ->
+          beforeEach ->
+            simulateKeyPress 'A'
+
+          it "doesn't change the value", ->
+            expect(getInputValue()).to.equal '___'
+
+          it "doesn't change the cursor position", ->
+            expect(getInput()._getSelection()).to.eql begin: 0, end: 0
+
   beforeEach ->
     document.body.removeChild(container) if container?
     container = document.createElement('div')
@@ -458,6 +486,7 @@ describe 'MaskedInput', ->
       props = {mask}
       props.format = format if format?
       props.value = initialVal if initialVal?
+      props.translations = translations if translations?
       props.onChange = handleChange if handleChange?
       props.onKeyDown = handleKeyDown if handleKeyDown?
       props.onKeyPress = handleKeyPress if handleKeyPress?
@@ -504,6 +533,7 @@ describe 'MaskedInput', ->
       # TODO: Can we combine this with the above be?
       props = {mask, initialVal}
       props.format = format if format?
+      props.translations = translations if translations?
       props.onChange = handleChange if handleChange?
       props.onKeyDown = handleKeyDown if handleKeyDown?
       props.onKeyPress = handleKeyPress if handleKeyPress?

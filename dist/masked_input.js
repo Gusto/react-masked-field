@@ -1,13 +1,20 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.MaskedInput = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var MaskedInput, React;
+var DEFAULT_TRANSLATIONS, MaskedInput, React;
 
 React = (typeof window !== "undefined" && window !== null ? window.React : void 0) || require('react');
+
+DEFAULT_TRANSLATIONS = {
+  '9': /\d/,
+  'a': /[A-Za-z]/,
+  '*': /[A-Za-z0-9]/
+};
 
 MaskedInput = React.createClass({
   displayName: 'MaskedInput',
   propTypes: {
     mask: React.PropTypes.string,
     format: React.PropTypes.string,
+    translations: React.PropTypes.object,
     onChange: React.PropTypes.func,
     onKeyDown: React.PropTypes.func,
     onKeyPress: React.PropTypes.func,
@@ -62,11 +69,6 @@ MaskedInput = React.createClass({
     }
     return React.createElement("input", React.__spread({}, this.props, props));
   },
-  _translations: {
-    '9': /\d/,
-    'a': /[A-Za-z]/,
-    '*': /[A-Za-z0-9]/
-  },
   _getSelection: function() {
     var begin, end, node, range;
     node = this.getDOMNode();
@@ -100,7 +102,9 @@ MaskedInput = React.createClass({
     }
   },
   _getPattern: function(idx) {
-    return this._translations[this.props.mask[idx]];
+    var maskChar, _ref;
+    maskChar = this.props.mask[idx];
+    return ((_ref = this.props.translations) != null ? _ref[maskChar] : void 0) || DEFAULT_TRANSLATIONS[maskChar];
   },
   _getFormatChar: function(idx) {
     idx = idx < this.props.format.length ? idx : 0;
