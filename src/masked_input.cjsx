@@ -1,7 +1,4 @@
 React = window?.React || require 'react'
-jsdiff = require 'diff'
-
-assert = require('chai').assert
 
 DEFAULT_TRANSLATIONS =
   '9': /\d/
@@ -37,32 +34,26 @@ MaskedInput = React.createClass
           char
 
     @_cursorPos = @_firstNonMaskIdx
-    value: @_buffer.join('')
+
+    # TODO: Any way we can do this in one pass?
+    value: @_maskedValue(@props.value || '')
 
   componentDidUpdate: ->
     @_setSelection(@_cursorPos) if @_cursorPos?
 
   componentDidMount: ->
-    # TODO: any other lifecycle functions we need to modify when there's no mask?
-    return unless @props.mask?
-
-    if @props.onChange? && @props.value?
-      # TODO: should @state.value already be ready to use here?
-      value = @_maskedValue(@props.value)
-      @props.onChange(target: {value}) if value isnt @props.value
+    if @props.mask? && @props.onChange? && @props.value? && @state.value isnt @props.value
+      @props.onChange(target: {value: @state.value})
 
   render: ->
-    props = {}
     if @props.mask?
-      props.onChange = @_handleChange
-      # props.onKeyPress = @_handleKeyPress
-      props.onKeyDown = @_handleKeyDown
-      props.onFocus = @_handleFocus
-      props.value =
-        if @props.value? && @props.value isnt @state.value
-          @_maskedValue(@props.value)
-        else
-          @state.value
+      props =
+        onChange: @_handleChange
+        onKeyDown: @_handleKeyDown
+        onFocus: @_handleFocus
+        value: @state.value
+    else
+      props = {}
 
     <input {...@props} {...props} />
 
@@ -130,20 +121,6 @@ MaskedInput = React.createClass
 
     @_cursorPos = Math.max(begin, @_firstNonMaskIdx)
 
-  _shiftRight: (pos) ->
-    c = @_getFormatChar(pos)
-    for i in [pos...@props.mask.length]
-      pattern = @_getPattern(i)
-      if pattern?
-        next = @_seekNext(i)
-        t = @_buffer[i]
-        @_buffer[i] = c
-        if next < @props.mask.length && pattern.test(t)
-          c = t
-        else
-          break
-    true
-
   _callOnComplete: (value) ->
     return unless @props.onComplete?
     for i in [0...@props.mask.length]
@@ -181,31 +158,6 @@ MaskedInput = React.createClass
 
     @props.onKeyDown?(e)
 
-  _handleKeyPress: (e) ->
-    if e.key.length is 1
-      {begin, end} = @_getSelection()
-      @_cursorPos = begin
-      bufferChanged = false
-
-      if begin isnt end
-        @_shiftLeft(begin, end)
-        bufferChanged = true
-
-      next = @_seekNext(@_cursorPos - 1)
-      if next < @props.mask.length && @_getPattern(next).test(e.key)
-        @_shiftRight(next)
-
-        @_buffer[next] = e.key
-        @_cursorPos = @_seekNext(next)
-        value = @_setValue @_buffer.join('')
-        @_callOnComplete value
-      else if bufferChanged
-        @_setValue @_buffer.join('')
-
-      e.preventDefault()
-
-    @props.onKeyPress?(e)
-
   _handleChange: (e) ->
     value = @_maskedValue e.target.value
     @_setValue value
@@ -228,7 +180,6 @@ MaskedInput = React.createClass
             break
           else if @_cursorPos > bufferPos
             @_cursorPos--
-            # @_cursorPos ?= i
 
         if inputPos >= input.length
           @_resetBuffer(bufferPos + 1, @props.mask.length)
@@ -240,48 +191,5 @@ MaskedInput = React.createClass
           inputPos++
 
     @_buffer.join('')
-
-  _maskedValue2: (input) ->
-    @_cursorPos = @_getSelection().begin
-    start = 0
-    diffs = jsdiff.diffChars(@state.value, input)
-
-    for diff, i in diffs
-      break if diff.added || diff.removed
-      start += diff.value.length # count?
-
-    for i in [i...diffs.length]
-      diff = diffs[i]
-
-      continue if diff.removed
-      start = @_something(start, diff.value, diff.added)
-      # start += diff.value.length
-
-    @_buffer.join('')
-
-  _something: (start, input, added) ->
-    pos = 0
-    for i in [start...@props.mask.length]
-      pattern = @_getPattern(i)
-      if pattern?
-        @_buffer[i] = @_getFormatChar(i)
-        while pos++ < input.length
-          c = input[pos - 1]
-          if pattern.test(c)
-            @_buffer[i] = c
-            break
-          else if added
-            @_cursorPos--
-
-        if pos > input.length
-          @_resetBuffer(i + 1, @props.mask.length)
-          break
-
-      else
-        @_cursorPos++ if added
-        if @_buffer[i] is input[pos]
-          pos++
-
-    i
 
 module.exports = MaskedInput
