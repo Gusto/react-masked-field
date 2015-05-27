@@ -21,6 +21,10 @@ describe 'MaskedInput', ->
   handleKeyPress = null
   handleComplete = null
 
+  # FIXME:
+  # - up/down arow behavior
+  # - undo?
+
   # TODO:
   # - When to show the placeholder
   # - Should the cursor be set to the first non-mask char?
@@ -35,6 +39,7 @@ describe 'MaskedInput', ->
     , 0
 
   simulateKeyPress = (key) ->
+    selection = getInput()._getSelection()
     cursorPos = getInput()._getSelection().begin
     defaultPrevented = false
     TestUtils.Simulate.keyPress domNode,
@@ -43,14 +48,33 @@ describe 'MaskedInput', ->
 
     unless defaultPrevented || key.length > 1
       prevVal = getInputValue()
-      newVal = prevVal.substring(0, cursorPos) + key + prevVal.substr(cursorPos)
+      newVal = prevVal.substring(0, selection.begin) + key + prevVal.substr(selection.end)
       getInput()._setSelection(cursorPos + 1)
       TestUtils.Simulate.change domNode,
         target:
           value: newVal
 
   simulateKeyDown = (key) ->
-    TestUtils.Simulate.keyDown domNode, {key}
+    defaultPrevented = false
+    TestUtils.Simulate.keyDown(domNode,
+      key: key
+      preventDefault: -> defaultPrevented = true
+    )
+
+    unless defaultPrevented
+      {begin, end} = getInput()._getSelection()
+      prevVal = getInputValue()
+      if begin is end
+        if key is 'Backspace'
+          newVal = prevVal.substring(0, begin-1) + prevVal.substr(end)
+        else if key is 'Delete'
+          newVal = prevVal.substring(0, begin) + prevVal.substr(end+1)
+      else
+        newVal = prevVal.substring(0, begin) + prevVal.substr(end)
+
+      TestUtils.Simulate.change domNode,
+        target:
+          value: newVal
 
   simulatePaste = (content) ->
     cursorPos = getInput()._getSelection()
@@ -76,6 +100,9 @@ describe 'MaskedInput', ->
         after ->
           handleChange = null
           handleComplete = null
+
+        beforeEach ->
+          handleChange.reset()
 
         afterEach ->
           handleChange.reset()
@@ -310,6 +337,7 @@ describe 'MaskedInput', ->
             handleComplete = null
 
           beforeEach ->
+            handleChange.reset()
             simulatePaste '12345'
 
           afterEach ->
@@ -345,8 +373,9 @@ describe 'MaskedInput', ->
             it 'replaces the selected characters', ->
               expect(getInputValue().substring 1, 5).to.equal '6/75'
 
+            # TODO: Is this the right behavior?
             it 'moves the cursor to the correct position', ->
-              expect(getInput()._getSelection()).to.eql begin: 6, end: 6
+              expect(getInput()._getSelection()).to.eql begin: 4, end: 4
 
             it 'correctly shifts the mask characters', ->
               expect(getInputValue()).to.equal '16/75/____'
@@ -371,7 +400,7 @@ describe 'MaskedInput', ->
               expect(getInputValue().substring 1, 5).to.equal '6/75'
 
             it 'moves the cursor to the correct position', ->
-              expect(getInput()._getSelection()).to.eql begin: 6, end: 6
+              expect(getInput()._getSelection()).to.eql begin: 4, end: 4
 
             it 'correctly shifts the mask characters', ->
               expect(getInputValue()).to.equal '16/75/____'
@@ -398,6 +427,9 @@ describe 'MaskedInput', ->
     context "when the mask is 'aaaaaaaa'", ->
       before ->
         mask = 'aaaaaaaa'
+
+      it 'sets the placeholder correctly', ->
+        expect(getInputValue()).to.equal '________'
 
       describe 'pressing the enter key', ->
         before ->
@@ -569,6 +601,41 @@ describe 'MaskedInput', ->
       simulateFocus -> done()
 
     setupTests ->
+      describe 'initial render', ->
+        before ->
+          handleChange = sinon.spy()
+
+        after ->
+          handleChange = null
+
+        afterEach ->
+          handleChange.reset()
+
+        context 'when the initial value is blank', ->
+          it 'calls the onChange callback', ->
+            expect(handleChange).to.have.been.calledOnce
+            expect(handleChange).to.have.been.calledWithExactly target: value: '__/__/____'
+
+        context 'when the initial value matches the placeholder', ->
+          before ->
+            initialVal = '__/__/____'
+
+          after ->
+            initialVal = ''
+
+          it 'does not call the onChange callback', ->
+            expect(handleChange).to.have.not.been.called
+
+        context "when the initial doesn't change when masked", ->
+          before ->
+            initialVal = '1_/__/____'
+
+          after ->
+            initialVal = ''
+
+          it 'does not call the onChange callback', ->
+            expect(handleChange).to.have.not.been.called
+
       describe 'setting an initial value', ->
         before ->
           initialVal = '123456'
