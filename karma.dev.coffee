@@ -24,7 +24,7 @@ module.exports = (config) ->
 
     browserify: {
       debug: true
-      extensions: [ '.cjsx' ]
+      extensions: [ '.cjsx', '.coffee' ]
     }
 
     # test results reporter to use

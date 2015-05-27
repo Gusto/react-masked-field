@@ -1,4 +1,5 @@
 React = window?.React || require 'react'
+{getSelection, setSelection} = require './selection_utils'
 
 DEFAULT_TRANSLATIONS =
   '9': /\d/
@@ -58,29 +59,13 @@ MaskedInput = React.createClass
     <input {...@props} {...props} />
 
   _getSelection: ->
-    return {begin: 0, end: 0} unless @isMounted()
-
-    node = @getDOMNode()
-    if node.setSelectionRange?
-      begin = node.selectionStart
-      end = node.selectionEnd
+    if @isMounted()
+      getSelection(@getDOMNode())
     else
-      range = document.selection.createRange()
-      begin = 0 - range.duplicate().moveStart 'character', -100000
-      end = begin + range.text.length
-
-    {begin, end}
+      {begin: 0, end: 0}
 
   _setSelection: (begin, end=begin) ->
-    node = @getDOMNode()
-    if node.setSelectionRange?
-      node.setSelectionRange(begin, end)
-    else
-      range = node.createTextRange()
-      range.collapse true
-      range.moveEnd 'character', begin
-      range.moveStart 'character', end
-      range.select()
+    setSelection(@getDOMNode(), begin, end)
 
   _getPattern: (idx) ->
     maskChar = @props.mask[idx]
