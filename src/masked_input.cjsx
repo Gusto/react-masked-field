@@ -1,4 +1,7 @@
 React = window?.React || require 'react'
+jsdiff = require 'diff'
+
+assert = require('chai').assert
 
 DEFAULT_TRANSLATIONS =
   '9': /\d/
@@ -22,6 +25,7 @@ MaskedInput = React.createClass
     format: '_'
 
   getInitialState: ->
+    # TODO: should this reflect the @props.value ?
     return null unless @props.mask?
 
     @_buffer =
@@ -38,11 +42,20 @@ MaskedInput = React.createClass
   componentDidUpdate: ->
     @_setSelection(@_cursorPos) if @_cursorPos?
 
+  componentDidMount: ->
+    # TODO: any other lifecycle functions we need to modify when there's no mask?
+    return unless @props.mask?
+
+    if @props.onChange? && @props.value?
+      # TODO: should @state.value already be ready to use here?
+      value = @_maskedValue(@props.value)
+      @props.onChange(target: {value}) if value isnt @props.value
+
   render: ->
     props = {}
     if @props.mask?
       props.onChange = @_handleChange
-      props.onKeyPress = @_handleKeyPress
+      # props.onKeyPress = @_handleKeyPress
       props.onKeyDown = @_handleKeyDown
       props.onFocus = @_handleFocus
       props.value =
@@ -54,6 +67,8 @@ MaskedInput = React.createClass
     <input {...@props} {...props} />
 
   _getSelection: ->
+    return {begin: 0, end: 0} unless @isMounted()
+
     node = @getDOMNode()
     if node.setSelectionRange?
       begin = node.selectionStart
@@ -137,7 +152,7 @@ MaskedInput = React.createClass
     @props.onComplete value
 
   _setValue: (value) ->
-    @props.onChange?(target: {value})
+    @props.onChange?(target: {value}) if value isnt @state.value
     @setState {value}
     value
 
@@ -197,8 +212,56 @@ MaskedInput = React.createClass
     @_callOnComplete value
 
   _maskedValue: (input) ->
-    pos = 0
     for i in [0...@props.mask.length]
+      break if @_buffer[i] isnt input[i]
+
+    originalCursorPos = @_cursorPos = @_getSelection().begin
+    inputPos = i
+    for bufferPos in [i...@props.mask.length]
+      pattern = @_getPattern(bufferPos)
+      if pattern?
+        @_buffer[bufferPos] = @_getFormatChar(bufferPos)
+        while inputPos < input.length
+          c = input[inputPos++]
+          if pattern.test(c)
+            @_buffer[bufferPos] = c
+            break
+          else if @_cursorPos > bufferPos
+            @_cursorPos--
+            # @_cursorPos ?= i
+
+        if inputPos >= input.length
+          @_resetBuffer(bufferPos + 1, @props.mask.length)
+          break
+
+      else
+        @_cursorPos++ if inputPos <= originalCursorPos
+        if @_buffer[bufferPos] is input[inputPos]
+          inputPos++
+
+    @_buffer.join('')
+
+  _maskedValue2: (input) ->
+    @_cursorPos = @_getSelection().begin
+    start = 0
+    diffs = jsdiff.diffChars(@state.value, input)
+
+    for diff, i in diffs
+      break if diff.added || diff.removed
+      start += diff.value.length # count?
+
+    for i in [i...diffs.length]
+      diff = diffs[i]
+
+      continue if diff.removed
+      start = @_something(start, diff.value, diff.added)
+      # start += diff.value.length
+
+    @_buffer.join('')
+
+  _something: (start, input, added) ->
+    pos = 0
+    for i in [start...@props.mask.length]
       pattern = @_getPattern(i)
       if pattern?
         @_buffer[i] = @_getFormatChar(i)
@@ -207,15 +270,18 @@ MaskedInput = React.createClass
           if pattern.test(c)
             @_buffer[i] = c
             break
+          else if added
+            @_cursorPos--
 
         if pos > input.length
           @_resetBuffer(i + 1, @props.mask.length)
           break
 
-      else if @_buffer[i] is input[pos]
-        pos++
+      else
+        @_cursorPos++ if added
+        if @_buffer[i] is input[pos]
+          pos++
 
-    @_cursorPos = i
-    @_buffer.join('')
+    i
 
 module.exports = MaskedInput
