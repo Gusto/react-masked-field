@@ -1,5 +1,6 @@
 React = require 'react'
 TestUtils = require 'react/lib/ReactTestUtils'
+LinkedStateMixin = require 'react/lib/LinkedStateMixin'
 MaskedInput = require '../src/masked_input'
 chai = require 'chai'
 expect = chai.expect
@@ -665,3 +666,55 @@ describe 'MaskedInput', ->
         context 'when no format is given', ->
           it 'fills in the missing characters with the default character', ->
             expect(getInputValue()).to.equal '12/34/56__'
+
+    context 'when the component uses ReactLink', ->
+      LinkWrapper = React.createClass
+        mixins: [LinkedStateMixin]
+
+        getInitialState: ->
+          value: @props.initialVal
+
+        render: ->
+          <MaskedInput {...@props} valueLink={@linkState('value')} ref='input' />
+
+      before ->
+        initialVal = ''
+        getInput = -> component.refs.input
+
+      beforeEach (done) ->
+        props = {mask, initialVal}
+        component = React.render(
+          <LinkWrapper mask="99/99/9999" initialVal={initialVal} />,
+          container
+        )
+        domNode = component.getDOMNode()
+
+        simulateFocus -> done()
+
+      describe 'setting an initial value', ->
+        before ->
+          initialVal = '12345'
+
+        after ->
+          initialVal = ''
+
+        it 'sets the input value', ->
+          expect(getInputValue()).to.equal '12/34/5___'
+
+        it 'sets the state of the parent component', ->
+          expect(component.state.value).to.equal '12/34/5___'
+
+      describe 'pasting', ->
+        beforeEach ->
+          simulatePaste '12345'
+
+        it 'updates the state of the parent component', ->
+          expect(component.state.value).to.equal '12/34/5___'
+
+      describe 'pressing the backspace key', ->
+        beforeEach ->
+          simulateKeyPress key for key in '12345'.split('')
+          simulateKeyDown 'Backspace'
+
+        it 'updates the state of the parent component', ->
+          expect(component.state.value).to.equal '12/34/____'

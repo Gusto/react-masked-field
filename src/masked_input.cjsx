@@ -18,12 +18,12 @@ MaskedInput = React.createClass
     onKeyDown: React.PropTypes.func
     onKeyPress: React.PropTypes.func
     onComplete: React.PropTypes.func
+    valueLink: React.PropTypes.object
 
   getDefaultProps: ->
     format: '_'
 
   getInitialState: ->
-    # TODO: should this reflect the @props.value ?
     return null unless @props.mask?
 
     @_buffer =
@@ -37,14 +37,16 @@ MaskedInput = React.createClass
     @_cursorPos = @_firstNonMaskIdx
 
     # TODO: Any way we can do this in one pass?
-    value: @_maskedValue(@props.value || '')
+    value: @_maskedValue(@_getPropsValue() || '')
 
   componentDidUpdate: ->
     @_setSelection(@_cursorPos) if @_cursorPos?
 
   componentDidMount: ->
-    if @props.mask? && @props.onChange? && @props.value? && @state.value isnt @props.value
-      @props.onChange(target: {value: @state.value})
+    propsValue = @_getPropsValue()
+    if @props.mask? && propsValue? && @state.value isnt propsValue
+      @_callOnChange(@state.value)
+      # @props.onChange(target: {value: @state.value})
 
   render: ->
     if @props.mask?
@@ -53,6 +55,7 @@ MaskedInput = React.createClass
         onKeyDown: @_handleKeyDown
         onFocus: @_handleFocus
         value: @state.value
+        valueLink: null
     else
       props = {}
 
@@ -66,6 +69,9 @@ MaskedInput = React.createClass
 
   _setSelection: (begin, end=begin) ->
     setSelection(@getDOMNode(), begin, end)
+
+  _getPropsValue: ->
+    if @props.valueLink? then @props.valueLink.value else @props.value
 
   _getPattern: (idx) ->
     maskChar = @props.mask[idx]
@@ -88,6 +94,12 @@ MaskedInput = React.createClass
     true while --pos >= 0 && not @_getPattern(pos)?
     pos
 
+  _callOnChange: (value) ->
+    if @props.valueLink?
+      @props.valueLink.requestChange(value)
+    else
+      @props.onChange?(target: {value})
+
   _callOnComplete: (value) ->
     return unless @props.onComplete?
     for i in [0...@props.mask.length]
@@ -96,7 +108,7 @@ MaskedInput = React.createClass
     @props.onComplete value
 
   _setValue: (value) ->
-    @props.onChange?(target: {value}) if value isnt @state.value
+    @_callOnChange(value) if value isnt @state.value
     @setState {value}
 
   _handleFocus: (e) ->
