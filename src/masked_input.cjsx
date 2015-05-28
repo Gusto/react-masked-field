@@ -88,24 +88,6 @@ MaskedInput = React.createClass
     true while --pos >= 0 && not @_getPattern(pos)?
     pos
 
-  _shiftLeft: (begin, end) ->
-    @_resetBuffer(begin, end)
-    return if begin < 0
-
-    next = @_seekNext(end - 1)
-    for i in [begin...@props.mask.length]
-      pattern = @_getPattern(i)
-      if pattern?
-        if next < @props.mask.length && pattern.test(@_buffer[next])
-          @_buffer[i] = @_buffer[next]
-          @_buffer[next] = @_getFormatChar(next)
-        else
-          break
-
-        next = @_seekNext(next)
-
-    @_cursorPos = Math.max(begin, @_firstNonMaskIdx)
-
   _callOnComplete: (value) ->
     return unless @props.onComplete?
     for i in [0...@props.mask.length]
@@ -116,7 +98,6 @@ MaskedInput = React.createClass
   _setValue: (value) ->
     @props.onChange?(target: {value}) if value isnt @state.value
     @setState {value}
-    value
 
   _handleFocus: (e) ->
     setTimeout =>
@@ -130,14 +111,22 @@ MaskedInput = React.createClass
       {begin, end} = @_getSelection()
 
       if begin is end
-        if e.key is 'Delete'
-          begin = @_seekNext(begin - 1)
-          end = @_seekNext(begin)
-        else
-          begin = @_seekPrev(begin)
+        begin = if e.key is 'Delete' then @_seekNext(begin - 1) else @_seekPrev(begin)
+        end = @_seekNext(begin)
 
-      @_shiftLeft(begin, end)
-      @_setValue @_buffer.join('')
+      pattern = @_getPattern(begin)
+      if pattern?.test(@_buffer[end])
+        input = @state.value.substring(0, begin) + @state.value.substring(end)
+        value = @_maskedValue(input)
+        # input = @state.value.substring(end)
+        # value = @_maskedValue(input, begin)
+      else
+        @_resetBuffer(begin, end)
+        value = @_buffer.join('')
+
+      @_setValue(value)
+
+      @_cursorPos = Math.max(begin, @_firstNonMaskIdx)
 
       e.preventDefault()
 
@@ -148,7 +137,7 @@ MaskedInput = React.createClass
     @_setValue value
     @_callOnComplete value
 
-  _maskedValue: (input) ->
+  _maskedValue: (input, begin=0) ->
     for i in [0...@props.mask.length]
       break if @_buffer[i] isnt input[i]
 
