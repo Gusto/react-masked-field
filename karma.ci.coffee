@@ -1,42 +1,16 @@
 # Karma configuration
 # Generated on Wed Mar 04 2015 15:56:21 GMT-0800 (PST)
 
+commonConfig = require './karma.common.coffee'
+
 module.exports = (config) ->
+  config.set(commonConfig)
+
   config.set
-
-    # base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: ''
-
-    # frameworks to use
-    # available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['browserify', 'mocha']
-
-    # list of files / patterns to load in the browser
-    files: [
-      'spec/**/*.cjsx'
-    ]
-
-    # preprocess matching files before serving them to the browser
-    # available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-      'spec/**/*.cjsx': [ 'browserify' ]
-    }
-
-    browserify: {
-      debug: true
-      extensions: [ '.cjsx' ]
-    }
-
     # test results reporter to use
     # possible values: 'dots', 'progress'
     # available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['dots']
-
-    # web server port
-    port: 9876
-
-    # enable / disable colors in the output (reporters and logs)
-    colors: true
 
     # level of logging
     # possible values:
