@@ -247,6 +247,15 @@ describe 'MaskedInput', ->
             it 'moves the cursor to the correct position', ->
               expect(getInput()._getSelection()).to.eql begin: 3, end: 3
 
+        context 'when the next character is a mask character', ->
+          beforeEach ->
+            simulateKeyPress '3'
+            getInput()._setSelection 2
+            simulateKeyDown 'Backspace'
+
+          it 'correctly shifts the non-mask characters', ->
+            expect(getInputValue()).to.equal '13/__/____'
+
         context 'when the cursor is at the beginning', ->
           beforeEach ->
             getInput()._setSelection 0
