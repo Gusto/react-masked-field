@@ -106,6 +106,7 @@ MaskedInput = React.createClass
 
     @props.onFocus?(e)
 
+  # TODO: rename all begin -> start
   _handleKeyDown: (e) ->
     if e.key is 'Backspace' || e.key is 'Delete'
       {begin, end} = @_getSelection()
@@ -116,16 +117,12 @@ MaskedInput = React.createClass
 
       pattern = @_getPattern(begin)
       if pattern?.test(@_buffer[end])
-        input = @state.value.substring(0, begin) + @state.value.substring(end)
-        value = @_maskedValue(input)
-        # input = @state.value.substring(end)
-        # value = @_maskedValue(input, begin)
+        value = @_maskedValue(@state.value.substring(end), begin)
       else
         @_resetBuffer(begin, end)
         value = @_buffer.join('')
 
       @_setValue(value)
-
       @_cursorPos = Math.max(begin, @_firstNonMaskIdx)
 
       e.preventDefault()
@@ -137,13 +134,14 @@ MaskedInput = React.createClass
     @_setValue value
     @_callOnComplete value
 
+  # TODO: rename input
   _maskedValue: (input, begin=0) ->
-    for i in [0...@props.mask.length]
-      break if @_buffer[i] isnt input[i]
+    for i in [0...@props.mask.length - begin]
+      break if @_buffer[begin + i] isnt input[i]
 
     originalCursorPos = @_cursorPos = @_getSelection().begin
     inputPos = i
-    for bufferPos in [i...@props.mask.length]
+    for bufferPos in [begin + i...@props.mask.length]
       pattern = @_getPattern(bufferPos)
       if pattern?
         @_buffer[bufferPos] = @_getFormatChar(bufferPos)
