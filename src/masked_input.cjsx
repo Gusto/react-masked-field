@@ -67,8 +67,8 @@ MaskedInput = React.createClass
     else
       {begin: 0, end: 0}
 
-  _setSelection: (begin, end=begin) ->
-    setSelection(@getDOMNode(), begin, end)
+  _setSelection: (start, end=start) ->
+    setSelection(@getDOMNode(), start, end)
 
   _getPropsValue: ->
     if @props.valueLink? then @props.valueLink.value else @props.value
@@ -146,33 +146,32 @@ MaskedInput = React.createClass
     @_setValue value
     @_callOnComplete value
 
-  # TODO: rename input
-  _maskedValue: (input, begin=0) ->
-    for i in [0...@props.mask.length - begin]
-      break if @_buffer[begin + i] isnt input[i]
+  _maskedValue: (value, start=0) ->
+    for i in [0...@props.mask.length - start]
+      break if @_buffer[start + i] isnt value[i]
 
     originalCursorPos = @_cursorPos = @_getSelection().begin
-    inputPos = i
-    for bufferPos in [begin + i...@props.mask.length]
+    valuePos = i
+    for bufferPos in [start + i...@props.mask.length]
       pattern = @_getPattern(bufferPos)
       if pattern?
         @_buffer[bufferPos] = @_getFormatChar(bufferPos)
-        while inputPos < input.length
-          c = input[inputPos++]
+        while valuePos < value.length
+          c = value[valuePos++]
           if pattern.test(c)
             @_buffer[bufferPos] = c
             break
           else if @_cursorPos > bufferPos
             @_cursorPos--
 
-        if inputPos >= input.length
+        if valuePos >= value.length
           @_resetBuffer(bufferPos + 1, @props.mask.length)
           break
 
       else
-        @_cursorPos++ if inputPos <= originalCursorPos
-        if @_buffer[bufferPos] is input[inputPos]
-          inputPos++
+        @_cursorPos++ if valuePos <= originalCursorPos
+        if @_buffer[bufferPos] is value[valuePos]
+          valuePos++
 
     @_buffer.join('')
 
