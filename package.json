@@ -31,7 +31,8 @@
   "scripts": {
     "start": "./node_modules/karma/bin/karma start karma.dev.coffee",
     "build": "NODE_ENV=production browserify --external react --standalone MaskedInput -o dist/MaskedInput.js . && ./node_modules/uglify-js/bin/uglifyjs dist/MaskedInput.js -cm -o dist/MaskedInput.min.js",
-    "test": "./node_modules/karma/bin/karma start karma.ci.coffee"
+    "test": "./node_modules/karma/bin/karma start karma.ci.coffee",
+    "lint": "./node_modules/eslint/bin/eslint.js ."
   },
   "browserify": {
     "transform": [

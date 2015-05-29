@@ -4,3 +4,4 @@ nodejs:
   version: '0.10.31'
 tests:
   - npm test
+  - npm run lint
