@@ -33,6 +33,9 @@ describe 'MaskedInput', ->
   getInputValue = ->
     TestUtils.findRenderedDOMComponentWithTag(getInput(), 'input').getDOMNode().value
 
+  cursorPosShouldEql = (pos) ->
+    expect(getInput()._getSelection()).to.eql start: pos, end: pos
+
   simulateFocus = (cb) ->
     TestUtils.Simulate.focus domNode
     setTimeout ->
@@ -117,7 +120,7 @@ describe 'MaskedInput', ->
             expect(getInputValue()[0]).to.equal '2'
 
           it 'moves the cursor to the correct position', ->
-            expect(getInput()._getSelection()).to.eql start: 1, end: 1
+            cursorPosShouldEql 1
 
           it 'correctly shifts the mask characters', ->
             expect(getInputValue()).to.equal '2_/__/____'
@@ -134,7 +137,7 @@ describe 'MaskedInput', ->
             it 'moves the cursor past the mask character', ->
               simulateKeyPress '3'
               expect(getInputValue()).to.equal '23/__/____'
-              expect(getInput()._getSelection()).to.eql start: 3, end: 3
+              cursorPosShouldEql 3
 
           context 'when the cursor is in the middle of the value', ->
             beforeEach ->
@@ -146,7 +149,7 @@ describe 'MaskedInput', ->
               expect(getInputValue()[1]).to.equal '5'
 
             it 'moves the cursor to the correct position', ->
-              expect(getInput()._getSelection()).to.eql start: 3, end: 3
+              cursorPosShouldEql 3
 
           context 'when input text is selected', ->
             beforeEach ->
@@ -158,7 +161,7 @@ describe 'MaskedInput', ->
               expect(getInputValue().substring 1, 5).to.equal '6/__'
 
             it 'moves the cursor to the correct position', ->
-              expect(getInput()._getSelection()).to.eql start: 3, end: 3
+              cursorPosShouldEql 3
 
             it 'correctly shifts the mask characters', ->
               expect(getInputValue()).to.equal '26/__/____'
@@ -182,7 +185,7 @@ describe 'MaskedInput', ->
             expect(getInputValue()).to.equal '__/__/____'
 
           it "doesn't change the cursor position", ->
-            expect(getInput()._getSelection()).to.eql start: 0, end: 0
+            cursorPosShouldEql 0
 
           it "doesn't call the onChange callback", ->
             expect(handleChange).to.have.not.been.called
@@ -197,7 +200,7 @@ describe 'MaskedInput', ->
               expect(getInputValue()).to.equal '12/3_/____'
 
             it "doesn't change the cursor position", ->
-              expect(getInput()._getSelection()).to.eql start: 1, end: 1
+              cursorPosShouldEql 1
 
           context 'when input text is selected', ->
             beforeEach ->
@@ -209,7 +212,7 @@ describe 'MaskedInput', ->
               expect(getInputValue().substring 1, 5).to.equal '5/__'
 
             it 'moves the cursor to the correct position', ->
-              expect(getInput()._getSelection()).to.eql start: 1, end: 1
+              cursorPosShouldEql 1
 
             it 'correctly shifts the mask characters', ->
               expect(getInputValue()).to.equal '15/__/____'
@@ -223,7 +226,7 @@ describe 'MaskedInput', ->
           expect(getInputValue()[3]).to.equal '_'
 
         it 'moves the cursor to the correct position', ->
-          expect(getInput()._getSelection()).to.eql start: 3, end: 3
+          cursorPosShouldEql 3
 
         it 'correctly shifts the mask characters', ->
           expect(getInputValue()).to.equal '12/__/____'
@@ -236,7 +239,7 @@ describe 'MaskedInput', ->
             expect(getInputValue()[1]).to.equal '_'
 
           it 'moves the cursor to the correct position', ->
-            expect(getInput()._getSelection()).to.eql start: 1, end: 1
+            cursorPosShouldEql 1
 
           it 'correctly shifts the mask characters', ->
             expect(getInputValue()).to.equal '1_/__/____'
@@ -246,7 +249,7 @@ describe 'MaskedInput', ->
               simulateKeyPress '1'
 
             it 'moves the cursor to the correct position', ->
-              expect(getInput()._getSelection()).to.eql start: 3, end: 3
+              cursorPosShouldEql 3
 
         context 'when the next character is a mask character', ->
           beforeEach ->
@@ -275,7 +278,7 @@ describe 'MaskedInput', ->
             expect(getInputValue().substring 1, 4).to.equal '4/5'
 
           it 'moves the cursor to the correct position', ->
-            expect(getInput()._getSelection()).to.eql start: 1, end: 1
+            cursorPosShouldEql 1
 
           it 'correctly shifts the mask characters', ->
             expect(getInputValue()).to.equal '14/5_/____'
@@ -299,7 +302,7 @@ describe 'MaskedInput', ->
           expect(getInputValue()[3]).to.equal '4'
 
         it "doesn't move the cursor", ->
-          expect(getInput()._getSelection()).to.eql start: 1, end: 1
+          cursorPosShouldEql 1
 
         it 'correctly shifts the mask characters', ->
           expect(getInputValue()).to.equal '13/4_/____'
@@ -316,7 +319,7 @@ describe 'MaskedInput', ->
             expect(getInputValue()[3]).to.equal '_'
 
           it 'moves the cursor to the correct position', ->
-            expect(getInput()._getSelection()).to.eql start: 3, end: 3
+            cursorPosShouldEql 3
 
           it 'correctly shifts the mask characters', ->
             expect(getInputValue()).to.equal '13/__/____'
@@ -331,7 +334,7 @@ describe 'MaskedInput', ->
             expect(getInputValue().substring 1, 4).to.equal '3/4'
 
           it "doesn't move the cursor", ->
-            expect(getInput()._getSelection()).to.eql start: 1, end: 1
+            cursorPosShouldEql 1
 
           it 'correctly shifts the mask characters', ->
             expect(getInputValue()).to.equal '13/4_/____'
@@ -358,7 +361,7 @@ describe 'MaskedInput', ->
             expect(getInputValue()).to.equal '12/34/5___'
 
           it 'moves the cursor to the correct position', ->
-            expect(getInput()._getSelection()).to.eql start: 7, end: 7
+            cursorPosShouldEql 7
 
           it 'calls the onChange callback', ->
             expect(handleChange).to.have.been.calledOnce
@@ -385,7 +388,7 @@ describe 'MaskedInput', ->
 
             # TODO: Is this the right behavior?
             it 'moves the cursor to the correct position', ->
-              expect(getInput()._getSelection()).to.eql start: 4, end: 4
+              cursorPosShouldEql 4
 
             it 'correctly shifts the mask characters', ->
               expect(getInputValue()).to.equal '16/75/____'
@@ -399,7 +402,7 @@ describe 'MaskedInput', ->
             expect(getInputValue()).to.equal '12/34/5___'
 
           it 'moves the cursor to the correct position', ->
-            expect(getInput()._getSelection()).to.eql start: 7, end: 7
+            cursorPosShouldEql 7
 
           context 'when input text is selected', ->
             beforeEach ->
@@ -410,7 +413,7 @@ describe 'MaskedInput', ->
               expect(getInputValue().substring 1, 5).to.equal '6/75'
 
             it 'moves the cursor to the correct position', ->
-              expect(getInput()._getSelection()).to.eql start: 4, end: 4
+              cursorPosShouldEql 4
 
             it 'correctly shifts the mask characters', ->
               expect(getInputValue()).to.equal '16/75/____'
@@ -429,7 +432,7 @@ describe 'MaskedInput', ->
           expect(getInputValue()[0]).to.equal '_'
 
         it 'moves the cursor to the correct position', ->
-          expect(getInput()._getSelection()).to.eql start: 0, end: 0
+          cursorPosShouldEql 0
 
         it 'correctly shifts the mask characters', ->
           expect(getInputValue()).to.equal '_-12'
@@ -466,7 +469,7 @@ describe 'MaskedInput', ->
 
       describe 'initial state', ->
         it 'sets the cursor to the first non-mask character', ->
-          expect(getInput()._getSelection()).to.eql start: 3, end: 3
+          cursorPosShouldEql 3
 
       describe 'pasting', ->
         context 'when the cursor is at the beginning', ->
@@ -483,7 +486,7 @@ describe 'MaskedInput', ->
             simulateKeyDown 'Backspace'
 
           it 'moves the cursor to the first non-mask position', ->
-            expect(getInput()._getSelection()).to.eql start: 3, end: 3
+            cursorPosShouldEql 3
 
     context 'when there is no mask', ->
       before ->
@@ -510,7 +513,7 @@ describe 'MaskedInput', ->
           expect(getInputValue()).to.equal '1a2b3c'
 
         it 'moves the cursor to the correct position', ->
-          expect(getInput()._getSelection()).to.eql start: 6, end: 6
+          cursorPosShouldEql 6
 
     context 'when there is a pattern provided', ->
       before ->
@@ -527,7 +530,7 @@ describe 'MaskedInput', ->
             expect(getInputValue()[0]).to.equal 'F'
 
           it 'moves the cursor to the correct position', ->
-            expect(getInput()._getSelection()).to.eql start: 1, end: 1
+            cursorPosShouldEql 1
 
         context "when the character doesn't match the mask", ->
           beforeEach ->
@@ -537,7 +540,7 @@ describe 'MaskedInput', ->
             expect(getInputValue()).to.equal '___'
 
           it "doesn't change the cursor position", ->
-            expect(getInput()._getSelection()).to.eql start: 0, end: 0
+            cursorPosShouldEql 0
 
   beforeEach ->
     document.body.removeChild(container) if container?

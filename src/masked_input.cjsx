@@ -46,7 +46,6 @@ MaskedInput = React.createClass
     propsValue = @_getPropsValue()
     if @props.mask? && propsValue? && @state.value isnt propsValue
       @_callOnChange(@state.value)
-      # @props.onChange(target: {value: @state.value})
 
   render: ->
     if @props.mask?
@@ -118,7 +117,6 @@ MaskedInput = React.createClass
 
     @props.onFocus?(e)
 
-  # TODO: rename all start -> start
   _handleKeyDown: (e) ->
     if e.key is 'Backspace' || e.key is 'Delete'
       {start, end} = @_getSelection()
