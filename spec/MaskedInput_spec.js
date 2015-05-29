@@ -501,6 +501,7 @@ describe('MaskedInput', function() {
               expect(getInputValue().substring(1, 5)).to.equal('6/75');
             });
 
+            // TODO: Is this the right behavior?
             it('moves the cursor to the correct position', function() {
               cursorPosShouldEql(4);
             });

@@ -10,6 +10,7 @@ var DEFAULT_TRANSLATIONS = {
 };
 
 var MaskedInput = React.createClass({
+  // TODO: format validation
   propTypes: {
     mask: React.PropTypes.string,
     format: React.PropTypes.string,
@@ -44,6 +45,7 @@ var MaskedInput = React.createClass({
 
     this._cursorPos = this._firstNonMaskIdx;
     return {
+      // TODO: Any way we can do this in one pass?
       value: this._maskedValue(this._getPropsValue() || '')
     };
   },
@@ -121,6 +123,7 @@ var MaskedInput = React.createClass({
     return pos;
   },
   _seekPrev: function(pos) {
+    // TODO: Not a big fan of this...
     while (--pos >= 0 && (this._getPattern(pos) == null)) {
       true;
     }
