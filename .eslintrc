@@ -14,7 +14,8 @@
   },
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "mocha": true
   },
   "rules": {
     "comma-dangle": 2, // disallow trailing commas in object literals
