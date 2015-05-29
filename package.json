@@ -30,10 +30,10 @@
     "uglify-js": "^2.4.23"
   },
   "scripts": {
-    "start": "./node_modules/karma/bin/karma start karma.dev.js",
+    "start": "karma start karma.dev.js",
     "build": "browserify --external react --standalone MaskedInput -o dist/MaskedInput.js . && ./node_modules/uglify-js/bin/uglifyjs dist/MaskedInput.js -cm -o dist/MaskedInput.min.js",
-    "test": "./node_modules/karma/bin/karma start karma.ci.js",
-    "lint": "./node_modules/eslint/bin/eslint.js ."
+    "test": "karma start karma.ci.js",
+    "lint": "eslint ."
   },
   "browserify": {
     "transform": [
