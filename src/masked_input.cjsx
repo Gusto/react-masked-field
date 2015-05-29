@@ -65,7 +65,7 @@ MaskedInput = React.createClass
     if @isMounted()
       getSelection(@getDOMNode())
     else
-      {begin: 0, end: 0}
+      {start: 0, end: 0}
 
   _setSelection: (start, end=start) ->
     setSelection(@getDOMNode(), start, end)
@@ -118,24 +118,24 @@ MaskedInput = React.createClass
 
     @props.onFocus?(e)
 
-  # TODO: rename all begin -> start
+  # TODO: rename all start -> start
   _handleKeyDown: (e) ->
     if e.key is 'Backspace' || e.key is 'Delete'
-      {begin, end} = @_getSelection()
+      {start, end} = @_getSelection()
 
-      if begin is end
-        begin = if e.key is 'Delete' then @_seekNext(begin - 1) else @_seekPrev(begin)
-        end = @_seekNext(begin)
+      if start is end
+        start = if e.key is 'Delete' then @_seekNext(start - 1) else @_seekPrev(start)
+        end = @_seekNext(start)
 
-      pattern = @_getPattern(begin)
+      pattern = @_getPattern(start)
       if pattern?.test(@_buffer[end])
-        value = @_maskedValue(@state.value.substring(end), begin)
+        value = @_maskedValue(@state.value.substring(end), start)
       else
-        @_resetBuffer(begin, end)
+        @_resetBuffer(start, end)
         value = @_buffer.join('')
 
       @_setValue(value)
-      @_cursorPos = Math.max(begin, @_firstNonMaskIdx)
+      @_cursorPos = Math.max(start, @_firstNonMaskIdx)
 
       e.preventDefault()
 
@@ -150,7 +150,7 @@ MaskedInput = React.createClass
     for i in [0...@props.mask.length - start]
       break if @_buffer[start + i] isnt value[i]
 
-    originalCursorPos = @_cursorPos = @_getSelection().begin
+    originalCursorPos = @_cursorPos = @_getSelection().start
     valuePos = i
     for bufferPos in [start + i...@props.mask.length]
       pattern = @_getPattern(bufferPos)
