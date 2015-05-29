@@ -10,10 +10,12 @@
   "peerDependencies": {
     "react": "^0.13.3"
   },
+  "dependencies": {
+    "reactify": "^1.1.1"
+  },
   "devDependencies": {
     "browserify": "^10.2.1",
     "chai": "^2.3.0",
-    "envify": "^3.4.0",
     "eslint": "^0.21.2",
     "eslint-plugin-react": "^2.3.0",
     "karma": "^0.12.33",
@@ -23,21 +25,19 @@
     "karma-mocha": "^0.1.10",
     "mocha": "^2.2.5",
     "react": "^0.13.3",
-    "reactify": "^1.1.1",
     "sinon": "^1.14.1",
     "sinon-chai": "^2.7.0",
     "uglify-js": "^2.4.23"
   },
   "scripts": {
     "start": "./node_modules/karma/bin/karma start karma.dev.js",
-    "build": "NODE_ENV=production browserify --external react --standalone MaskedInput -o dist/MaskedInput.js . && ./node_modules/uglify-js/bin/uglifyjs dist/MaskedInput.js -cm -o dist/MaskedInput.min.js",
+    "build": "browserify --external react --standalone MaskedInput -o dist/MaskedInput.js . && ./node_modules/uglify-js/bin/uglifyjs dist/MaskedInput.js -cm -o dist/MaskedInput.min.js",
     "test": "./node_modules/karma/bin/karma start karma.ci.js",
     "lint": "./node_modules/eslint/bin/eslint.js ."
   },
   "browserify": {
     "transform": [
-      ["reactify", {"es6": true}],
-      "envify"
+      ["reactify", {"es6": true}]
     ]
   }
 }
