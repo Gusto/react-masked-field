@@ -9,6 +9,8 @@ var DEFAULT_TRANSLATIONS = {
   '*': /[A-Za-z0-9]/
 };
 
+// TODO: double check my ifs: e.g. should this.props.mask being blank act like no mask at all?
+
 var MaskedInput = React.createClass({
   // TODO: format validation
   propTypes: {
@@ -116,18 +118,23 @@ var MaskedInput = React.createClass({
       }
     }
   },
-  _seekNext: function(pos) {
-    while (++pos < this.props.mask.length && (this._getPattern(pos) == null)) {
-      true;
+  _nextNonMaskIdx: function(idx) {
+    for (var next = idx + 1; next < this.props.mask.length; ++next) {
+      if (this._getPattern(next)) {
+        break;
+      }
     }
-    return pos;
+
+    return next;
   },
-  _seekPrev: function(pos) {
-    // TODO: Not a big fan of this...
-    while (--pos >= 0 && (this._getPattern(pos) == null)) {
-      true;
+  _prevNonMaskIdx: function(idx) {
+    for (var prev = idx - 1; prev >= 0; --prev) {
+      if (this._getPattern(prev)) {
+        break;
+      }
     }
-    return pos;
+
+    return prev;
   },
   _callOnChange: function(value) {
     if (this.props.valueLink != null) {
@@ -168,8 +175,8 @@ var MaskedInput = React.createClass({
       var {start, end} = this._getSelection();
 
       if (start === end) {
-        start = e.key === 'Delete' ? this._seekNext(start - 1) : this._seekPrev(start);
-        end = this._seekNext(start);
+        start = e.key === 'Delete' ? this._nextNonMaskIdx(start - 1) : this._prevNonMaskIdx(start);
+        end = this._nextNonMaskIdx(start);
       }
 
       var value;
@@ -198,45 +205,43 @@ var MaskedInput = React.createClass({
     this._callOnComplete(value);
   },
   _maskedValue: function(value, start) {
-    if (start == null) {
-      start = 0;
-    }
+    start = start || 0;
 
-    var bufferPos = start;
-    var valuePos = 0;
-    for (; bufferPos < this.props.mask.length; ++bufferPos, ++valuePos) {
-      if (this._buffer[bufferPos] !== value[valuePos]) {
+    var bufferIdx = start;
+    var valueIdx = 0;
+    for (; bufferIdx < this.props.mask.length; ++bufferIdx, ++valueIdx) {
+      if (this._buffer[bufferIdx] !== value[valueIdx]) {
         break;
       }
     }
 
     var originalCursorPos = this._cursorPos = this._getSelection().start;
-    for (; bufferPos < this.props.mask.length; ++bufferPos)  {
-      var pattern = this._getPattern(bufferPos);
+    for (; bufferIdx < this.props.mask.length; ++bufferIdx)  {
+      var pattern = this._getPattern(bufferIdx);
       if (pattern != null) {
-        this._buffer[bufferPos] = this._getFormatChar(bufferPos);
-        while (valuePos < value.length) {
-          var c = value[valuePos++];
+        this._buffer[bufferIdx] = this._getFormatChar(bufferIdx);
+        while (valueIdx < value.length) {
+          var c = value[valueIdx++];
           if (pattern.test(c)) {
-            this._buffer[bufferPos] = c;
+            this._buffer[bufferIdx] = c;
             break;
           }
-          else if (this._cursorPos > bufferPos) {
+          else if (this._cursorPos > bufferIdx) {
             this._cursorPos--;
           }
         }
 
-        if (valuePos >= value.length) {
-          this._resetBuffer(bufferPos + 1, this.props.mask.length);
+        if (valueIdx >= value.length) {
+          this._resetBuffer(bufferIdx + 1, this.props.mask.length);
           break;
         }
       }
       else {
-        if (valuePos <= originalCursorPos) {
+        if (valueIdx <= originalCursorPos) {
           this._cursorPos++;
         }
-        if (this._buffer[bufferPos] === value[valuePos]) {
-          valuePos++;
+        if (this._buffer[bufferIdx] === value[valueIdx]) {
+          valueIdx++;
         }
       }
     }
