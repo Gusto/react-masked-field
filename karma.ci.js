@@ -3,7 +3,7 @@
 
 'use strict';
 
-var commonConfig = require('./karma.common.coffee');
+var commonConfig = require('./karma.common');
 
 module.exports = function(config) {
   config.set(commonConfig);
