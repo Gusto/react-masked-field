@@ -6,15 +6,13 @@
     "type": "git",
     "url": "https://github.com/ZenPayroll/react-masked-input.git"
   },
-  "main": "src/masked_input.cjsx",
+  "main": "src/MaskedInput.js",
   "peerDependencies": {
     "react": "^0.13.3"
   },
   "devDependencies": {
     "browserify": "^10.2.1",
     "chai": "^2.3.0",
-    "coffee-reactify": "^3.0.0",
-    "coffee-script": "^1.9.3",
     "envify": "^3.4.0",
     "eslint": "^0.21.2",
     "eslint-plugin-react": "^2.3.0",
@@ -25,18 +23,19 @@
     "karma-mocha": "^0.1.10",
     "mocha": "^2.2.5",
     "react": "^0.13.3",
+    "reactify": "^1.1.1",
     "sinon": "^1.14.1",
     "sinon-chai": "^2.7.0",
     "uglify-js": "^2.4.23"
   },
   "scripts": {
     "start": "./node_modules/karma/bin/karma start karma.dev.coffee",
-    "build": "NODE_ENV=production browserify --extension .coffee --external react --standalone MaskedInput -o dist/masked_input.js . && ./node_modules/uglify-js/bin/uglifyjs dist/masked_input.js -cm -o dist/masked_input.min.js",
+    "build": "NODE_ENV=production browserify --external react --standalone MaskedInput -o dist/MaskedInput.js . && ./node_modules/uglify-js/bin/uglifyjs dist/MaskedInput.js -cm -o dist/MaskedInput.min.js",
     "test": "./node_modules/karma/bin/karma start karma.ci.coffee"
   },
   "browserify": {
     "transform": [
-      "coffee-reactify",
+      ["reactify", {"es6": true}],
       "envify"
     ]
   }
