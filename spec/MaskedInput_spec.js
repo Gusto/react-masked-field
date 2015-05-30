@@ -10,22 +10,21 @@ var sinon = require('sinon');
 chai.use(require('sinon-chai'));
 
 describe('MaskedInput', function() {
-  var container = null;
-  var mask = null;
-  var component = null;
-  var domNode = null;
-  var initialVal = null;
-  var getInput = null;
-  var format = null;
-  var translations = null;
+  var container;
+  var mask;
+  var component;
+  var domNode;
+  var initialVal;
+  var getInput;
+  var format;
+  var translations;
 
-  var handleChange = null;
-  var handleKeyDown = null;
-  var handleKeyPress = null;
-  var handleComplete = null;
+  var handleChange;
+  var handleKeyDown;
+  var handleKeyPress;
+  var handleComplete;
 
   // FIXME:
-  // - up/down arow behavior
   // - undo?
 
   // TODO:
@@ -45,7 +44,7 @@ describe('MaskedInput', function() {
     setTimeout(cb, 0);
   }
 
-   function simulateKeyPress(key) {
+  function simulateKeyPress(key) {
     var {start, end} = getInput()._getSelection();
     var defaultPrevented = false;
     TestUtils.Simulate.keyPress(domNode, {

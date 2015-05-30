@@ -1,8 +1,7 @@
 'use strict';
 
 var formatValidator = require('../src/formatValidator');
-var chai = require('chai');
-var expect = chai.expect;
+var expect = require('chai').expect;
 
 describe('formatValidator', function () {
   var props;

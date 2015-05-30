@@ -10,8 +10,6 @@ var DEFAULT_TRANSLATIONS = {
   '*': /[A-Za-z0-9]/
 };
 
-// TODO: double check my ifs: e.g. should this.props.mask being blank act like no mask at all?
-
 var MaskedInput = React.createClass({
   propTypes: {
     mask: React.PropTypes.string,
@@ -59,7 +57,7 @@ var MaskedInput = React.createClass({
   },
   componentDidMount: function() {
     var propsValue = this._getPropsValue();
-    if (this.props.mask && propsValue != null && this.state.value !== propsValue) {
+    if (this.props.mask != null && propsValue != null && this.state.value !== propsValue) {
       this._callOnChange(this.state.value);
     }
   },
@@ -219,7 +217,7 @@ var MaskedInput = React.createClass({
     var originalCursorPos = this._cursorPos = this._getSelection().start;
     for (; bufferIdx < this.props.mask.length; ++bufferIdx)  {
       var pattern = this._getPattern(bufferIdx);
-      if (pattern != null) {
+      if (pattern) {
         this._buffer[bufferIdx] = this._getFormatChar(bufferIdx);
         while (valueIdx < value.length) {
           var c = value[valueIdx++];
