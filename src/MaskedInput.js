@@ -2,6 +2,7 @@
 
 var React = (window ? window.React : null) || require('react');
 var {getSelection, setSelection} = require('./SelectionUtils');
+var formatValidator = require('./formatValidator');
 
 var DEFAULT_TRANSLATIONS = {
   '9': /\d/,
@@ -12,11 +13,11 @@ var DEFAULT_TRANSLATIONS = {
 // TODO: double check my ifs: e.g. should this.props.mask being blank act like no mask at all?
 
 var MaskedInput = React.createClass({
-  // TODO: format validation
   propTypes: {
     mask: React.PropTypes.string,
-    format: React.PropTypes.string,
+    format: formatValidator,
     translations: React.PropTypes.object,
+    value: React.PropTypes.string,
     onChange: React.PropTypes.func,
     onKeyDown: React.PropTypes.func,
     onKeyPress: React.PropTypes.func,
