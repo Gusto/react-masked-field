@@ -7,6 +7,10 @@
     "url": "https://github.com/ZenPayroll/react-masked-input.git"
   },
   "main": "src/MaskedInput.js",
+  "files": [
+    "demo/",
+    "src/"
+  ],
   "peerDependencies": {
     "react": "^0.13.3"
   },

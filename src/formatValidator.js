@@ -3,8 +3,6 @@
 // TODO: Maybe make this a separate file?
 var React = (window ? window.React : null) || require('react');
 
-// TODO: double check my ifs: e.g. should this.props.mask being blank act like no mask at all?
-
 module.exports = function (props, propName, componentName) {
   var result = React.PropTypes.string.apply(null, arguments);
 
