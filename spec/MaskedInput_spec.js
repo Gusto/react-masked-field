@@ -4,6 +4,7 @@ var React = require('react');
 var TestUtils = require('react/lib/ReactTestUtils');
 var LinkedStateMixin = require('react/lib/LinkedStateMixin');
 var MaskedInput = require('../src/MaskedInput');
+var EventUtils = require('./EventUtils');
 var chai = require('chai');
 var expect = chai.expect;
 var sinon = require('sinon');
@@ -44,59 +45,10 @@ describe('MaskedInput', function() {
     setTimeout(cb, 0);
   }
 
-  function simulateKeyPress(key) {
-    var {start, end} = getInput()._getSelection();
-    var defaultPrevented = false;
-    TestUtils.Simulate.keyPress(domNode, {
-      key,
-      preventDefault: () => defaultPrevented = true
-    });
-
-    if (!defaultPrevented && key.length === 1) {
-      var prevVal = getInputValue();
-      var newVal = prevVal.substring(0, start) + key + prevVal.substr(end);
-      getInput()._setSelection(start + 1);
-      TestUtils.Simulate.change(domNode, {target: {value: newVal}});
-    }
-  }
-
-  function simulateKeyDown(key) {
-    var defaultPrevented = false;
-    TestUtils.Simulate.keyDown(domNode, {
-      key,
-      preventDefault: () => defaultPrevented = true
-    });
-
-    if (!defaultPrevented) {
-      var {start, end} = getInput()._getSelection();
-      var prevVal = getInputValue();
-      if (start === end) {
-        if (key === 'Backspace') {
-          var newVal = prevVal.substring(0, start - 1) + prevVal.substr(end);
-        }
-        else if (key === 'Delete') {
-          var newVal = prevVal.substring(0, start) + prevVal.substr(end + 1);
-        }
-      }
-      else {
-        newVal = prevVal.substring(0, start) + prevVal.substr(end);
-      }
-
-      TestUtils.Simulate.change(domNode, {target: {value: newVal}});
-    }
-  }
-
-  function simulatePaste(content) {
-    var {start, end} = getInput()._getSelection();
-    getInput()._setSelection(start + content.length);
-    var prevVal = getInputValue();
-    var newVal = prevVal.substring(0, start) + content + prevVal.substr(end);
-    return TestUtils.Simulate.change(domNode, {target: {value: newVal}});
-  }
-
-  function simulateTyping(content) {
-    content.split('').forEach(key => simulateKeyPress(key));
-  }
+  var simulateKeyPress = key => EventUtils.simulateKeyPress(domNode, key);
+  var simulateKeyDown = key => EventUtils.simulateKeyDown(domNode, key);
+  var simulatePaste = content => EventUtils.simulateChange(domNode, content);
+  var simulateTyping = content => EventUtils.simulateTyping(domNode, content);
 
   function setupTests(additionalTests) {
     context("when the mask is '99/99/9999'", function() {
