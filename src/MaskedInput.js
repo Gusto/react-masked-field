@@ -18,7 +18,6 @@ var MaskedInput = React.createClass({
     value: React.PropTypes.string,
     onChange: React.PropTypes.func,
     onKeyDown: React.PropTypes.func,
-    onKeyPress: React.PropTypes.func,
     onComplete: React.PropTypes.func,
     onFocus: React.PropTypes.func,
     valueLink: React.PropTypes.object
