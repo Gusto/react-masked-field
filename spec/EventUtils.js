@@ -7,8 +7,9 @@ function simulateChange(node, content) {
   var {start, end} = getSelection(node);
   var newVal = node.value.substring(0, start) + content + node.value.substr(end);
 
+  node.value = newVal;
   setSelection(node, start + content.length, start + content.length);
-  TestUtils.Simulate.change(node, {target: {value: newVal}});
+  TestUtils.Simulate.change(node, {target: node});
 }
 
 function simulateKeyPress(node, key) {
@@ -49,7 +50,9 @@ function simulateKeyDown(node, key) {
       newVal = prevVal.substring(0, start) + prevVal.substr(end);
     }
 
-    TestUtils.Simulate.change(node, {target: {value: newVal}});
+    node.value = newVal;
+    setSelection(node, start, start);
+    TestUtils.Simulate.change(node, {target: node});
   }
 }
 

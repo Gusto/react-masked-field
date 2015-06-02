@@ -12,18 +12,10 @@ chai.use(require('sinon-chai'));
 
 describe('MaskedInput', function() {
   var container;
-  var mask;
   var component;
   var domNode;
-  var initialVal;
   var getInput;
-  var format;
-  var translations;
-
-  var handleChange;
-  var handleKeyDown;
-  var handleKeyPress;
-  var handleComplete;
+  var props = {};
 
   // FIXME:
   // - undo?
@@ -53,29 +45,29 @@ describe('MaskedInput', function() {
   function setupTests(additionalTests) {
     context("when the mask is '99/99/9999'", function() {
       before(function() {
-        mask = '99/99/9999';
+        props.mask = '99/99/9999';
       });
 
       additionalTests();
 
       describe('typing a key', function() {
         before(function() {
-          handleChange = sinon.spy();
-          handleComplete = sinon.spy();
+          props.onChange = sinon.spy();
+          props.onComplete = sinon.spy();
         });
 
         after(function() {
-          handleChange = null;
-          handleComplete = null;
+          delete props.onChange;
+          delete props.onComplete;
         });
 
         beforeEach(function() {
-          handleChange.reset();
+          props.onChange.reset();
         });
 
         afterEach(function() {
-          handleChange.reset();
-          handleComplete.reset();
+          props.onChange.reset();
+          props.onComplete.reset();
         });
 
         context('when the character matches the mask', function() {
@@ -96,8 +88,8 @@ describe('MaskedInput', function() {
           });
 
           it('calls the onChange callback', function() {
-            expect(handleChange).to.have.been.calledOnce;
-            expect(handleChange).to.have.been.calledWithExactly({
+            expect(props.onChange).to.have.been.calledOnce;
+            expect(props.onChange).to.have.been.calledWithExactly({
               target: {
                 value: '2_/__/____'
               }
@@ -105,7 +97,7 @@ describe('MaskedInput', function() {
           });
 
           it("doesn't call the onComplete callback", function() {
-            expect(handleComplete).to.have.not.been.called;
+            expect(props.onComplete).to.have.not.been.called;
           });
 
           context('when the next character is a mask character', function() {
@@ -153,7 +145,7 @@ describe('MaskedInput', function() {
             });
 
             it('calls the onChange callback', function() {
-              expect(handleChange.callCount).to.equal(5);
+              expect(props.onChange.callCount).to.equal(5);
             });
           });
 
@@ -163,8 +155,8 @@ describe('MaskedInput', function() {
             });
 
             it('calls the onComplete callback', function() {
-              expect(handleComplete).to.have.been.calledOnce;
-              expect(handleComplete).to.have.been.calledWithExactly('22/34/5678');
+              expect(props.onComplete).to.have.been.calledOnce;
+              expect(props.onComplete).to.have.been.calledWithExactly('22/34/5678');
             });
           });
         });
@@ -183,7 +175,7 @@ describe('MaskedInput', function() {
           });
 
           it("doesn't call the onChange callback", function() {
-            expect(handleChange).to.have.not.been.called;
+            expect(props.onChange).to.have.not.been.called;
           });
 
           context('when the cursor is in the middle of the value', function() {
@@ -315,15 +307,15 @@ describe('MaskedInput', function() {
       });
       describe('pressing the delete key', function() {
         before(function() {
-          handleKeyDown = sinon.spy();
+          props.onKeyDown = sinon.spy();
         });
 
         after(function() {
-          handleKeyDown = null;
+          delete props.onKeyDown;
         });
 
         afterEach(function() {
-          handleKeyDown.reset();
+          props.onKeyDown.reset();
         });
 
         beforeEach(function() {
@@ -345,7 +337,7 @@ describe('MaskedInput', function() {
         });
 
         it('calls the onKeyDown callback', function() {
-          expect(handleKeyDown).to.have.been.calledOnce;
+          expect(props.onKeyDown).to.have.been.calledOnce;
         });
 
         context('when the following character is a mask character', function() {
@@ -391,23 +383,23 @@ describe('MaskedInput', function() {
       describe('pasting', function() {
         context('when the pasted content contains only valid characters', function() {
           before(function() {
-            handleChange = sinon.spy();
-            handleComplete = sinon.spy();
+            props.onChange = sinon.spy();
+            props.onComplete = sinon.spy();
           });
 
           after(function() {
-            handleChange = null;
-            handleComplete = null;
+            delete props.onChange;
+            delete props.onComplete;
           });
 
           beforeEach(function() {
-            handleChange.reset();
+            props.onChange.reset();
             simulatePaste('12345');
           });
 
           afterEach(function() {
-            handleChange.reset();
-            handleComplete.reset();
+            props.onChange.reset();
+            props.onComplete.reset();
           });
 
           it('adds the content to the value', function() {
@@ -419,8 +411,8 @@ describe('MaskedInput', function() {
           });
 
           it('calls the onChange callback', function() {
-            expect(handleChange).to.have.been.calledOnce;
-            expect(handleChange).to.have.been.calledWithExactly({
+            expect(props.onChange).to.have.been.calledOnce;
+            expect(props.onChange).to.have.been.calledWithExactly({
               target: {
                 value: '12/34/5___'
               }
@@ -428,7 +420,7 @@ describe('MaskedInput', function() {
           });
 
           it("doesn't call the onComplete callback", function() {
-            expect(handleComplete).to.have.not.been.called;
+            expect(props.onComplete).to.have.not.been.called;
           });
 
           context('when the entire mask is filled', function() {
@@ -437,8 +429,8 @@ describe('MaskedInput', function() {
             });
 
             it('calls the onComplete callback', function() {
-              expect(handleComplete).to.have.been.calledOnce;
-              expect(handleComplete).to.have.been.calledWithExactly('12/34/5678');
+              expect(props.onComplete).to.have.been.calledOnce;
+              expect(props.onComplete).to.have.been.calledWithExactly('12/34/5678');
             });
           });
 
@@ -502,7 +494,7 @@ describe('MaskedInput', function() {
 
     context("when the mask is 'a-99'", function() {
       before(function() {
-        mask = 'a-99';
+        props.mask = 'a-99';
       });
 
       describe('pressing the backspace key', function() {
@@ -528,7 +520,7 @@ describe('MaskedInput', function() {
 
     context("when the mask is 'aaaaaaaa'", function() {
       before(function() {
-        mask = 'aaaaaaaa';
+        props.mask = 'aaaaaaaa';
       });
 
       it('sets the placeholder correctly', function() {
@@ -537,11 +529,11 @@ describe('MaskedInput', function() {
 
       describe('pressing the enter key', function() {
         before(function() {
-          handleKeyPress = sinon.spy();
+          props.onKeyPress = sinon.spy();
         });
 
         after(function() {
-          handleKeyPress = null;
+          delete props.onKeyPress;
         });
 
         beforeEach(function() {
@@ -549,7 +541,7 @@ describe('MaskedInput', function() {
         });
 
         afterEach(function() {
-          handleKeyPress.reset();
+          props.onKeyPress.reset();
         });
 
         it("doesn't change the value", function() {
@@ -557,14 +549,14 @@ describe('MaskedInput', function() {
         });
 
         it('calls the onKeyPress callback', function() {
-          expect(handleKeyPress).to.have.been.calledOnce;
+          expect(props.onKeyPress).to.have.been.calledOnce;
         });
       });
     });
 
     context("when the mask is '21-99999999'", function() {
       before(function() {
-        mask = '21-99999999';
+        props.mask = '21-99999999';
       });
 
       describe('initial state', function() {
@@ -601,16 +593,16 @@ describe('MaskedInput', function() {
 
     context('when there is no mask', function() {
       before(function() {
-        mask = null;
+        delete props.mask;
       });
 
       describe('setting an initial value', function() {
         before(function() {
-          initialVal = '123abc';
+          props.value = '123abc';
         });
 
         after(function() {
-          initialVal = null;
+          delete props.value;
         });
 
         it('contains the initial value', function() {
@@ -620,11 +612,7 @@ describe('MaskedInput', function() {
 
       describe('typing keys', function() {
         beforeEach(function() {
-          var value;
-          value = '1a2b3c';
-          getInput().getDOMNode().value = '1a2b3c';
-          getInput()._setSelection(value.length);
-          TestUtils.Simulate.change(domNode);
+          simulateTyping('1a2b3c');
         });
 
         it('adds the characters to the value', function() {
@@ -639,8 +627,8 @@ describe('MaskedInput', function() {
 
     context('when there is a pattern provided', function() {
       before(function() {
-        mask = 'FFF';
-        translations = {
+        props.mask = 'FFF';
+        props.translations = {
           'F': /[F]/
         };
       });
@@ -688,35 +676,12 @@ describe('MaskedInput', function() {
 
   context("when the component isn't controlled", function() {
     before(function() {
-      initialVal = null;
+      delete props.value;
       getInput = () => component;
     });
 
     beforeEach(function(done) {
-      var props;
-      var props = {mask};
-      if (format != null) {
-        props.format = format;
-      }
-      if (initialVal != null) {
-        props.value = initialVal;
-      }
-      if (translations != null) {
-        props.translations = translations;
-      }
-      if (handleChange != null) {
-        props.onChange = handleChange;
-      }
-      if (handleKeyDown != null) {
-        props.onKeyDown = handleKeyDown;
-      }
-      if (handleKeyPress != null) {
-        props.onKeyPress = handleKeyPress;
-      }
-      if (handleComplete != null) {
-        props.onComplete = handleComplete;
-      }
-      if ((initialVal != null) && (handleChange == null)) {
+      if (props.value != null && props.onChange == null) {
         props.readOnly = true;
       }
       component = React.render(<MaskedInput {...props} />, container);
@@ -725,15 +690,19 @@ describe('MaskedInput', function() {
       simulateFocus(done);
     });
 
+    afterEach(function() {
+      delete props.readOnly;
+    });
+
     setupTests(function() {
       describe('the placeholder', function() {
         context('when a format is given', function() {
           before(function() {
-            format = 'mm/dd/yyyy';
+            props.format = 'mm/dd/yyyy';
           });
 
           after(function() {
-            format = null;
+            delete props.format;
           });
 
           it('fills in the placeholder with the format characters', function() {
@@ -752,9 +721,13 @@ describe('MaskedInput', function() {
 
   context('when the component is controlled', function() {
     var ControlledWrapper = React.createClass({
+      propTypes: {
+        value: React.PropTypes.string,
+        onChange: React.PropTypes.func
+      },
       getInitialState: function() {
         return {
-          value: this.props.initialVal
+          value: this.props.value
         };
       },
       handleChange: function(e) {
@@ -776,31 +749,11 @@ describe('MaskedInput', function() {
     });
 
     before(function() {
-      initialVal = '';
+      props.value = '';
       getInput = () => component.refs.input;
     });
 
     beforeEach(function(done) {
-      // TODO: Can we combine this with the above be?
-      var props = {mask, initialVal};
-      if (format != null) {
-        props.format = format;
-      }
-      if (translations != null) {
-        props.translations = translations;
-      }
-      if (handleChange != null) {
-        props.onChange = handleChange;
-      }
-      if (handleKeyDown != null) {
-        props.onKeyDown = handleKeyDown;
-      }
-      if (handleKeyPress != null) {
-        props.onKeyPress = handleKeyPress;
-      }
-      if (handleComplete != null) {
-        props.onComplete = handleComplete;
-      }
       component = React.render(<ControlledWrapper {...props} />, container);
       domNode = component.getDOMNode();
 
@@ -810,21 +763,21 @@ describe('MaskedInput', function() {
     setupTests(function() {
       describe('initial render', function() {
         before(function() {
-          handleChange = sinon.spy();
+          props.onChange = sinon.spy();
         });
 
         after(function() {
-          handleChange = null;
+          delete props.onChange;
         });
 
         afterEach(function() {
-          handleChange.reset();
+          props.onChange.reset();
         });
 
         context('when the initial value is blank', function() {
           it('calls the onChange callback', function() {
-            expect(handleChange).to.have.been.calledOnce;
-            expect(handleChange).to.have.been.calledWithExactly({
+            expect(props.onChange).to.have.been.calledOnce;
+            expect(props.onChange).to.have.been.calledWithExactly({
               target: {
                 value: '__/__/____'
               }
@@ -834,49 +787,49 @@ describe('MaskedInput', function() {
 
         context('when the initial value matches the placeholder', function() {
           before(function() {
-            initialVal = '__/__/____';
+            props.value = '__/__/____';
           });
 
           after(function() {
-            initialVal = '';
+            props.value = '';
           });
 
           it('does not call the onChange callback', function() {
-            expect(handleChange).to.have.not.been.called;
+            expect(props.onChange).to.have.not.been.called;
           });
         });
 
         context("when the initial doesn't change when masked", function() {
           before(function() {
-            initialVal = '1_/__/____';
+            props.value = '1_/__/____';
           });
 
           after(function() {
-            initialVal = '';
+            props.value = '';
           });
 
           it('does not call the onChange callback', function() {
-            expect(handleChange).to.have.not.been.called;
+            expect(props.onChange).to.have.not.been.called;
           });
         });
       });
 
       describe('setting an initial value', function() {
         before(function() {
-          initialVal = '123456';
+          props.value = '123456';
         });
 
         after(function() {
-          initialVal = '';
+          props.value = '';
         });
 
         context('when a format is given', function() {
           before(function() {
-            format = 'mm/dd/yyyy';
+            props.format = 'mm/dd/yyyy';
           });
 
           after(function() {
-            format = null;
+            delete props.format;
           });
 
           it('fills in the missing characters with the format characters', function() {
@@ -891,69 +844,71 @@ describe('MaskedInput', function() {
         });
       });
     });
+  });
 
-    context('when the component uses ReactLink', function() {
-      var LinkWrapper = React.createClass({
-        mixins: [LinkedStateMixin],
-        getInitialState: function() {
-          return {value: this.props.initialVal};
-        },
-        render: function() {
-          return <MaskedInput {...this.props} valueLink={this.linkState('value')} ref="input" />;
-        }
-      });
+  context('when the component uses ReactLink', function() {
+    var value = '';
 
+    var LinkWrapper = React.createClass({
+      propTypes: {value: React.PropTypes.string},
+      mixins: [LinkedStateMixin],
+      getInitialState: function() {
+        return {value: this.props.value};
+      },
+      render: function() {
+        return <MaskedInput {...this.props} valueLink={this.linkState('value')} ref="input" />;
+      }
+    });
+
+    before(function() {
+      getInput = () => component.refs.input;
+    });
+
+    beforeEach(function(done) {
+      component = React.render(
+        <LinkWrapper mask="99/99/9999" value={value} />,
+        container
+      );
+      domNode = component.getDOMNode();
+
+      simulateFocus(done);
+    });
+
+    describe('setting an initial value', function() {
       before(function() {
-        initialVal = '';
-        getInput = () => component.refs.input;
+        value = '12345';
       });
 
-      beforeEach(function(done) {
-        component = React.render(
-          <LinkWrapper mask="99/99/9999" initialVal={initialVal} />,
-          container
-        );
-        domNode = component.getDOMNode();
-
-        simulateFocus(done);
+      after(function() {
+        value = '';
       });
 
-      describe('setting an initial value', function() {
-        before(function() {
-          initialVal = '12345';
-        });
-
-        after(function() {
-          initialVal = '';
-        });
-
-        it('sets the input value', function() {
-          expect(getInputValue()).to.equal('12/34/5___');
-        });
-
-        it('sets the state of the parent component', function() {
-          expect(component.state.value).to.equal('12/34/5___');
-        });
+      it('sets the input value', function() {
+        expect(getInputValue()).to.equal('12/34/5___');
       });
 
-      describe('pasting', function() {
-        beforeEach(function() {
-          simulatePaste('12345');
-        });
+      it('sets the state of the parent component', function() {
+        expect(component.state.value).to.equal('12/34/5___');
+      });
+    });
 
-        it('updates the state of the parent component', function() {
-          expect(component.state.value).to.equal('12/34/5___');
-        });
+    describe('pasting', function() {
+      beforeEach(function() {
+        simulatePaste('12345');
       });
 
-      describe('pressing the backspace key', function() {
-        beforeEach(function() {
-          simulateTyping('12345');
-          simulateKeyDown('Backspace');
-        });
-        it('updates the state of the parent component', function() {
-          expect(component.state.value).to.equal('12/34/____');
-        });
+      it('updates the state of the parent component', function() {
+        expect(component.state.value).to.equal('12/34/5___');
+      });
+    });
+
+    describe('pressing the backspace key', function() {
+      beforeEach(function() {
+        simulateTyping('12345');
+        simulateKeyDown('Backspace');
+      });
+      it('updates the state of the parent component', function() {
+        expect(component.state.value).to.equal('12/34/____');
       });
     });
   });
