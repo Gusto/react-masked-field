@@ -20,10 +20,6 @@ describe('MaskedInput', function() {
   // FIXME:
   // - undo?
 
-  // TODO:
-  // - When to show the placeholder
-  // - Should the cursor be set to the first non-mask char?
-
   function getInputValue() {
     return TestUtils.findRenderedDOMComponentWithTag(getInput(), 'input').getDOMNode().value;
   }
@@ -101,9 +97,11 @@ describe('MaskedInput', function() {
           });
 
           context('when the next character is a mask character', function() {
-            // TODO: be?
-            it('moves the cursor past the mask character', function() {
+            beforeEach(function() {
               simulateKeyPress('3');
+            });
+
+            it('moves the cursor past the mask character', function() {
               expect(getInputValue()).to.equal('23/__/____');
               cursorPosShouldEql(3);
             });
