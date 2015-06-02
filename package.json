@@ -2,6 +2,7 @@
   "name": "react-masked-input",
   "description": "A masked input component built in React",
   "version": "0.1.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/ZenPayroll/react-masked-input.git"

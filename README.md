@@ -2,7 +2,7 @@
 
 A masked input component built in React.
 
-The `MaskedInput` is a text input field that allows you to restrict and format the values that can be entered into it, while informing the user of the expected input. Common uses include dates, phone numbers, social security numbers and tax IDs.
+The `MaskedInput` component is a text input field that allows you to restrict and format the values that can be entered into it, while informing the user of the expected input. Common uses include dates, phone numbers, social security numbers and tax IDs.
 
 ## Example
 
@@ -62,3 +62,7 @@ The `onComplete` event is triggered when the mask has been completely filled. Th
 
 ### Other props
 In addition to the props above, `MaskedInput` should handle all supported `input` props.
+
+## License
+
+This project is licensed under the terms of the MIT license
