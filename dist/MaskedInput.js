@@ -3,6 +3,7 @@
 
 var React = (window ? window.React : null) || require('react');
 var $__0=   require('./SelectionUtils'),getSelection=$__0.getSelection,setSelection=$__0.setSelection;
+var formatValidator = require('./formatValidator');
 
 var DEFAULT_TRANSLATIONS = {
   '9': /\d/,
@@ -11,14 +12,13 @@ var DEFAULT_TRANSLATIONS = {
 };
 
 var MaskedInput = React.createClass({displayName: "MaskedInput",
-  // TODO: format validation
   propTypes: {
     mask: React.PropTypes.string,
-    format: React.PropTypes.string,
+    format: formatValidator,
     translations: React.PropTypes.object,
+    value: React.PropTypes.string,
     onChange: React.PropTypes.func,
     onKeyDown: React.PropTypes.func,
-    onKeyPress: React.PropTypes.func,
     onComplete: React.PropTypes.func,
     onFocus: React.PropTypes.func,
     valueLink: React.PropTypes.object
@@ -57,7 +57,7 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   },
   componentDidMount: function() {
     var propsValue = this._getPropsValue();
-    if (this.props.mask && propsValue != null && this.state.value !== propsValue) {
+    if (this.props.mask != null && propsValue != null && this.state.value !== propsValue) {
       this._callOnChange(this.state.value);
     }
   },
@@ -117,18 +117,23 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
       }
     }
   },
-  _seekNext: function(pos) {
-    while (++pos < this.props.mask.length && (this._getPattern(pos) == null)) {
-      true;
+  _nextNonMaskIdx: function(idx) {
+    for (var next = idx + 1; next < this.props.mask.length; ++next) {
+      if (this._getPattern(next)) {
+        break;
+      }
     }
-    return pos;
+
+    return next;
   },
-  _seekPrev: function(pos) {
-    // TODO: Not a big fan of this...
-    while (--pos >= 0 && (this._getPattern(pos) == null)) {
-      true;
+  _prevNonMaskIdx: function(idx) {
+    for (var prev = idx - 1; prev >= 0; --prev) {
+      if (this._getPattern(prev)) {
+        break;
+      }
     }
-    return pos;
+
+    return prev;
   },
   _callOnChange: function(value) {
     if (this.props.valueLink != null) {
@@ -169,8 +174,8 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
       var $__0=   this._getSelection(),start=$__0.start,end=$__0.end;
 
       if (start === end) {
-        start = e.key === 'Delete' ? this._seekNext(start - 1) : this._seekPrev(start);
-        end = this._seekNext(start);
+        start = e.key === 'Delete' ? this._nextNonMaskIdx(start - 1) : this._prevNonMaskIdx(start);
+        end = this._nextNonMaskIdx(start);
       }
 
       var value;
@@ -199,45 +204,43 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
     this._callOnComplete(value);
   },
   _maskedValue: function(value, start) {
-    if (start == null) {
-      start = 0;
-    }
+    start = start || 0;
 
-    var bufferPos = start;
-    var valuePos = 0;
-    for (; bufferPos < this.props.mask.length; ++bufferPos, ++valuePos) {
-      if (this._buffer[bufferPos] !== value[valuePos]) {
+    var bufferIdx = start;
+    var valueIdx = 0;
+    for (; bufferIdx < this.props.mask.length; ++bufferIdx, ++valueIdx) {
+      if (this._buffer[bufferIdx] !== value[valueIdx]) {
         break;
       }
     }
 
     var originalCursorPos = this._cursorPos = this._getSelection().start;
-    for (; bufferPos < this.props.mask.length; ++bufferPos)  {
-      var pattern = this._getPattern(bufferPos);
-      if (pattern != null) {
-        this._buffer[bufferPos] = this._getFormatChar(bufferPos);
-        while (valuePos < value.length) {
-          var c = value[valuePos++];
+    for (; bufferIdx < this.props.mask.length; ++bufferIdx)  {
+      var pattern = this._getPattern(bufferIdx);
+      if (pattern) {
+        this._buffer[bufferIdx] = this._getFormatChar(bufferIdx);
+        while (valueIdx < value.length) {
+          var c = value[valueIdx++];
           if (pattern.test(c)) {
-            this._buffer[bufferPos] = c;
+            this._buffer[bufferIdx] = c;
             break;
           }
-          else if (this._cursorPos > bufferPos) {
+          else if (this._cursorPos > bufferIdx) {
             this._cursorPos--;
           }
         }
 
-        if (valuePos >= value.length) {
-          this._resetBuffer(bufferPos + 1, this.props.mask.length);
+        if (valueIdx >= value.length) {
+          this._resetBuffer(bufferIdx + 1, this.props.mask.length);
           break;
         }
       }
       else {
-        if (valuePos <= originalCursorPos) {
+        if (valueIdx <= originalCursorPos) {
           this._cursorPos++;
         }
-        if (this._buffer[bufferPos] === value[valuePos]) {
-          valuePos++;
+        if (this._buffer[bufferIdx] === value[valueIdx]) {
+          valueIdx++;
         }
       }
     }
@@ -248,7 +251,7 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
 
 module.exports = MaskedInput;
 
-},{"./SelectionUtils":2,"react":"react"}],2:[function(require,module,exports){
+},{"./SelectionUtils":2,"./formatValidator":3,"react":"react"}],2:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -280,5 +283,24 @@ module.exports = {
   }
 };
 
-},{}]},{},[1])(1)
+},{}],3:[function(require,module,exports){
+'use strict';
+
+// TODO: Maybe make this a separate file?
+var React = (window ? window.React : null) || require('react');
+
+module.exports = function (props, propName, componentName) {
+  var result = React.PropTypes.string.apply(null, arguments);
+
+  if (result === null && props.mask != null && props.format != null &&
+      props.format.length !== 1 && props.format.length !== props.mask.length) {
+    var msg = 'Invalid prop `' + propName + '` supplied to `' + componentName +
+      '`, length must be 1 or match the length of prop `mask`.';
+    result = new Error(msg);
+  }
+
+  return result;
+};
+
+},{"react":"react"}]},{},[1])(1)
 });
