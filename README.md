@@ -1,20 +1,20 @@
-# React Masked Input [![Build Status](https://ci.solanolabs.com:443/ZenPayroll/react-masked-input/badges/branches/master?badge_token=794c1568edddf9a8b00392fdc577a476be3f6c10)](https://ci.solanolabs.com:443/ZenPayroll/react-masked-input/suites/195735)
+# React Masked Field [![Build Status](https://ci.solanolabs.com:443/ZenPayroll/react-masked-input/badges/branches/master?badge_token=794c1568edddf9a8b00392fdc577a476be3f6c10)](https://ci.solanolabs.com:443/ZenPayroll/react-masked-input/suites/195735)
 
-A masked input component built in React.
+A masked field component built in React.
 
-The `MaskedInput` component is a text input field that allows you to restrict and format the values that can be entered into it, while informing the user of the expected input. Common uses include dates, phone numbers, social security numbers and tax IDs.
+The `MaskedField` component is a text input field that allows you to restrict and format the values that can be entered into it, while informing the user of the expected input. Common uses include dates, phone numbers, social security numbers and tax IDs.
 
 ## Example
 
 ```js
-var MaskedInput = require('react-masked-input');
+var MaskedField = require('react-masked-field');
 
 function handleComplete(date) {
   console.log('Date is ' + date);
 }
 
 React.render(
-  <MaskedInput mask="99/99/9999" onComplete={handleComplete} />,
+  <MaskedField mask="99/99/9999" onComplete={handleComplete} />,
   document.getElementById('demo')
 );
 ```
@@ -24,7 +24,7 @@ React.render(
 Install from npm:
 
 ```
-npm install react-masked-input
+npm install react-masked-field
 ```
 
 A standalone build is also available in the `dist` folder.
@@ -34,7 +34,7 @@ A standalone build is also available in the `dist` folder.
 #### `mask`
 string *optional*
 
-The mask applied to the value of the input. For each character of the mask that matches a `translation`, the input character will be restricted to the corresponding regular expression. If no mask is provided, it will function like a normal `input` element.
+The mask applied to the value of the field. For each character of the mask that matches a `translation`, the input character will be restricted to the corresponding regular expression. If no mask is provided, it will function like a normal `input` element.
 
 #### `format`
 string *optional*  
@@ -58,10 +58,10 @@ Additional (or overridden) translations for converting mask characters to regula
 #### `onComplete`
 function *optional*
 
-The `onComplete` event is triggered when the mask has been completely filled. The `value` of the input is passed to the event handler.
+The `onComplete` event is triggered when the mask has been completely filled. The `value` of the field is passed to the event handler.
 
 ### Other props
-In addition to the props above, `MaskedInput` should handle all supported `input` props.
+In addition to the props above, `MaskedField` should handle all supported `input` props.
 
 ## License
 

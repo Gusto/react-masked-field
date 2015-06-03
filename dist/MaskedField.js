@@ -1,7 +1,8 @@
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.MaskedField = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
 var React = (window ? window.React : null) || require('react');
-var {getSelection, setSelection} = require('./SelectionUtils');
+var $__0=   require('./SelectionUtils'),getSelection=$__0.getSelection,setSelection=$__0.setSelection;
 var formatValidator = require('./formatValidator');
 
 var DEFAULT_TRANSLATIONS = {
@@ -10,7 +11,7 @@ var DEFAULT_TRANSLATIONS = {
   '*': /[A-Za-z0-9]/
 };
 
-var MaskedInput = React.createClass({
+var MaskedField = React.createClass({displayName: "MaskedField",
   propTypes: {
     mask: React.PropTypes.string,
     format: formatValidator,
@@ -75,7 +76,7 @@ var MaskedInput = React.createClass({
       props = {};
     }
 
-    return <input {...this.props} {...props} />;
+    return React.createElement("input", React.__spread({},  this.props,  props));
   },
   _getSelection: function() {
     if (this.isMounted()) {
@@ -157,12 +158,12 @@ var MaskedInput = React.createClass({
     if (value !== this.state.value) {
       this._callOnChange(value);
     }
-    this.setState({value});
+    this.setState({value:value});
   },
   _handleFocus: function(e) {
-    setTimeout(() => {
+    setTimeout(function()  {
       this._setSelection(this._cursorPos);
-    }, 0);
+    }.bind(this), 0);
 
     if (this.props.onFocus) {
       this.props.onFocus(e);
@@ -170,7 +171,7 @@ var MaskedInput = React.createClass({
   },
   _handleKeyDown: function(e) {
     if (e.key === 'Backspace' || e.key === 'Delete') {
-      var {start, end} = this._getSelection();
+      var $__0=   this._getSelection(),start=$__0.start,end=$__0.end;
 
       if (start === end) {
         start = e.key === 'Delete' ? this._nextNonMaskIdx(start - 1) : this._prevNonMaskIdx(start);
@@ -248,4 +249,58 @@ var MaskedInput = React.createClass({
   }
 });
 
-module.exports = MaskedInput;
+module.exports = MaskedField;
+
+},{"./SelectionUtils":2,"./formatValidator":3,"react":"react"}],2:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+  getSelection: function(node) {
+    var start, end;
+    if (node.setSelectionRange != null) {
+      start = node.selectionStart;
+      end = node.selectionEnd;
+    }
+    else {
+      var range = document.selection.createRange();
+      start = 0 - range.duplicate().moveStart('character', -100000);
+      end = start + range.text.length;
+    }
+
+    return {start:start, end:end};
+  },
+  setSelection: function(node, start, end) {
+    if (node.setSelectionRange != null) {
+      node.setSelectionRange(start, end);
+    }
+    else {
+      var range = node.createTextRange();
+      range.collapse(true);
+      range.moveEnd('character', start);
+      range.moveStart('character', end);
+      range.select();
+    }
+  }
+};
+
+},{}],3:[function(require,module,exports){
+'use strict';
+
+// TODO: Maybe make this a separate file?
+var React = (window ? window.React : null) || require('react');
+
+module.exports = function (props, propName, componentName) {
+  var result = React.PropTypes.string.apply(null, arguments);
+
+  if (result === null && props.mask != null && props.format != null &&
+      props.format.length !== 1 && props.format.length !== props.mask.length) {
+    var msg = 'Invalid prop `' + propName + '` supplied to `' + componentName +
+      '`, length must be 1 or match the length of prop `mask`.';
+    result = new Error(msg);
+  }
+
+  return result;
+};
+
+},{"react":"react"}]},{},[1])(1)
+});

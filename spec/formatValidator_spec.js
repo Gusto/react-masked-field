@@ -5,7 +5,7 @@ var expect = require('chai').expect;
 
 describe('formatValidator', function () {
   var props;
-  var validate = () => formatValidator(props, 'format', 'MaskedInput');
+  var validate = () => formatValidator(props, 'format', 'MaskedField');
 
   function itReturnsNull() {
     it('returns null', () => expect(validate()).to.be.null);

@@ -1,19 +1,21 @@
 'use strict';
 
 var React = window.React;
-var MaskedInput = window.MaskedInput;
+var MaskedField = window.MaskedField;
 
 var demoNode = document.getElementById('demo');
-function addInput(mask) {
-  var label = mask;
+function addField(label, mask) {
+  var label = label + ' ' + mask;
   demoNode.appendChild(document.createTextNode(label));
   var container = document.createElement('div');
   demoNode.appendChild(container);
 
   React.render(
-    React.createElement(MaskedInput, {mask: mask}),
+    React.createElement(MaskedField, {mask: mask}),
     container
   );
 }
 
-addInput('99/99/9999');
+addField('Date', '99/99/9999');
+addField('Phone number', '(999) 999-9999');
+addField('SSN', '999-99-9999');

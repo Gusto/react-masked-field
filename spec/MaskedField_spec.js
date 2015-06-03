@@ -3,29 +3,29 @@
 var React = require('react');
 var TestUtils = require('react/lib/ReactTestUtils');
 var LinkedStateMixin = require('react/lib/LinkedStateMixin');
-var MaskedInput = require('../src/MaskedInput');
+var MaskedField = require('../src/MaskedField');
 var EventUtils = require('./EventUtils');
 var chai = require('chai');
 var expect = chai.expect;
 var sinon = require('sinon');
 chai.use(require('sinon-chai'));
 
-describe('MaskedInput', function() {
+describe('MaskedField', function() {
   var container;
   var component;
   var domNode;
-  var getInput;
+  var getField;
   var props = {};
 
   // FIXME:
   // - undo?
 
-  function getInputValue() {
-    return TestUtils.findRenderedDOMComponentWithTag(getInput(), 'input').getDOMNode().value;
+  function getFieldValue() {
+    return TestUtils.findRenderedDOMComponentWithTag(getField(), 'input').getDOMNode().value;
   }
 
   function cursorPosShouldEql(pos) {
-    expect(getInput()._getSelection()).to.eql({start: pos, end: pos});
+    expect(getField()._getSelection()).to.eql({start: pos, end: pos});
   }
 
   function simulateFocus(cb) {
@@ -72,7 +72,7 @@ describe('MaskedInput', function() {
           });
 
           it('adds the character to the value', function() {
-            expect(getInputValue()[0]).to.equal('2');
+            expect(getFieldValue()[0]).to.equal('2');
           });
 
           it('moves the cursor to the correct position', function() {
@@ -80,7 +80,7 @@ describe('MaskedInput', function() {
           });
 
           it('correctly shifts the mask characters', function() {
-            expect(getInputValue()).to.equal('2_/__/____');
+            expect(getFieldValue()).to.equal('2_/__/____');
           });
 
           it('calls the onChange callback', function() {
@@ -102,7 +102,7 @@ describe('MaskedInput', function() {
             });
 
             it('moves the cursor past the mask character', function() {
-              expect(getInputValue()).to.equal('23/__/____');
+              expect(getFieldValue()).to.equal('23/__/____');
               cursorPosShouldEql(3);
             });
           });
@@ -110,12 +110,12 @@ describe('MaskedInput', function() {
           context('when the cursor is in the middle of the value', function() {
             beforeEach(function() {
               simulateTyping('34');
-              getInput()._setSelection(1);
+              getField()._setSelection(1);
               simulateKeyPress('5');
             });
 
             it('adds the character to the value', function() {
-              expect(getInputValue()[1]).to.equal('5');
+              expect(getFieldValue()[1]).to.equal('5');
             });
 
             it('moves the cursor to the correct position', function() {
@@ -123,15 +123,15 @@ describe('MaskedInput', function() {
             });
           });
 
-          context('when input text is selected', function() {
+          context('when field text is selected', function() {
             beforeEach(function() {
               simulateTyping('345');
-              getInput()._setSelection(1, 5);
+              getField()._setSelection(1, 5);
               simulateKeyPress('6');
             });
 
             it('replaces the selected characters', function() {
-              expect(getInputValue().substring(1, 5)).to.equal('6/__');
+              expect(getFieldValue().substring(1, 5)).to.equal('6/__');
             });
 
             it('moves the cursor to the correct position', function() {
@@ -139,7 +139,7 @@ describe('MaskedInput', function() {
             });
 
             it('correctly shifts the mask characters', function() {
-              expect(getInputValue()).to.equal('26/__/____');
+              expect(getFieldValue()).to.equal('26/__/____');
             });
 
             it('calls the onChange callback', function() {
@@ -165,7 +165,7 @@ describe('MaskedInput', function() {
           });
 
           it("doesn't change the value", function() {
-            expect(getInputValue()).to.equal('__/__/____');
+            expect(getFieldValue()).to.equal('__/__/____');
           });
 
           it("doesn't change the cursor position", function() {
@@ -179,12 +179,12 @@ describe('MaskedInput', function() {
           context('when the cursor is in the middle of the value', function() {
             beforeEach(function() {
               simulateTyping('123');
-              getInput()._setSelection(1);
+              getField()._setSelection(1);
               simulateKeyPress('A');
             });
 
             it("doesn't change the value", function() {
-              expect(getInputValue()).to.equal('12/3_/____');
+              expect(getFieldValue()).to.equal('12/3_/____');
             });
 
             it("doesn't change the cursor position", function() {
@@ -192,15 +192,15 @@ describe('MaskedInput', function() {
             });
           });
 
-          context('when input text is selected', function() {
+          context('when field text is selected', function() {
             beforeEach(function() {
               simulateTyping('12345');
-              getInput()._setSelection(1, 5);
+              getField()._setSelection(1, 5);
               simulateKeyPress('A');
             });
 
             it('removes the selected characters', function() {
-              expect(getInputValue().substring(1, 5)).to.equal('5/__');
+              expect(getFieldValue().substring(1, 5)).to.equal('5/__');
             });
 
             it('moves the cursor to the correct position', function() {
@@ -208,7 +208,7 @@ describe('MaskedInput', function() {
             });
 
             it('correctly shifts the mask characters', function() {
-              expect(getInputValue()).to.equal('15/__/____');
+              expect(getFieldValue()).to.equal('15/__/____');
             });
           });
         });
@@ -221,7 +221,7 @@ describe('MaskedInput', function() {
         });
 
         it('removes the preceding character', function() {
-          expect(getInputValue()[3]).to.equal('_');
+          expect(getFieldValue()[3]).to.equal('_');
         });
 
         it('moves the cursor to the correct position', function() {
@@ -229,7 +229,7 @@ describe('MaskedInput', function() {
         });
 
         it('correctly shifts the mask characters', function() {
-          expect(getInputValue()).to.equal('12/__/____');
+          expect(getFieldValue()).to.equal('12/__/____');
         });
 
         context('when the previous character is a mask character', function() {
@@ -238,7 +238,7 @@ describe('MaskedInput', function() {
           });
 
           it('removes the preceding non-mask character', function() {
-            expect(getInputValue()[1]).to.equal('_');
+            expect(getFieldValue()[1]).to.equal('_');
           });
 
           it('moves the cursor to the correct position', function() {
@@ -246,7 +246,7 @@ describe('MaskedInput', function() {
           });
 
           it('correctly shifts the mask characters', function() {
-            expect(getInputValue()).to.equal('1_/__/____');
+            expect(getFieldValue()).to.equal('1_/__/____');
           });
 
           describe('typing another character', function() {
@@ -263,35 +263,35 @@ describe('MaskedInput', function() {
         context('when the next character is a mask character', function() {
           beforeEach(function() {
             simulateKeyPress('3');
-            getInput()._setSelection(2);
+            getField()._setSelection(2);
             simulateKeyDown('Backspace');
           });
 
           it('correctly shifts the non-mask characters', function() {
-            expect(getInputValue()).to.equal('13/__/____');
+            expect(getFieldValue()).to.equal('13/__/____');
           });
         });
 
         context('when the cursor is at the beginning', function() {
           beforeEach(function() {
-            getInput()._setSelection(0);
+            getField()._setSelection(0);
             simulateKeyDown('Backspace');
           });
 
           it("doesn't change the value", function() {
-            expect(getInputValue()).to.equal('12/__/____');
+            expect(getFieldValue()).to.equal('12/__/____');
           });
         });
 
-        context('when input text is selected', function() {
+        context('when field text is selected', function() {
           beforeEach(function() {
             simulateTyping('345');
-            getInput()._setSelection(1, 4);
+            getField()._setSelection(1, 4);
             simulateKeyDown('Backspace');
           });
 
           it('removes the selected characters', function() {
-            expect(getInputValue().substring(1, 4)).to.equal('4/5');
+            expect(getFieldValue().substring(1, 4)).to.equal('4/5');
           });
 
           it('moves the cursor to the correct position', function() {
@@ -299,7 +299,7 @@ describe('MaskedInput', function() {
           });
 
           it('correctly shifts the mask characters', function() {
-            expect(getInputValue()).to.equal('14/5_/____');
+            expect(getFieldValue()).to.equal('14/5_/____');
           });
         });
       });
@@ -318,12 +318,12 @@ describe('MaskedInput', function() {
 
         beforeEach(function() {
           simulateTyping('1234');
-          getInput()._setSelection(1);
+          getField()._setSelection(1);
           simulateKeyDown('Delete');
         });
 
         it('removes the following non-mask character', function() {
-          expect(getInputValue()[3]).to.equal('4');
+          expect(getFieldValue()[3]).to.equal('4');
         });
 
         it("doesn't move the cursor", function() {
@@ -331,7 +331,7 @@ describe('MaskedInput', function() {
         });
 
         it('correctly shifts the mask characters', function() {
-          expect(getInputValue()).to.equal('13/4_/____');
+          expect(getFieldValue()).to.equal('13/4_/____');
         });
 
         it('calls the onKeyDown callback', function() {
@@ -340,12 +340,12 @@ describe('MaskedInput', function() {
 
         context('when the following character is a mask character', function() {
           beforeEach(function() {
-            getInput()._setSelection(2);
+            getField()._setSelection(2);
             simulateKeyDown('Delete');
           });
 
           it('removes the following non-mask character', function() {
-            expect(getInputValue()[3]).to.equal('_');
+            expect(getFieldValue()[3]).to.equal('_');
           });
 
           it('moves the cursor to the correct position', function() {
@@ -353,19 +353,19 @@ describe('MaskedInput', function() {
           });
 
           it('correctly shifts the mask characters', function() {
-            expect(getInputValue()).to.equal('13/__/____');
+            expect(getFieldValue()).to.equal('13/__/____');
           });
         });
 
-         context('when input text is selected', function() {
+         context('when field text is selected', function() {
           beforeEach(function() {
             simulateTyping('25');
-            getInput()._setSelection(1, 4);
+            getField()._setSelection(1, 4);
             simulateKeyDown('Delete');
           });
 
           it('removes the selected characters', function() {
-            expect(getInputValue().substring(1, 4)).to.equal('3/4');
+            expect(getFieldValue().substring(1, 4)).to.equal('3/4');
           });
 
           it("doesn't move the cursor", function() {
@@ -373,7 +373,7 @@ describe('MaskedInput', function() {
           });
 
           it('correctly shifts the mask characters', function() {
-            expect(getInputValue()).to.equal('13/4_/____');
+            expect(getFieldValue()).to.equal('13/4_/____');
           });
         });
       });
@@ -401,7 +401,7 @@ describe('MaskedInput', function() {
           });
 
           it('adds the content to the value', function() {
-            expect(getInputValue()).to.equal('12/34/5___');
+            expect(getFieldValue()).to.equal('12/34/5___');
           });
 
           it('moves the cursor to the correct position', function() {
@@ -432,14 +432,14 @@ describe('MaskedInput', function() {
             });
           });
 
-          context('when input text is selected', function() {
+          context('when field text is selected', function() {
             beforeEach(function() {
-              getInput()._setSelection(1, 5);
+              getField()._setSelection(1, 5);
               simulatePaste('67');
             });
 
             it('replaces the selected characters', function() {
-              expect(getInputValue().substring(1, 5)).to.equal('6/75');
+              expect(getFieldValue().substring(1, 5)).to.equal('6/75');
             });
 
             // TODO: Is this the right behavior?
@@ -448,7 +448,7 @@ describe('MaskedInput', function() {
             });
 
             it('correctly shifts the mask characters', function() {
-              expect(getInputValue()).to.equal('16/75/____');
+              expect(getFieldValue()).to.equal('16/75/____');
             });
 
           });
@@ -461,21 +461,21 @@ describe('MaskedInput', function() {
           });
 
           it('adds the valid content to the value', function() {
-            expect(getInputValue()).to.equal('12/34/5___');
+            expect(getFieldValue()).to.equal('12/34/5___');
           });
 
           it('moves the cursor to the correct position', function() {
             cursorPosShouldEql(7);
           });
 
-          context('when input text is selected', function() {
+          context('when field text is selected', function() {
             beforeEach(function() {
-              getInput()._setSelection(1, 5);
+              getField()._setSelection(1, 5);
               simulatePaste('6a7b');
             });
 
             it('replaces the selected characters', function() {
-              expect(getInputValue().substring(1, 5)).to.equal('6/75');
+              expect(getFieldValue().substring(1, 5)).to.equal('6/75');
             });
 
             it('moves the cursor to the correct position', function() {
@@ -483,7 +483,7 @@ describe('MaskedInput', function() {
             });
 
             it('correctly shifts the mask characters', function() {
-              expect(getInputValue()).to.equal('16/75/____');
+              expect(getFieldValue()).to.equal('16/75/____');
             });
           });
         });
@@ -498,12 +498,12 @@ describe('MaskedInput', function() {
       describe('pressing the backspace key', function() {
         beforeEach(function() {
           simulateTyping('a12');
-          getInput()._setSelection(1);
+          getField()._setSelection(1);
           simulateKeyDown('Backspace');
         });
 
         it('removes the preceding character', function() {
-          expect(getInputValue()[0]).to.equal('_');
+          expect(getFieldValue()[0]).to.equal('_');
         });
 
         it('moves the cursor to the correct position', function() {
@@ -511,7 +511,7 @@ describe('MaskedInput', function() {
         });
 
         it('correctly shifts the mask characters', function() {
-          expect(getInputValue()).to.equal('_-12');
+          expect(getFieldValue()).to.equal('_-12');
         });
       });
     });
@@ -522,7 +522,7 @@ describe('MaskedInput', function() {
       });
 
       it('sets the placeholder correctly', function() {
-        expect(getInputValue()).to.equal('________');
+        expect(getFieldValue()).to.equal('________');
       });
 
       describe('pressing the enter key', function() {
@@ -543,7 +543,7 @@ describe('MaskedInput', function() {
         });
 
         it("doesn't change the value", function() {
-          expect(getInputValue()).to.equal('________');
+          expect(getFieldValue()).to.equal('________');
         });
 
         it('calls the onKeyPress callback', function() {
@@ -570,7 +570,7 @@ describe('MaskedInput', function() {
           });
 
           it('adds the content to the value', function() {
-            expect(getInputValue()).to.equal('21-12345678');
+            expect(getFieldValue()).to.equal('21-12345678');
           });
         });
       });
@@ -578,7 +578,7 @@ describe('MaskedInput', function() {
       describe('pressing the backspace key', function() {
         context('when the entire mask is selected', function() {
           beforeEach(function() {
-            getInput()._setSelection(0, 11);
+            getField()._setSelection(0, 11);
             simulateKeyDown('Backspace');
           });
 
@@ -604,7 +604,7 @@ describe('MaskedInput', function() {
         });
 
         it('contains the initial value', function() {
-          expect(getInputValue()).to.equal('123abc');
+          expect(getFieldValue()).to.equal('123abc');
         });
       });
 
@@ -614,7 +614,7 @@ describe('MaskedInput', function() {
         });
 
         it('adds the characters to the value', function() {
-          expect(getInputValue()).to.equal('1a2b3c');
+          expect(getFieldValue()).to.equal('1a2b3c');
         });
 
         it('moves the cursor to the correct position', function() {
@@ -638,7 +638,7 @@ describe('MaskedInput', function() {
           });
 
           it('adds the character to the value', function() {
-            expect(getInputValue()[0]).to.equal('F');
+            expect(getFieldValue()[0]).to.equal('F');
           });
 
           it('moves the cursor to the correct position', function() {
@@ -652,7 +652,7 @@ describe('MaskedInput', function() {
           });
 
           it("doesn't change the value", function() {
-            expect(getInputValue()).to.equal('___');
+            expect(getFieldValue()).to.equal('___');
           });
 
           it("doesn't change the cursor position", function() {
@@ -675,14 +675,14 @@ describe('MaskedInput', function() {
   context("when the component isn't controlled", function() {
     before(function() {
       delete props.value;
-      getInput = () => component;
+      getField = () => component;
     });
 
     beforeEach(function(done) {
       if (props.value != null && props.onChange == null) {
         props.readOnly = true;
       }
-      component = React.render(<MaskedInput {...props} />, container);
+      component = React.render(<MaskedField {...props} />, container);
       domNode = component.getDOMNode();
 
       simulateFocus(done);
@@ -704,13 +704,13 @@ describe('MaskedInput', function() {
           });
 
           it('fills in the placeholder with the format characters', function() {
-            expect(getInputValue()).to.equal('mm/dd/yyyy');
+            expect(getFieldValue()).to.equal('mm/dd/yyyy');
           });
         });
 
         context('when no format is given', function() {
           it('fills in the placeholder with the default character', function() {
-            expect(getInputValue()).to.equal('__/__/____');
+            expect(getFieldValue()).to.equal('__/__/____');
           });
         });
       });
@@ -736,11 +736,11 @@ describe('MaskedInput', function() {
       },
       render: function() {
         return (
-          <MaskedInput
+          <MaskedField
             {...this.props}
             value={this.state.value}
             onChange={this.handleChange}
-            ref="input"
+            ref="field"
           />
         );
       }
@@ -748,7 +748,7 @@ describe('MaskedInput', function() {
 
     before(function() {
       props.value = '';
-      getInput = () => component.refs.input;
+      getField = () => component.refs.field;
     });
 
     beforeEach(function(done) {
@@ -831,13 +831,13 @@ describe('MaskedInput', function() {
           });
 
           it('fills in the missing characters with the format characters', function() {
-            expect(getInputValue()).to.equal('12/34/56yy');
+            expect(getFieldValue()).to.equal('12/34/56yy');
           });
         });
 
         context('when no format is given', function() {
           it('fills in the missing characters with the default character', function() {
-            expect(getInputValue()).to.equal('12/34/56__');
+            expect(getFieldValue()).to.equal('12/34/56__');
           });
         });
       });
@@ -854,12 +854,12 @@ describe('MaskedInput', function() {
         return {value: this.props.value};
       },
       render: function() {
-        return <MaskedInput {...this.props} valueLink={this.linkState('value')} ref="input" />;
+        return <MaskedField {...this.props} valueLink={this.linkState('value')} ref="field" />;
       }
     });
 
     before(function() {
-      getInput = () => component.refs.input;
+      getField = () => component.refs.field;
     });
 
     beforeEach(function(done) {
@@ -881,8 +881,8 @@ describe('MaskedInput', function() {
         value = '';
       });
 
-      it('sets the input value', function() {
-        expect(getInputValue()).to.equal('12/34/5___');
+      it('sets the field value', function() {
+        expect(getFieldValue()).to.equal('12/34/5___');
       });
 
       it('sets the state of the parent component', function() {
