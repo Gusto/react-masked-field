@@ -589,6 +589,24 @@ describe('MaskedField', function() {
       });
     });
 
+    context("when the mask is 'ZZ-999-ZZ-999'", function() {
+      before(function() {
+        props.mask = 'ZZ-999-ZZ-999';
+      });
+
+      describe('pasting', function() {
+        context('when the cursor is at the beginning', function() {
+          beforeEach(function() {
+            simulatePaste('123123');
+          });
+
+          it('adds the content to the value', function() {
+            expect(getFieldValue()).to.equal('ZZ-123-ZZ-123');
+          });
+        });
+      });
+    });
+
     context('when there is no mask', function() {
       before(function() {
         delete props.mask;
