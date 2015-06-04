@@ -1,4 +1,4 @@
-# React Masked Field [![Build Status](https://ci.solanolabs.com:443/ZenPayroll/react-masked-input/badges/branches/master?badge_token=794c1568edddf9a8b00392fdc577a476be3f6c10)](https://ci.solanolabs.com:443/ZenPayroll/react-masked-input/suites/195735)
+# React Masked Field [![Build Status](https://ci.solanolabs.com:443/ZenPayroll/react-masked-field/badges/branches/master?badge_token=6a04ee4cc963ca172ff97f2dac0723b8d8977f0a)](https://ci.solanolabs.com:443/ZenPayroll/react-masked-field/suites/244347)
 
 A masked field component built in React.
 
