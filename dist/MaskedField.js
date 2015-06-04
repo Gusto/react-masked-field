@@ -206,16 +206,8 @@ var MaskedField = React.createClass({displayName: "MaskedField",
   _maskedValue: function(value, start) {
     start = start || 0;
 
-    var bufferIdx = start;
-    var valueIdx = 0;
-    for (; bufferIdx < this.props.mask.length; ++bufferIdx, ++valueIdx) {
-      if (this._buffer[bufferIdx] !== value[valueIdx]) {
-        break;
-      }
-    }
-
     var originalCursorPos = this._cursorPos = this._getSelection().start;
-    for (; bufferIdx < this.props.mask.length; ++bufferIdx)  {
+    for (var bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; ++bufferIdx)  {
       var pattern = this._getPattern(bufferIdx);
       if (pattern) {
         this._buffer[bufferIdx] = this._getFormatChar(bufferIdx);

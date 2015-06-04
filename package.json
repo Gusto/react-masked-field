@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "karma start karma.dev.js",
-    "build": "browserify --external react --standalone MaskedField -o dist/MaskedField.js . && ./node_modules/uglify-js/bin/uglifyjs dist/MaskedField.js -cm -o dist/MaskedField.min.js",
+    "build": "browserify --external react --standalone MaskedField -o dist/MaskedField.js . && uglifyjs dist/MaskedField.js -cm -o dist/MaskedField.min.js",
     "test": "karma start karma.ci.js",
     "lint": "eslint ."
   },
