@@ -1,0 +1,48 @@
+{
+  "name": "react-masked-field",
+  "description": "A masked field component built in React",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZenPayroll/react-masked-input.git"
+  },
+  "main": "src/MaskedField.js",
+  "files": [
+    "demo/",
+    "src/"
+  ],
+  "peerDependencies": {
+    "react": "^0.13.3"
+  },
+  "dependencies": {
+    "reactify": "^1.1.1"
+  },
+  "devDependencies": {
+    "browserify": "^10.2.1",
+    "chai": "^2.3.0",
+    "eslint": "^0.21.2",
+    "eslint-plugin-react": "^2.3.0",
+    "karma": "^0.12.33",
+    "karma-browserify": "^4.2.1",
+    "karma-chrome-launcher": "^0.1.12",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-mocha": "^0.1.10",
+    "mocha": "^2.2.5",
+    "react": "^0.13.3",
+    "sinon": "^1.14.1",
+    "sinon-chai": "^2.7.0",
+    "uglify-js": "^2.4.23"
+  },
+  "scripts": {
+    "start": "karma start karma.dev.js",
+    "build": "browserify --external react --standalone MaskedField -o dist/MaskedField.js . && uglifyjs dist/MaskedField.js -cm -o dist/MaskedField.min.js",
+    "test": "karma start karma.ci.js",
+    "lint": "eslint ."
+  },
+  "browserify": {
+    "transform": [
+      ["reactify", {"es6": true}]
+    ]
+  }
+}
