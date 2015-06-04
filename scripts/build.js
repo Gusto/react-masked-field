@@ -7,8 +7,8 @@ var fs = require('fs');
 var UglifyJS = require('uglify-js');
 var packageData = require('../package.json');
 
-var distFile = './dist/MaskedField.js';
-var minDistFile = './dist/MaskedField.min.js';
+var distFile = './dist/react-masked-field.js';
+var minDistFile = './dist/react-masked-field.min.js';
 var header = '/**\n* ' + packageData.name + ' ' + packageData.version + '\n';
 var fullHeader = header +
 '*\n\

@@ -288,7 +288,6 @@ module.exports = {
 },{}],3:[function(require,module,exports){
 'use strict';
 
-// TODO: Maybe make this a separate file?
 var React = (window ? window.React : null) || require('react');
 
 module.exports = function (props, propName, componentName) {
