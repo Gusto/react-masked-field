@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ZenPayroll/react-masked-input.git"
+    "url": "https://github.com/ZenPayroll/react-masked-field.git"
   },
   "main": "src/MaskedField.js",
   "files": [
@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "karma start karma.dev.js",
-    "build": "browserify --external react --standalone MaskedField -o dist/MaskedField.js . && uglifyjs dist/MaskedField.js -cm -o dist/MaskedField.min.js",
+    "build": "./scripts/build.js",
     "test": "karma start karma.ci.js",
     "lint": "eslint ."
   },
