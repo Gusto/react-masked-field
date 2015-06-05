@@ -54,7 +54,6 @@ var MaskedField = React.createClass({displayName: "MaskedField",
       }
     }
 
-    this._cursorPos = this._firstNonMaskIdx;
     return {
       // TODO: Any way we can do this in one pass?
       value: this._maskedValue(this._getPropsValue() || '')
@@ -93,7 +92,8 @@ var MaskedField = React.createClass({displayName: "MaskedField",
       return getSelection(this.getDOMNode());
     }
     else {
-      return {start: 0, end: 0};
+      var cursorPos = (this._getPropsValue() || '').length;
+      return {start: cursorPos, end: cursorPos};
     }
   },
   _setSelection: function(start, end) {
