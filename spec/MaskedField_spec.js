@@ -484,6 +484,24 @@ describe('MaskedField', function() {
           });
         });
       });
+
+      describe('setting an initial value', function() {
+        before(function() {
+          props.value = '0101201';
+        });
+
+        after(function() {
+          delete props.value;
+        });
+
+        it('correctly masks the initial value', function() {
+          expect(getFieldValue()).to.equal('01/01/201_');
+        });
+
+        it('moves the cursor to the correct position', function() {
+          cursorPosShouldEql(9);
+        });
+      });
     });
 
     context("when the mask is 'a-99'", function() {
