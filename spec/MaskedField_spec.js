@@ -28,15 +28,11 @@ describe('MaskedField', function() {
     expect(getField()._getSelection()).to.eql({start: pos, end: pos});
   }
 
-  function simulateFocus(cb) {
-    TestUtils.Simulate.focus(domNode);
-    setTimeout(cb, 0);
-  }
-
   var simulateKeyPress = key => EventUtils.simulateKeyPress(domNode, key);
   var simulateKeyDown = key => EventUtils.simulateKeyDown(domNode, key);
   var simulatePaste = content => EventUtils.simulateChange(domNode, content);
   var simulateTyping = content => EventUtils.simulateTyping(domNode, content);
+  var simulateFocus = cb => EventUtils.simulateFocus(domNode, cb);
 
   function setupTests(additionalTests) {
     context("when the mask is '99/99/9999'", function() {
