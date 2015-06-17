@@ -125,13 +125,10 @@ const MaskedField = React.createClass({
     return buffer;
   },
   _isBufferEmpty() {
-    for (let i = 0; i < this.props.mask.length; ++i) {
-      if (this._getPattern(i) && this._buffer[i] !== BLANK_CHAR) {
-        return false;
-      }
-    }
-
-    return true;
+    return this._buffer.every((char, idx) => !this._getPattern(idx) || char === BLANK_CHAR);
+  },
+  _isBufferFull() {
+    return this._buffer.every((char, idx) => !this._getPattern(idx) || char !== BLANK_CHAR);
   },
   _nextNonMaskIdx(idx) {
     let next = idx + 1;
@@ -162,15 +159,7 @@ const MaskedField = React.createClass({
     }
   },
   _callOnComplete(value) {
-    if (this.props.onComplete) {
-      // let bla = this._buffer.every((char, idx) => this._getPattern(idx) && char == BLANK_CHAR);
-
-      for (let i = 0; i < this.props.mask.length; ++i) {
-        if (this._getPattern(i) && this._buffer[i] === BLANK_CHAR) {
-          return;
-        }
-      }
-
+    if (this.props.onComplete && this._isBufferFull()) {
       this.props.onComplete(value);
     }
   },
