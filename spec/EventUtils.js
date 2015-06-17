@@ -1,11 +1,11 @@
 'use strict';
 
-var TestUtils = require('react/lib/ReactTestUtils');
-var {getSelection, setSelection} = require('../src/SelectionUtils');
+const TestUtils = require('react/lib/ReactTestUtils');
+const {getSelection, setSelection} = require('../src/SelectionUtils');
 
 function simulateChange(node, content) {
-  var {start, end} = getSelection(node);
-  var newVal = node.value.substring(0, start) + content + node.value.substr(end);
+  let {start, end} = getSelection(node);
+  let newVal = node.value.substring(0, start) + content + node.value.substr(end);
 
   node.value = newVal;
   setSelection(node, start + content.length, start + content.length);
@@ -13,7 +13,7 @@ function simulateChange(node, content) {
 }
 
 function simulateKeyPress(node, key) {
-  var defaultPrevented = false;
+  let defaultPrevented = false;
   TestUtils.Simulate.keyPress(node, {
     key,
     preventDefault: () => defaultPrevented = true
@@ -29,21 +29,22 @@ function simulateTyping(node, content) {
 }
 
 function simulateKeyDown(node, key) {
-  var defaultPrevented = false;
+  let defaultPrevented = false;
   TestUtils.Simulate.keyDown(node, {
     key,
     preventDefault: () => defaultPrevented = true
   });
 
   if (!defaultPrevented) {
-    var {start, end} = getSelection(node);
-    var prevVal = node.value;
+    let {start, end} = getSelection(node);
+    let prevVal = node.value;
+    let newVal;
     if (start === end) {
       if (key === 'Backspace') {
-        var newVal = prevVal.substring(0, start - 1) + prevVal.substr(end);
+        newVal = prevVal.substring(0, start - 1) + prevVal.substr(end);
       }
       else if (key === 'Delete') {
-        var newVal = prevVal.substring(0, start) + prevVal.substr(end + 1);
+        newVal = prevVal.substring(0, start) + prevVal.substr(end + 1);
       }
     }
     else {

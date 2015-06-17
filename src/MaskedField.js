@@ -7,17 +7,17 @@
 
 'use strict';
 
-var React = (window ? window.React : null) || require('react');
-var {getSelection, setSelection} = require('./SelectionUtils');
-var formatValidator = require('./formatValidator');
+const React = (window ? window.React : null) || require('react');
+const {getSelection, setSelection} = require('./SelectionUtils');
+const formatValidator = require('./formatValidator');
 
-var DEFAULT_TRANSLATIONS = {
+const DEFAULT_TRANSLATIONS = {
   '9': /\d/,
   'a': /[A-Za-z]/,
   '*': /[A-Za-z0-9]/
 };
 
-var MaskedField = React.createClass({
+const MaskedField = React.createClass({
   propTypes: {
     mask: React.PropTypes.string,
     format: formatValidator,
@@ -38,7 +38,7 @@ var MaskedField = React.createClass({
     }
 
     this._buffer = [];
-    for (var idx = 0; idx < this.props.mask.length; ++idx) {
+    for (let idx = 0; idx < this.props.mask.length; ++idx) {
       if (this._getPattern(idx)) {
         if (this._firstNonMaskIdx == null) {
           this._firstNonMaskIdx = idx;
@@ -61,13 +61,13 @@ var MaskedField = React.createClass({
     }
   },
   componentDidMount: function() {
-    var propsValue = this._getPropsValue();
+    let propsValue = this._getPropsValue();
     if (this.props.mask != null && propsValue != null && this.state.value !== propsValue) {
       this._callOnChange(this.state.value);
     }
   },
   render: function() {
-    var props;
+    let props;
     if (this.props.mask != null) {
       props = {
         onChange: this._handleChange,
@@ -88,14 +88,11 @@ var MaskedField = React.createClass({
       return getSelection(this.getDOMNode());
     }
     else {
-      var cursorPos = (this._getPropsValue() || '').length;
+      let cursorPos = (this._getPropsValue() || '').length;
       return {start: cursorPos, end: cursorPos};
     }
   },
-  _setSelection: function(start, end) {
-    if (end == null) {
-      end = start;
-    }
+  _setSelection: function(start, end=start) {
     setSelection(this.getDOMNode(), start, end);
   },
   _getPropsValue: function() {
@@ -107,8 +104,8 @@ var MaskedField = React.createClass({
     }
   },
   _getPattern: function(idx) {
-    var maskChar = this.props.mask[idx];
-    var pattern = this.props.translations ? this.props.translations[maskChar] : null;
+    let maskChar = this.props.mask[idx];
+    let pattern = this.props.translations ? this.props.translations[maskChar] : null;
 
     return pattern || DEFAULT_TRANSLATIONS[maskChar];
   },
@@ -117,29 +114,25 @@ var MaskedField = React.createClass({
     return this.props.format[idx];
   },
   _resetBuffer: function(start, end) {
-    for (var i = start; i < end; ++i) {
+    for (let i = start; i < end; ++i) {
       if (this._getPattern(i)) {
         this._buffer[i] = this._getFormatChar(i);
       }
     }
   },
   _nextNonMaskIdx: function(idx) {
-    for (var next = idx + 1; next < this.props.mask.length; ++next) {
+    for (let next = idx + 1; next < this.props.mask.length; ++next) {
       if (this._getPattern(next)) {
-        break;
+        return next;
       }
     }
-
-    return next;
   },
   _prevNonMaskIdx: function(idx) {
-    for (var prev = idx - 1; prev >= 0; --prev) {
+    for (let prev = idx - 1; prev >= 0; --prev) {
       if (this._getPattern(prev)) {
-        break;
+        return prev;
       }
     }
-
-    return prev;
   },
   _callOnChange: function(value) {
     if (this.props.valueLink != null) {
@@ -151,7 +144,7 @@ var MaskedField = React.createClass({
   },
   _callOnComplete: function(value) {
     if (this.props.onComplete) {
-      for (var i = 0; i < this.props.mask.length; ++i) {
+      for (let i = 0; i < this.props.mask.length; ++i) {
         if (this._getPattern(i) && this._buffer[i] === this._getFormatChar(i)) {
           return;
         }
@@ -177,15 +170,15 @@ var MaskedField = React.createClass({
   },
   _handleKeyDown: function(e) {
     if (e.key === 'Backspace' || e.key === 'Delete') {
-      var {start, end} = this._getSelection();
+      let {start, end} = this._getSelection();
 
       if (start === end) {
         start = e.key === 'Delete' ? this._nextNonMaskIdx(start - 1) : this._prevNonMaskIdx(start);
         end = this._nextNonMaskIdx(start);
       }
 
-      var value;
-      var pattern = this._getPattern(start);
+      let value;
+      let pattern = this._getPattern(start);
       if (pattern && pattern.test(this._buffer[end])) {
         value = this._maskedValue(this.state.value.substring(end), start);
       }
@@ -205,20 +198,18 @@ var MaskedField = React.createClass({
     }
   },
   _handleChange: function(e) {
-    var value = this._maskedValue(e.target.value);
+    let value = this._maskedValue(e.target.value);
     this._setValue(value);
     this._callOnComplete(value);
   },
-  _maskedValue: function(value, start) {
-    start = start || 0;
-
-    var originalCursorPos = this._cursorPos = this._getSelection().start;
-    for (var bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; ++bufferIdx)  {
-      var pattern = this._getPattern(bufferIdx);
+  _maskedValue: function(value, start=0) {
+    let originalCursorPos = this._cursorPos = this._getSelection().start;
+    for (let bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; ++bufferIdx)  {
+      let pattern = this._getPattern(bufferIdx);
       if (pattern) {
         this._buffer[bufferIdx] = this._getFormatChar(bufferIdx);
         while (valueIdx < value.length) {
-          var c = value[valueIdx++];
+          let c = value[valueIdx++];
           if (pattern.test(c)) {
             this._buffer[bufferIdx] = c;
             break;

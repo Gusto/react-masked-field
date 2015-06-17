@@ -1,21 +1,21 @@
 'use strict';
 
-var React = require('react');
-var TestUtils = require('react/lib/ReactTestUtils');
-var LinkedStateMixin = require('react/lib/LinkedStateMixin');
-var MaskedField = require('../src/MaskedField');
-var EventUtils = require('./EventUtils');
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon');
+const React = require('react');
+const TestUtils = require('react/lib/ReactTestUtils');
+const LinkedStateMixin = require('react/lib/LinkedStateMixin');
+const MaskedField = require('../src/MaskedField');
+const EventUtils = require('./EventUtils');
+const chai = require('chai');
+const expect = chai.expect;
+const sinon = require('sinon');
 chai.use(require('sinon-chai'));
 
 describe('MaskedField', function() {
-  var container;
-  var component;
-  var domNode;
-  var getField;
-  var props = {};
+  let container;
+  let component;
+  let domNode;
+  let getField;
+  let props = {};
 
   // FIXME:
   // - undo?
@@ -28,11 +28,11 @@ describe('MaskedField', function() {
     expect(getField()._getSelection()).to.eql({start: pos, end: pos});
   }
 
-  var simulateKeyPress = key => EventUtils.simulateKeyPress(domNode, key);
-  var simulateKeyDown = key => EventUtils.simulateKeyDown(domNode, key);
-  var simulatePaste = content => EventUtils.simulateChange(domNode, content);
-  var simulateTyping = content => EventUtils.simulateTyping(domNode, content);
-  var simulateFocus = cb => EventUtils.simulateFocus(domNode, cb);
+  const simulateKeyPress = key => EventUtils.simulateKeyPress(domNode, key);
+  const simulateKeyDown = key => EventUtils.simulateKeyDown(domNode, key);
+  const simulatePaste = content => EventUtils.simulateChange(domNode, content);
+  const simulateTyping = content => EventUtils.simulateTyping(domNode, content);
+  const simulateFocus = cb => EventUtils.simulateFocus(domNode, cb);
 
   function setupTests(additionalTests) {
     context("when the mask is '99/99/9999'", function() {
@@ -750,7 +750,7 @@ describe('MaskedField', function() {
   });
 
   context('when the component is controlled', function() {
-    var ControlledWrapper = React.createClass({
+    const ControlledWrapper = React.createClass({
       propTypes: {
         value: React.PropTypes.string,
         onChange: React.PropTypes.func
@@ -877,9 +877,9 @@ describe('MaskedField', function() {
   });
 
   context('when the component uses ReactLink', function() {
-    var value = '';
+    let value = '';
 
-    var LinkWrapper = React.createClass({
+    const LinkWrapper = React.createClass({
       propTypes: {value: React.PropTypes.string},
       mixins: [LinkedStateMixin],
       getInitialState: function() {

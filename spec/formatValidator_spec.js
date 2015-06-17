@@ -1,11 +1,11 @@
 'use strict';
 
-var formatValidator = require('../src/formatValidator');
-var expect = require('chai').expect;
+const formatValidator = require('../src/formatValidator');
+const expect = require('chai').expect;
 
 describe('formatValidator', function () {
-  var props;
-  var validate = () => formatValidator(props, 'format', 'MaskedField');
+  let props;
+  let validate = () => formatValidator(props, 'format', 'MaskedField');
 
   function itReturnsNull() {
     it('returns null', () => expect(validate()).to.be.null);
