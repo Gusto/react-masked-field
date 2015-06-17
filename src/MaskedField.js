@@ -29,10 +29,10 @@ const MaskedField = React.createClass({
     onFocus: React.PropTypes.func,
     valueLink: React.PropTypes.object
   },
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {format: '_'};
   },
-  getInitialState: function() {
+  getInitialState() {
     if (this.props.mask == null) {
       return null;
     }
@@ -55,18 +55,18 @@ const MaskedField = React.createClass({
       value: this._maskedValue(this._getPropsValue() || '')
     };
   },
-  componentDidUpdate: function() {
+  componentDidUpdate() {
     if (this._cursorPos != null) {
       this._setSelection(this._cursorPos);
     }
   },
-  componentDidMount: function() {
+  componentDidMount() {
     let propsValue = this._getPropsValue();
     if (this.props.mask != null && propsValue != null && this.state.value !== propsValue) {
       this._callOnChange(this.state.value);
     }
   },
-  render: function() {
+  render() {
     let props;
     if (this.props.mask != null) {
       props = {
@@ -83,7 +83,7 @@ const MaskedField = React.createClass({
 
     return <input {...this.props} {...props} />;
   },
-  _getSelection: function() {
+  _getSelection() {
     if (this.isMounted()) {
       return getSelection(this.getDOMNode());
     }
@@ -92,10 +92,10 @@ const MaskedField = React.createClass({
       return {start: cursorPos, end: cursorPos};
     }
   },
-  _setSelection: function(start, end=start) {
+  _setSelection(start, end=start) {
     setSelection(this.getDOMNode(), start, end);
   },
-  _getPropsValue: function() {
+  _getPropsValue() {
     if (this.props.valueLink != null) {
       return this.props.valueLink.value;
     }
@@ -103,38 +103,38 @@ const MaskedField = React.createClass({
       return this.props.value;
     }
   },
-  _getPattern: function(idx) {
+  _getPattern(idx) {
     let maskChar = this.props.mask[idx];
     let pattern = this.props.translations ? this.props.translations[maskChar] : null;
 
     return pattern || DEFAULT_TRANSLATIONS[maskChar];
   },
-  _getFormatChar: function(idx) {
+  _getFormatChar(idx) {
     idx = idx < this.props.format.length ? idx : 0;
     return this.props.format[idx];
   },
-  _resetBuffer: function(start, end) {
+  _resetBuffer(start, end) {
     for (let i = start; i < end; ++i) {
       if (this._getPattern(i)) {
         this._buffer[i] = this._getFormatChar(i);
       }
     }
   },
-  _nextNonMaskIdx: function(idx) {
+  _nextNonMaskIdx(idx) {
     for (let next = idx + 1; next < this.props.mask.length; ++next) {
       if (this._getPattern(next)) {
         return next;
       }
     }
   },
-  _prevNonMaskIdx: function(idx) {
+  _prevNonMaskIdx(idx) {
     for (let prev = idx - 1; prev >= 0; --prev) {
       if (this._getPattern(prev)) {
         return prev;
       }
     }
   },
-  _callOnChange: function(value) {
+  _callOnChange(value) {
     if (this.props.valueLink != null) {
       this.props.valueLink.requestChange(value);
     }
@@ -142,7 +142,7 @@ const MaskedField = React.createClass({
       this.props.onChange({target: {value: value}});
     }
   },
-  _callOnComplete: function(value) {
+  _callOnComplete(value) {
     if (this.props.onComplete) {
       for (let i = 0; i < this.props.mask.length; ++i) {
         if (this._getPattern(i) && this._buffer[i] === this._getFormatChar(i)) {
@@ -153,13 +153,13 @@ const MaskedField = React.createClass({
       this.props.onComplete(value);
     }
   },
-  _setValue: function(value) {
+  _setValue(value) {
     if (value !== this.state.value) {
       this._callOnChange(value);
     }
     this.setState({value});
   },
-  _handleFocus: function(e) {
+  _handleFocus(e) {
     setTimeout(() => {
       this._setSelection(this._cursorPos);
     }, 0);
@@ -168,7 +168,7 @@ const MaskedField = React.createClass({
       this.props.onFocus(e);
     }
   },
-  _handleKeyDown: function(e) {
+  _handleKeyDown(e) {
     if (e.key === 'Backspace' || e.key === 'Delete') {
       let {start, end} = this._getSelection();
 
@@ -197,14 +197,14 @@ const MaskedField = React.createClass({
       this.props.onKeyDown(e);
     }
   },
-  _handleChange: function(e) {
+  _handleChange(e) {
     let value = this._maskedValue(e.target.value);
     this._setValue(value);
     this._callOnComplete(value);
   },
-  _maskedValue: function(value, start=0) {
+  _maskedValue(value, start=0) {
     let originalCursorPos = this._cursorPos = this._getSelection().start;
-    for (let bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; ++bufferIdx)  {
+    for (let bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; ++bufferIdx) {
       let pattern = this._getPattern(bufferIdx);
       if (pattern) {
         this._buffer[bufferIdx] = this._getFormatChar(bufferIdx);

@@ -755,18 +755,18 @@ describe('MaskedField', function() {
         value: React.PropTypes.string,
         onChange: React.PropTypes.func
       },
-      getInitialState: function() {
+      getInitialState() {
         return {
           value: this.props.value
         };
       },
-      handleChange: function(e) {
+      handleChange(e) {
         if (this.props.onChange) {
           this.props.onChange({target: {value: e.target.value}});
         }
         this.setState({value: e.target.value});
       },
-      render: function() {
+      render() {
         return (
           <MaskedField
             {...this.props}
@@ -882,10 +882,10 @@ describe('MaskedField', function() {
     const LinkWrapper = React.createClass({
       propTypes: {value: React.PropTypes.string},
       mixins: [LinkedStateMixin],
-      getInitialState: function() {
+      getInitialState() {
         return {value: this.props.value};
       },
-      render: function() {
+      render() {
         return <MaskedField {...this.props} valueLink={this.linkState('value')} ref="field" />;
       }
     });

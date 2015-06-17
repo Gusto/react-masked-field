@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  getSelection: function(node) {
+  getSelection(node) {
     let start, end;
     if (node.setSelectionRange != null) {
       start = node.selectionStart;
@@ -15,7 +15,7 @@ module.exports = {
 
     return {start, end};
   },
-  setSelection: function(node, start, end) {
+  setSelection(node, start, end) {
     if (node.setSelectionRange != null) {
       node.setSelectionRange(start, end);
     }
