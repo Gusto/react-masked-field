@@ -1,0 +1,26 @@
+{
+  "name": "react-masked-field",
+  "version": "1.0.0",
+  "description": "react-masked-field ============",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt-contrib-sass": "^0.7.3",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt": "^0.4.5",
+    "grunt-contrib-haml": "^0.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZenPayroll/react-masked-field"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZenPayroll/react-masked-field/issues"
+  },
+  "homepage": "https://github.com/ZenPayroll/react-masked-field"
+}

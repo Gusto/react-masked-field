@@ -1,0 +1,17 @@
+// Google Fonts
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700|Raleway:400,300,500);
+
+// Font Variables
+$header-font: 'Raleway', sans-serif;
+$body-font: 'Lato', sans-serif;
+
+// Styles
+body {
+	font-family: $body-font;
+	font-weight: normal;
+	font-size: 13px;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: $header-font;
+	font-weight: normal;
+}

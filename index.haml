@@ -1,0 +1,108 @@
+%html{:lang => "en-us"}
+	%head
+		%meta{:charset => "UTF-8"}
+		%title Open Source
+		%meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}
+		%link{:href => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css", :rel => "stylesheet"}
+		%link{:href => "css/assets/ZP-Logo-bug-Z.png", :rel => "shortcut icon", :type => "text/css"}
+		%link{:href => "css/style.css", :media => "screen", :rel => "stylesheet", :type => "text/css"}
+	%body
+		%nav.navbar-default
+			.container
+				.navbar-header
+					%button.navbar-toggle.collapsed{"aria-controls" => "navbar", "aria-expanded" => "false", "data-target" => "#navbar", "data-toggle" => "collapse", :type => "button"}
+					%a.navbar-brand{:href => "https://zenpayroll.com/"}
+						%img{:src => "css/assets/ZP-Logo-white.png"}
+				#navbar.navbar-collapse.collapse
+					%ul.nav.navbar-nav
+						%li.dropdown
+							%a.dropdown-toggle{"data-toggle" => "dropdown", :href => "", :role => "button"}
+								Projects
+								%span.glyphicon.glyphicon-triangle-bottom
+							%ul.dropdown-menu
+								%li
+									%a{:href => ""} React-Masked-Field 
+								%li 
+									%a{:href => ""} RoboJeremy
+								%li 
+									%a{:href => ""} P3								
+						%li
+							%a{:href => "http://engineering.zenpayroll.com/"} Blog 						
+					.navbar-right
+						%ul.social-media
+							%li
+								%a{:href => ""}
+									%img{:src => "css/assets/ZP-social-github.svg"}
+							%li
+								%a{:href => ""}
+									%img{:src => "css/assets/ZP-social-facebook.svg"}
+							%li
+								%a{:href => ""}
+									%img{:src => "css/assets/ZP-social-linkedin.svg"}
+							%li
+								%a{:href => ""}
+									%img{:src => "css/assets/ZP-social-twitter.svg"}
+		#home
+			%article.jumbotron
+				.container
+					.row.project-name.text-center
+						%h1 Open Source
+						%p A collection of projects for the community
+		%article.container
+			.row
+				.col-sm-6.message
+					.col-sm-2
+						%img{:src => "css/assets/ZP-icon-bucket.svg"}
+					.col-sm-10
+						%h3 Our Projects
+						%p Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.	
+				.col-sm-6.message
+					.col-sm-2
+						%img{:src => "css/assets/ZP-icon-community.svg"}
+					.col-sm-10
+						%h3 Community
+						%p Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+		.row
+			%hr.col-sm-10.col-sm-offset-1				
+		%article.container
+			%ul.project-list.row
+				%li.col-sm-4
+					.project
+						.tag-type React
+						%h4 React Masked Field
+						%p Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+						%a{:href => ""} Github
+				%li.col-sm-4
+					.project
+						.tag-type Node
+						%h4 RoboJeremy
+						%p Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+						%a{:href => ""} Github
+				%li.col-sm-4
+					.project
+						.tag-type Ruby
+						%h4 Project 3
+						%p Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+						%a{:href => ""} Github	
+		.row											
+			%hr.col-sm-10.col-sm-offset-1
+		%article.container
+			.jobs-posting.row.text-center
+				.col-sm-12				
+					%img{:src => "css/assets/ZP-Logo-bug.png"}
+					%h3 Interested in Zenpayroll?
+				%a.btn.btn-primary.btn-md{:href => ""}Browse Jobs
+		%footer.footer
+			.container
+				.row
+					.sub-footer-links.col-sm-12.text-center
+						%span
+							Privacy Policy 
+						&#169; 2015 ZenPayroll Engineering. All Rights Reserved.		
+
+		%script{:src => "http://code.jquery.com/jquery-1.11.2.min.js"}
+		%script{:src => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"}
+		
+		%script{:src => "js/main.js"}
+
+

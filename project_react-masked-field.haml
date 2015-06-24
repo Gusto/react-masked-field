@@ -1,0 +1,134 @@
+%html{:lang => "en-us"}
+	%head
+		%meta{:charset => "UTF-8"}
+		%title React-Masked-Field 
+		%meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}
+		%link{:href => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css", :rel => "stylesheet"}
+		%link{:href => "css/assets/ZP-Logo-bug-Z.png", :rel => "shortcut icon", :type => "text/css"}
+		%link{:href => "css/style.css", :media => "screen", :rel => "stylesheet", :type => "text/css"}
+	%body
+		%nav.navbar-default
+			.container
+				.navbar-header
+					%button.navbar-toggle.collapsed{"aria-controls" => "navbar", "aria-expanded" => "false", "data-target" => "#navbar", "data-toggle" => "collapse", :type => "button"}
+					%a.navbar-brand{:href => "https://zenpayroll.com/"}
+						%img{:src => "css/assets/ZP-Logo-white.png"}
+				#navbar.navbar-collapse.collapse
+					%ul.nav.navbar-nav
+						%li.dropdown
+							%a.dropdown-toggle{"data-toggle" => "dropdown", :href => "", :role => "button"}
+								Projects
+								%span.glyphicon.glyphicon-triangle-bottom
+							%ul.dropdown-menu
+								%li
+									%a{:href => ""} React-Masked-Field 
+								%li 
+									%a{:href => ""} RoboJeremy
+								%li 
+									%a{:href => ""} P3									
+						%li
+							%a{:href => "http://engineering.zenpayroll.com/"} Blog 						
+					.navbar-right
+						%ul.social-media
+							%li
+								%a{:href => ""}
+									%img{:src => "css/assets/ZP-social-github.svg"}
+							%li
+								%a{:href => ""}
+									%img{:src => "css/assets/ZP-social-facebook.svg"}
+							%li
+								%a{:href => ""}
+									%img{:src => "css/assets/ZP-social-linkedin.svg"}
+							%li
+								%a{:href => ""}
+									%img{:src => "css/assets/ZP-social-twitter.svg"}
+		#react-masked-field							
+			%article.jumbotron
+				.container
+					.row.project-name.text-center
+						%h1 React-Masked-Field
+						%p A masked input component built in React.js
+		%article.container
+			.row
+				.col-sm-10.col-sm-offset-1
+					.project-description
+						%h3 About React-Masked-Field
+						%p The MaskedField component is a text input field that allows you to restrict and format the values that can be entered into it, while informing the user of the expected input. Common uses include dates, phone numbers, social security numbers and tax IDs.
+					.project-box
+						%ul.nav.project-nav
+							%li#demo.tab
+								%a Demo
+							%li#installation.tab 
+								%a Installation
+							%li#example.tab 
+								%a Example 
+							%li#props.tab 
+								%a Props
+						#project-demo.project-detail
+							%h4 Demo
+							%p The example below will only allow a numeric entry for dates.
+							%form
+								.form-group
+									%label Date
+									.react-masked-field-demo
+						#project-installation.project-detail.hidden
+							%h4 Installation
+							%p A standalone build is also available in the dist folder.
+							%code
+								npm install react-masked-field
+						#project-example.project-detail.hidden
+							%h4 Example
+							%p 
+								%code
+									%span.variable 
+										var 
+									MaskedField = 
+									%span.method
+										require
+									('react-masked-field');
+							%p 
+								%code									
+									%span.variable
+										function 
+									handleComplete(date) {
+									%br/
+									%span.method
+										&nbsp; console.log
+									('Date is ' + date);
+									%br/
+									}	
+							%p 
+								%code
+									React.render(
+									%br/
+									&nbsp; &lt;MaskedField mask="99/99/9999" onComplete={handleComplete} /&gt;,
+									%br/
+									%span.method
+										&nbsp; document.getElementById
+									('demo')
+									%br/
+									);							
+						#project-props.project-detail.hidden
+							%h4 Props
+							%code
+
+		%footer.footer
+			.container
+				.row
+					.sub-footer-links.col-sm-12.text-center
+						%span
+							Privacy Policy 
+						&#169; 2015 ZenPayroll Engineering. All Rights Reserved.		
+
+		%script{:src => "http://code.jquery.com/jquery-1.11.2.min.js"}
+		%script{:src => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"}
+
+		%script{:src => "https://fb.me/react-0.13.3.min.js"}
+		%script{:src => "https://fb.me/JSXTransformer-0.13.3.js"}
+		%script{:src => "https://fb.me/react-with-addons-0.13.3.min.js"}
+		
+		%script{:src => "dist/react-masked-field.min.js"}		
+		%script{:src => "js/main.js"}
+		%script{:src => "js/react-masked-field.js", :type => "text/jsx"}
+
+
