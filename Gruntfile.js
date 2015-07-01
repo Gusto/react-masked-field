@@ -1,7 +1,10 @@
+'use strict';
+
 module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-haml');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-browserify');
 
     grunt.initConfig({
         haml: {
@@ -26,6 +29,15 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        browserify: {
+          app: {
+            src: 'js/main.js',
+            dest: 'js/app.js',
+            options: {
+              watch: true
+            }
+          }
+        },
         watch: {
             haml: {
                 files: ['**/*.haml'],
@@ -38,5 +50,5 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('default', ['watch']);
+    grunt.registerTask('default', ['browserify', 'watch']);
 };

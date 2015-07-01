@@ -4,14 +4,21 @@
   "description": "react-masked-field ============",
   "main": "Gruntfile.js",
   "dependencies": {
+  },
+  "devDependencies": {
+    "babel-eslint": "^3.1.20",
+    "babelify": "^6.1.2",
+    "eslint": "^0.24.0",
+    "eslint-plugin-react": "^2.6.3",
+    "grunt-browserify": "^3.8.0",
     "grunt-contrib-sass": "^0.7.3",
     "grunt-contrib-watch": "^0.6.1",
     "grunt": "^0.4.5",
     "grunt-contrib-haml": "^0.2.0"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint js/*"
   },
   "repository": {
     "type": "git",
@@ -22,5 +29,10 @@
   "bugs": {
     "url": "https://github.com/ZenPayroll/react-masked-field/issues"
   },
-  "homepage": "https://github.com/ZenPayroll/react-masked-field"
+  "homepage": "https://github.com/ZenPayroll/react-masked-field",
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  }
 }
