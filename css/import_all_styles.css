@@ -9,7 +9,7 @@
 #react-masked-field .jumbotron {
   background: url("../css/assets/ZP-background-swingset.svg") bottom repeat-x, linear-gradient(to bottom, #E1D261 0%, #F7EB93 46%, #FFFFFF 100%); }
 
-.react-masked-field-demo input {
+.react-masked-field-demo {
   display: block;
   height: 34px;
   padding: 6px 12px;

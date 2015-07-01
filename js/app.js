@@ -1,65 +1,376 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/rylan/Development/react-masked-field/js/main.js":[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/rylan/Development/react-masked-field/js/MainContent.js":[function(require,module,exports){
 'use strict';
 
-var React = require('react');
-var $ = window.$;
-var MaskedField = require('react-masked-field');
-var Project1 = require('./react-masked-field');
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
 
-$(document).ready(function () {
-  $('li.tab').bind('click', function () {
-    $('.project-detail').each(function () {
-      $(this).addClass('hidden');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _ProjectTitle = require('./ProjectTitle');
+
+var _ProjectTitle2 = _interopRequireDefault(_ProjectTitle);
+
+var _ProjectBox = require('./ProjectBox');
+
+var _ProjectBox2 = _interopRequireDefault(_ProjectBox);
+
+exports['default'] = _react2['default'].createClass({
+  displayName: 'MainContent',
+
+  render: function render() {
+    return _react2['default'].createElement(
+      'div',
+      { className: 'row' },
+      _react2['default'].createElement(
+        'div',
+        { className: 'col-sm-10 col-sm-offset-1' },
+        _react2['default'].createElement(
+          'div',
+          { className: 'project-description' },
+          _react2['default'].createElement(
+            'h3',
+            null,
+            'About React-Masked-Field'
+          ),
+          _react2['default'].createElement(
+            'p',
+            null,
+            'The MaskedField component is a text input field that allows you to restrict and format the values that can be entered into it, while informing the user of the expected input. Common uses include dates, phone numbers, social security numbers and tax IDs.'
+          )
+        ),
+        _react2['default'].createElement(_ProjectBox2['default'], null)
+      )
+    );
+  }
+});
+module.exports = exports['default'];
+
+},{"./ProjectBox":"/Users/rylan/Development/react-masked-field/js/ProjectBox.js","./ProjectTitle":"/Users/rylan/Development/react-masked-field/js/ProjectTitle.js","react":"/Users/rylan/Development/react-masked-field/node_modules/react/react.js"}],"/Users/rylan/Development/react-masked-field/js/ProjectBox.js":[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _ProjectDemo = require('./ProjectDemo');
+
+var _ProjectDemo2 = _interopRequireDefault(_ProjectDemo);
+
+var _ProjectInstallation = require('./ProjectInstallation');
+
+var _ProjectInstallation2 = _interopRequireDefault(_ProjectInstallation);
+
+var _ProjectExample = require('./ProjectExample');
+
+var _ProjectExample2 = _interopRequireDefault(_ProjectExample);
+
+var TABS = {
+  Demo: _ProjectDemo2['default'],
+  Installation: _ProjectInstallation2['default'],
+  Example: _ProjectExample2['default'],
+  Props: 'span'
+};
+
+exports['default'] = _react2['default'].createClass({
+  displayName: 'ProjectBox',
+
+  getInitialState: function getInitialState() {
+    return { activeTab: Object.keys(TABS)[0] };
+  },
+  render: function render() {
+    var _this = this;
+
+    var tabs = Object.keys(TABS).map(function (tabName) {
+      return _react2['default'].createElement(
+        'li',
+        { key: tabName, className: 'tab', onClick: function () {
+            return _this.setState({ activeTab: tabName });
+          } },
+        _react2['default'].createElement(
+          'a',
+          null,
+          tabName
+        )
+      );
     });
 
-    var id = $(this).attr('id');
-    $('#project-' + id).removeClass('hidden');
-  });
-
-  function handleComplete(date) {
-    console.log('Date is ' + date);
+    return _react2['default'].createElement(
+      'div',
+      { className: 'project-box' },
+      _react2['default'].createElement(
+        'ul',
+        { className: 'nav project-nav' },
+        tabs
+      ),
+      _react2['default'].createElement(
+        'div',
+        { className: 'project-detail' },
+        this._renderActiveTab()
+      )
+    );
+  },
+  _renderActiveTab: function _renderActiveTab() {
+    var Component = TABS[this.state.activeTab];
+    return _react2['default'].createElement(Component, null);
   }
-
-  React.render(React.createElement(MaskedField, { mask: '99/99/9999' }), $('.react-masked-field-demo')[0]);
-
-  React.render(React.createElement(Project1, null), $('.project-description')[0]);
 });
+module.exports = exports['default'];
 
-},{"./react-masked-field":"/Users/rylan/Development/react-masked-field/js/react-masked-field.js","react":"/Users/rylan/Development/react-masked-field/node_modules/react/react.js","react-masked-field":"/Users/rylan/Development/react-masked-field/node_modules/react-masked-field/src/MaskedField.js"}],"/Users/rylan/Development/react-masked-field/js/react-masked-field.js":[function(require,module,exports){
+},{"./ProjectDemo":"/Users/rylan/Development/react-masked-field/js/ProjectDemo.js","./ProjectExample":"/Users/rylan/Development/react-masked-field/js/ProjectExample.js","./ProjectInstallation":"/Users/rylan/Development/react-masked-field/js/ProjectInstallation.js","react":"/Users/rylan/Development/react-masked-field/node_modules/react/react.js"}],"/Users/rylan/Development/react-masked-field/js/ProjectDemo.js":[function(require,module,exports){
 'use strict';
 
-var React = require('react');
-
-var Project1 = React.createClass({
-	displayName: 'Project1',
-
-	getDefaultProps: function getDefaultProps() {
-		return {
-			project_title: 'About React-Masked-Field',
-			project_description: 'The MaskedField component is a text input field that allows you to restrict and format the values that can be entered into it, while informing the user of the expected input. Common uses include dates, phone numbers, social security numbers and tax IDs.'
-		};
-	},
-	render: function render() {
-		return React.createElement(
-			'div',
-			null,
-			React.createElement(
-				'h3',
-				null,
-				this.props.project_title
-			),
-			React.createElement(
-				'p',
-				null,
-				this.props.project_description
-			)
-		);
-	}
+Object.defineProperty(exports, '__esModule', {
+  value: true
 });
 
-module.exports = Project1;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-},{"react":"/Users/rylan/Development/react-masked-field/node_modules/react/react.js"}],"/Users/rylan/Development/react-masked-field/node_modules/grunt-browserify/node_modules/browserify/node_modules/process/browser.js":[function(require,module,exports){
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactMaskedField = require('react-masked-field');
+
+var _reactMaskedField2 = _interopRequireDefault(_reactMaskedField);
+
+exports['default'] = _react2['default'].createClass({
+  displayName: 'ProjectDemo',
+
+  // getInitialState() {
+  //   return { dateComplete: fa}
+  // }
+
+  render: function render() {
+    return _react2['default'].createElement(
+      'div',
+      null,
+      _react2['default'].createElement(
+        'h4',
+        null,
+        'Demo'
+      ),
+      _react2['default'].createElement(
+        'p',
+        null,
+        'The example below will only allow a numeric entry for dates.'
+      ),
+      _react2['default'].createElement(
+        'form',
+        null,
+        _react2['default'].createElement(
+          'div',
+          { className: 'form-group' },
+          _react2['default'].createElement(
+            'label',
+            null,
+            'Date'
+          ),
+          _react2['default'].createElement(_reactMaskedField2['default'], { className: 'react-masked-field-demo', mask: '99/99/9999' })
+        )
+      )
+    );
+  }
+});
+module.exports = exports['default'];
+
+},{"react":"/Users/rylan/Development/react-masked-field/node_modules/react/react.js","react-masked-field":"/Users/rylan/Development/react-masked-field/node_modules/react-masked-field/src/MaskedField.js"}],"/Users/rylan/Development/react-masked-field/js/ProjectExample.js":[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+exports['default'] = _react2['default'].createClass({
+  displayName: 'ProjectExample',
+
+  render: function render() {
+    return _react2['default'].createElement(
+      'div',
+      null,
+      _react2['default'].createElement(
+        'h4',
+        null,
+        'Example'
+      ),
+      _react2['default'].createElement(
+        'p',
+        null,
+        _react2['default'].createElement(
+          'code',
+          null,
+          _react2['default'].createElement(
+            'span',
+            { className: 'variable' },
+            'var '
+          ),
+          'MaskedField =',
+          _react2['default'].createElement(
+            'span',
+            { className: 'method' },
+            ' require'
+          ),
+          '(\'react-masked-field\');'
+        )
+      ),
+      _react2['default'].createElement(
+        'p',
+        null,
+        _react2['default'].createElement(
+          'code',
+          null,
+          _react2['default'].createElement(
+            'span',
+            { className: 'variable' },
+            'function '
+          ),
+          'handleComplete(date) ',
+          '{',
+          _react2['default'].createElement('br', null),
+          _react2['default'].createElement(
+            'span',
+            { className: 'method' },
+            '  console.log'
+          ),
+          '(\'Date is \' + date);',
+          _react2['default'].createElement('br', null),
+          '}'
+        )
+      ),
+      _react2['default'].createElement(
+        'p',
+        null,
+        _react2['default'].createElement(
+          'code',
+          null,
+          'React.render(',
+          _react2['default'].createElement('br', null),
+          '  <MaskedField mask="99/99/9999" ',
+          'onComplete={handleComplete}',
+          ' />,',
+          _react2['default'].createElement('br', null),
+          _react2['default'].createElement(
+            'span',
+            { className: 'method' },
+            '  document.getElementById'
+          ),
+          '(\'demo\')',
+          _react2['default'].createElement('br', null),
+          ');'
+        )
+      )
+    );
+  }
+});
+module.exports = exports['default'];
+
+},{"react":"/Users/rylan/Development/react-masked-field/node_modules/react/react.js"}],"/Users/rylan/Development/react-masked-field/js/ProjectInstallation.js":[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+exports['default'] = _react2['default'].createClass({
+  displayName: 'ProjectInstallation',
+
+  render: function render() {
+    return _react2['default'].createElement(
+      'div',
+      null,
+      _react2['default'].createElement(
+        'h4',
+        null,
+        'Installation'
+      ),
+      _react2['default'].createElement(
+        'p',
+        null,
+        'A standalone build is also available in the dist folder.'
+      ),
+      _react2['default'].createElement(
+        'code',
+        null,
+        'npm install react-masked-field'
+      )
+    );
+  }
+});
+module.exports = exports['default'];
+
+},{"react":"/Users/rylan/Development/react-masked-field/node_modules/react/react.js"}],"/Users/rylan/Development/react-masked-field/js/ProjectTitle.js":[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+exports['default'] = _react2['default'].createClass({
+  displayName: 'ProjectTitle',
+
+  render: function render() {
+    return _react2['default'].createElement(
+      'div',
+      { className: 'project-description' },
+      _react2['default'].createElement(
+        'h3',
+        null,
+        'About React-Masked-Field'
+      ),
+      _react2['default'].createElement(
+        'p',
+        null,
+        'The MaskedField component is a text input field that allows you to restrict and format the values that can be entered into it, while informing the user of the expected input. Common uses include dates, phone numbers, social security numbers and tax IDs.'
+      )
+    );
+  }
+});
+module.exports = exports['default'];
+
+},{"react":"/Users/rylan/Development/react-masked-field/node_modules/react/react.js"}],"/Users/rylan/Development/react-masked-field/js/main.js":[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _MainContent = require('./MainContent');
+
+var _MainContent2 = _interopRequireDefault(_MainContent);
+
+_react2['default'].render(_react2['default'].createElement(_MainContent2['default'], null), document.getElementById('main-content'));
+
+},{"./MainContent":"/Users/rylan/Development/react-masked-field/js/MainContent.js","react":"/Users/rylan/Development/react-masked-field/node_modules/react/react.js"}],"/Users/rylan/Development/react-masked-field/node_modules/grunt-browserify/node_modules/browserify/node_modules/process/browser.js":[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
