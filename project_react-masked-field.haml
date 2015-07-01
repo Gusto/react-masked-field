@@ -1,7 +1,7 @@
 %html{:lang => "en-us"}
 	%head
 		%meta{:charset => "UTF-8"}
-		%title React-Masked-Field 
+		%title React-Masked-Field
 		%meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}
 		%link{:href => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css", :rel => "stylesheet"}
 		%link{:href => "css/assets/ZP-Logo-bug-Z.png", :rel => "shortcut icon", :type => "text/css"}
@@ -22,13 +22,13 @@
 								%span.glyphicon.glyphicon-triangle-bottom
 							%ul.dropdown-menu
 								%li
-									%a{:href => ""} React-Masked-Field 
-								%li 
+									%a{:href => ""} React-Masked-Field
+								%li
 									%a{:href => ""} RoboJeremy
-								%li 
-									%a{:href => ""} P3                  
+								%li
+									%a{:href => ""} P3
 						%li
-							%a{:href => "http://engineering.zenpayroll.com/"} Blog            
+							%a{:href => "http://engineering.zenpayroll.com/"} Blog
 					.navbar-right
 						%ul.social-media
 							%li
@@ -43,7 +43,7 @@
 							%li
 								%a{:href => "https://twitter.com/zenpayroll"}
 									%img{:src => "css/assets/ZP-social-twitter.svg"}
-		#react-masked-field             
+		#react-masked-field
 			%article.jumbotron
 				.container
 					.row.project-name.text-center
@@ -59,11 +59,11 @@
 						%ul.nav.project-nav
 							%li#demo.tab
 								%a Demo
-							%li#installation.tab 
+							%li#installation.tab
 								%a Installation
-							%li#example.tab 
-								%a Example 
-							%li#props.tab 
+							%li#example.tab
+								%a Example
+							%li#props.tab
 								%a Props
 						#project-demo.project-detail
 							%h4 Demo
@@ -79,26 +79,26 @@
 								npm install react-masked-field
 						#project-example.project-detail.hidden
 							%h4 Example
-							%p 
+							%p
 								%code
-									%span.variable 
-										var 
-									MaskedField = 
+									%span.variable
+										var
+									MaskedField =
 									%span.method
 										require
 									('react-masked-field');
-							%p 
-								%code                 
+							%p
+								%code
 									%span.variable
-										function 
+										function
 									handleComplete(date) {
 									%br/
 									%span.method
 										&nbsp; console.log
 									('Date is ' + date);
 									%br/
-									} 
-							%p 
+									}
+							%p
 								%code
 									React.render(
 									%br/
@@ -108,63 +108,63 @@
 										&nbsp; document.getElementById
 									('demo')
 									%br/
-									);              
+									);
 						#project-props.project-detail.hidden
 							%h4 Props
 							.form-group
 								%label mask
 								.code-group
-									%code 
-										string 
-										%span.attribute
-											optional                
-								%p The mask applied to the value of the field. For each character of the mask that matches a translation, the input character will be restricted to the corresponding regular expression. If no mask is provided, it will function like a normal input element.
-							.form-group         
-								%label format
-								.code-group
-									%code 
-										string 
+									%code
+										string
 										%span.attribute
 											optional
-									%br/    
-									%code 
+								%p The mask applied to the value of the field. For each character of the mask that matches a translation, the input character will be restricted to the corresponding regular expression. If no mask is provided, it will function like a normal input element.
+							.form-group
+								%label format
+								.code-group
+									%code
+										string
+										%span.attribute
+											optional
+									%br/
+									%code
 										default
 										%span.method
-											'_'             
+											'_'
 								%p The placeholder used for characters that haven't yet been filled in (.e.g MM/DD/YYYY for a date field). The format string should have a length of 1 or match the length of the mask.
-							.form-group                   
+							.form-group
 								%label translations
 								.code-group
-									%code 
+									%code
 										object
 										%span.attribute
 											optional
-									%br/    
-									%code 
-										default   
+									%br/
+									%code
+										default
 										%br/
-										%span.method 
+										%span.method
 											{
-										%br/	
-										%span.method 	
-											&#39;9&#39;: /\d/, 
 										%br/
-										%span.method 
+										%span.method
+											&#39;9&#39;: /\d/,
+										%br/
+										%span.method
 											&#39;a&#39;: /[A-Za-z]/,
 										%br/
-										%span.method 
+										%span.method
 											&#39;*&#39;: /[A-Za-z0-9]/
 										%br/
-										%span.method 	
-											}										
+										%span.method
+											}
 								%p Additional (or overridden) translations for converting mask characters to regular expressions.
-							.form-group                   
+							.form-group
 								%label onComplete
 								.code-group
-									%code 
+									%code
 										function
 										%span.attribute
-											optional                
+											optional
 								%p The onComplete event is triggered when the mask has been completely filled. The value of the field is passed to the event handler.
 
 		%footer.footer
@@ -172,18 +172,10 @@
 				.row
 					.sub-footer-links.col-sm-12.text-center
 						%span
-							Privacy Policy 
-						&#169; 2015 ZenPayroll Engineering. All Rights Reserved.    
+							Privacy Policy
+						&#169; 2015 ZenPayroll Engineering. All Rights Reserved.
 
 		%script{:src => "http://code.jquery.com/jquery-1.11.2.min.js"}
 		%script{:src => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"}
 
-		%script{:src => "https://fb.me/react-0.13.3.min.js"}
-		%script{:src => "https://fb.me/JSXTransformer-0.13.3.js"}
-		%script{:src => "https://fb.me/react-with-addons-0.13.3.min.js"}
-		
-		%script{:src => "dist/react-masked-field.min.js"}   
-		%script{:src => "js/main.js"}
-		%script{:src => "js/react-masked-field.js", :type => "text/jsx"}
-
-
+		%script{:src => "js/app.js"}
