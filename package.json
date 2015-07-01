@@ -3,18 +3,19 @@
   "version": "1.0.0",
   "description": "react-masked-field ============",
   "main": "Gruntfile.js",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^3.1.20",
     "babelify": "^6.1.2",
     "eslint": "^0.24.0",
     "eslint-plugin-react": "^2.6.3",
+    "grunt": "^0.4.5",
     "grunt-browserify": "^3.8.0",
+    "grunt-contrib-haml": "^0.2.0",
     "grunt-contrib-sass": "^0.7.3",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt": "^0.4.5",
-    "grunt-contrib-haml": "^0.2.0"
+    "react": "^0.13.3",
+    "react-masked-field": "ZenPayroll/react-masked-field"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
