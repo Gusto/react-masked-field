@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import ProjectTitle from './ProjectTitle';
 import ProjectBox from './ProjectBox';
 
 export default React.createClass({
