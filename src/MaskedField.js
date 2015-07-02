@@ -9,7 +9,6 @@
 
 const React = (window ? window.React : null) || require('react');
 const {getSelection, setSelection} = require('./SelectionUtils');
-const formatValidator = require('./formatValidator');
 
 const DEFAULT_TRANSLATIONS = {
   '9': /\d/,
@@ -17,42 +16,33 @@ const DEFAULT_TRANSLATIONS = {
   '*': /[A-Za-z0-9]/
 };
 
+const BLANK_CHAR = '_';
+
 const MaskedField = React.createClass({
   propTypes: {
     mask: React.PropTypes.string,
-    format: formatValidator,
     translations: React.PropTypes.object,
     value: React.PropTypes.string,
+    placeholder: React.PropTypes.string,
     onChange: React.PropTypes.func,
     onKeyDown: React.PropTypes.func,
     onComplete: React.PropTypes.func,
     onFocus: React.PropTypes.func,
+    onBlur: React.PropTypes.func,
     valueLink: React.PropTypes.object
-  },
-  getDefaultProps() {
-    return {format: '_'};
   },
   getInitialState() {
     if (this.props.mask == null) {
       return null;
     }
 
-    this._buffer = [];
-    for (let idx = 0; idx < this.props.mask.length; ++idx) {
-      if (this._getPattern(idx)) {
-        if (this._firstNonMaskIdx == null) {
-          this._firstNonMaskIdx = idx;
-        }
-        this._buffer.push(this._getFormatChar(idx));
-      }
-      else {
-        this._buffer.push(this.props.mask[idx]);
-      }
-    }
+    this._buffer = this._initialBuffer();
+    this._cursorPos = this._firstNonMaskIdx;
 
+    var propsValue = this._getPropsValue();
     return {
       // TODO: Any way we can do this in one pass?
-      value: this._maskedValue(this._getPropsValue() || '')
+      value: propsValue ? this._maskedValue(propsValue) : ''
     };
   },
   componentDidUpdate() {
@@ -67,18 +57,20 @@ const MaskedField = React.createClass({
     }
   },
   render() {
-    let props;
+    let props = {};
     if (this.props.mask != null) {
       props = {
         onChange: this._handleChange,
         onKeyDown: this._handleKeyDown,
         onFocus: this._handleFocus,
+        onBlur: this._handleBlur,
         value: this.state.value,
         valueLink: null
       };
-    }
-    else {
-      props = {};
+
+      if (this.props.placeholder == null) {
+        props.placeholder = this._initialBuffer().join('');
+      }
     }
 
     return <input {...this.props} {...props} />;
@@ -109,30 +101,54 @@ const MaskedField = React.createClass({
 
     return pattern || DEFAULT_TRANSLATIONS[maskChar];
   },
-  _getFormatChar(idx) {
-    idx = idx < this.props.format.length ? idx : 0;
-    return this.props.format[idx];
-  },
   _resetBuffer(start, end) {
     for (let i = start; i < end; ++i) {
       if (this._getPattern(i)) {
-        this._buffer[i] = this._getFormatChar(i);
+        this._buffer[i] = BLANK_CHAR;
       }
     }
+  },
+  _initialBuffer() {
+    let buffer = [];
+    for (let idx = 0; idx < this.props.mask.length; ++idx) {
+      if (this._getPattern(idx)) {
+        if (this._firstNonMaskIdx == null) {
+          this._firstNonMaskIdx = idx;
+        }
+        buffer.push('_');
+      }
+      else {
+        buffer.push(this.props.mask[idx]);
+      }
+    }
+
+    return buffer;
+  },
+  _isBufferEmpty() {
+    return this._buffer.every((char, idx) => !this._getPattern(idx) || char === BLANK_CHAR);
+  },
+  _isBufferFull() {
+    return this._buffer.every((char, idx) => !this._getPattern(idx) || char !== BLANK_CHAR);
   },
   _nextNonMaskIdx(idx) {
-    for (let next = idx + 1; next < this.props.mask.length; ++next) {
+    let next = idx + 1;
+    for (; next < this.props.mask.length; ++next) {
       if (this._getPattern(next)) {
-        return next;
+        break;
       }
     }
+
+    return next;
   },
   _prevNonMaskIdx(idx) {
-    for (let prev = idx - 1; prev >= 0; --prev) {
+    let prev = idx - 1;
+    for (; prev >= 0; --prev) {
       if (this._getPattern(prev)) {
-        return prev;
+        break;
       }
     }
+
+    return prev;
   },
   _callOnChange(value) {
     if (this.props.valueLink != null) {
@@ -143,13 +159,7 @@ const MaskedField = React.createClass({
     }
   },
   _callOnComplete(value) {
-    if (this.props.onComplete) {
-      for (let i = 0; i < this.props.mask.length; ++i) {
-        if (this._getPattern(i) && this._buffer[i] === this._getFormatChar(i)) {
-          return;
-        }
-      }
-
+    if (this.props.onComplete && this._isBufferFull()) {
       this.props.onComplete(value);
     }
   },
@@ -166,6 +176,17 @@ const MaskedField = React.createClass({
 
     if (this.props.onFocus) {
       this.props.onFocus(e);
+    }
+
+    this.setState({value: this._buffer.join('')});
+  },
+  _handleBlur(e) {
+    if (this._isBufferEmpty()) {
+      this._setValue('');
+    }
+
+    if (this.props.onBlur) {
+      this.props.onBlur(e);
     }
   },
   _handleKeyDown(e) {
@@ -207,7 +228,7 @@ const MaskedField = React.createClass({
     for (let bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; ++bufferIdx) {
       let pattern = this._getPattern(bufferIdx);
       if (pattern) {
-        this._buffer[bufferIdx] = this._getFormatChar(bufferIdx);
+        this._buffer[bufferIdx] = BLANK_CHAR;
         while (valueIdx < value.length) {
           let c = value[valueIdx++];
           if (pattern.test(c)) {

@@ -63,10 +63,15 @@ function simulateFocus(node, cb) {
   setTimeout(cb, 0);
 }
 
+function simulateBlur(node) {
+  TestUtils.Simulate.blur(node);
+}
+
 module.exports = {
   simulateChange,
   simulateKeyPress,
   simulateTyping,
   simulateKeyDown,
-  simulateFocus
+  simulateFocus,
+  simulateBlur
 };
