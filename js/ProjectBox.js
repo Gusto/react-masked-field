@@ -17,27 +17,36 @@ export default React.createClass({
     return { activeTab: Object.keys(TABS)[0] };
   },
   render() {
-    let tabs = Object.keys(TABS).map(tabName => {
-      return (
+    let links = [];
+    let tabs = [];
+
+    for (let tabName in TABS) {
+      links.push(
         <li key={tabName} className="tab" onClick={() => this.setState({activeTab: tabName})}>
           <a>{tabName}</a>
         </li>
       );
-    });
+
+      let TabComponent = TABS[tabName];
+      let className = 'project-detail';
+      if (tabName !== this.state.activeTab) {
+        className += ' hidden';
+      }
+
+      tabs.push(
+        <div key={tabName} className={className}>
+          <TabComponent />
+        </div>
+      );
+    }
 
     return (
       <div className="project-box">
         <ul className="nav project-nav">
-          {tabs}
+          {links}
         </ul>
-        <div className="project-detail">
-          {this._renderActiveTab()}
-        </div>
+        {tabs}
       </div>
     );
-  },
-  _renderActiveTab() {
-    let Component = TABS[this.state.activeTab];
-    return <Component />;
   }
 });
