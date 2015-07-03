@@ -2,6 +2,9 @@
 
 import React from 'react';
 import ProjectBox from './ProjectBox';
+import ProjectDemo from './ProjectDemo';
+import ProjectInstallation from './ProjectInstallation';
+import ProjectExample from './ProjectExample';
 
 export default React.createClass({
   render() {
@@ -16,7 +19,12 @@ export default React.createClass({
               input. Common uses include dates, phone numbers, social security numbers and tax IDs.
             </p>
           </div>
-          <ProjectBox />
+          <ProjectBox defaultTab="Demo">
+            <ProjectDemo tab="Demo" />
+            <ProjectInstallation tab="Installation" />
+            <ProjectExample tab="Example" />
+            <span tab="Props" />
+          </ProjectBox>
         </div>
       </div>
     );

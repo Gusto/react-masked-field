@@ -1,44 +1,36 @@
 'use strict';
 
 import React from 'react';
-import ProjectDemo from './ProjectDemo';
-import ProjectInstallation from './ProjectInstallation';
-import ProjectExample from './ProjectExample';
-
-const TABS = {
-  Demo: ProjectDemo,
-  Installation: ProjectInstallation,
-  Example: ProjectExample,
-  Props: 'span'
-};
+import cx from 'classnames';
 
 export default React.createClass({
+  propTypes: {
+    defaultTab: React.PropTypes.string.isRequired,
+    children: React.PropTypes.node
+  },
   getInitialState() {
-    return { activeTab: Object.keys(TABS)[0] };
+    return { activeTab: this.props.defaultTab };
   },
   render() {
     let links = [];
     let tabs = [];
 
-    for (let tabName in TABS) {
+    React.Children.forEach(this.props.children, child => {
+      let tabName = child.props.tab;
+
       links.push(
         <li key={tabName} className="tab" onClick={() => this.setState({activeTab: tabName})}>
           <a>{tabName}</a>
         </li>
       );
 
-      let TabComponent = TABS[tabName];
-      let className = 'project-detail';
-      if (tabName !== this.state.activeTab) {
-        className += ' hidden';
-      }
-
+      let className = cx('project-detail', { 'hidden': (tabName !== this.state.activeTab) });
       tabs.push(
         <div key={tabName} className={className}>
-          <TabComponent />
+          {child}
         </div>
       );
-    }
+    });
 
     return (
       <div className="project-box">
