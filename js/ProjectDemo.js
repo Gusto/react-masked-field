@@ -4,10 +4,9 @@ import React from 'react';
 import MaskedField from 'react-masked-field';
 
 export default React.createClass({
-  // getInitialState() {
-  //   return { dateComplete: fa}
-  // }
-
+  getInitialState() {
+    return { dateStr: null };
+  },
   render() {
     return (
       <div>
@@ -16,10 +15,25 @@ export default React.createClass({
         <form>
           <div className="form-group">
             <label>Date</label>
-            <MaskedField className="react-masked-field-demo" mask="99/99/9999" />
+            <MaskedField
+              className="react-masked-field-demo"
+              mask="99/99/9999"
+              onChange={this._handleDateChange}
+              onComplete={this._handleDateFilled}
+            />
+            {this._renderDateDisplay()}
           </div>
         </form>
       </div>
     );
+  },
+  _renderDateDisplay() {
+    return this.state.dateStr ? <span>Date filled: {this.state.dateStr}</span> : null;
+  },
+  _handleDateChange() {
+    this.setState({dateStr: null});
+  },
+  _handleDateFilled(value) {
+    this.setState({dateStr: value});
   }
 });
