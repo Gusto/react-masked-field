@@ -1,6 +1,8 @@
+@import "../partials/_colors";
+
 #react-masked-field {
 	.jumbotron {
-		background: url("../css/assets/ZP-background-swingset.svg") bottom repeat-x, linear-gradient(to bottom, #f2c763 0%,#f7eb93 46%,#ffffff 100%);
+		background: url("../css/assets/ZP-background-swingset.svg") bottom repeat-x, linear-gradient(to bottom, $canary-800 0%,$canary-500 46%,$white 100%);
 	}
 }
 
@@ -12,5 +14,6 @@
 		font-size: 14px;
 		border-radius: 4px;
 		border: 1px solid #ccc;
+		width: 50%;
 	}
 }

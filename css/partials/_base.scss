@@ -1,51 +1,51 @@
 @import "colors";
+@import "mixins";
 
-body {
-	position: relative;
-}
-
-article {
-	padding: 50px 0;
-}
-
+// Navigation Bar
 .navbar-default {
 	position: absolute;
 	width: 100%;
+	margin-top: 20px;
 	background: transparent;
 	.navbar-brand {
 		img {
 			width: 150px;
 		}
 	}
+	.navbar-toggle {
+		margin-top: 0.5em;
+		margin-right: 0.5em;
+		padding: 0.5em;
+		font-size: 2em;
+		border: 0;
+		&:hover, &:active {
+			background-color: rgba(255,255,255,0.5)
+		}		
+	}
 	.navbar-nav {
-		font-size: 1em;
-		font-weight: 700;
-		letter-spacing: 0.15em;		
+		@include font-label;
 		margin-top: 18px;
 		.open>a, .open>a:focus, .open>a:hover {
+			color: $body-font-hover;
 			background: transparent;
 		}
 		li>a {
 			color: $body-font-normal;
-			text-transform: uppercase;
 			&:hover, &:active {
 				background: none;
 			}
 		}
 	}
 	.navbar-nav>li>.dropdown-menu {
-		padding: 0.5em;
+		padding: 1em;
 		border-top-left-radius: 4px;
 		border-top-right-radius: 4px;
 		li>a {
+			@include font-label;
 			padding: 0;
-			&:hover {
-				color: $body-font-hover;
-			}
 		}
 	}
 }
-
 ul.social-media {
 	padding-top: 30px;
 	padding-right: 30px;
@@ -59,19 +59,77 @@ ul.social-media {
 	}
 }
 
+// Structure
+body {
+	position: relative;
+}
+
+article {
+	padding: 50px 0;
+}
+
+.row {
+	padding: 0;
+	margin: 0;
+}
+
+// Buttons
+.btn-primary {
+	background-color: #3D9936;
+	border: #3A8C34;
+	margin: 10px;
+}
+
+// Icons
+.glyphicon {
+	font-size: 0.6em;
+}
+
+// Header
 .jumbotron {
 	margin-bottom: 0;
 	background-size: cover;
 	.project-name {
-		padding: 60px 0 150px 0;
+		padding: 60px 0 200px 0;
 		h1 {
 			font-size: 3em;
+			margin-top: 1em;
 			margin-bottom: 0;
-
 		}
 	}
 }
 
+// Project Detail
+ul.project-nav {
+	li {
+		@include font-label;
+		display: inline-block;
+		cursor: pointer;
+		a:hover, a:active {
+			background: none;
+		}
+	}
+}
+.project-description {
+	padding: 0 15px;
+	margin-bottom: 2em;
+	form {
+		padding: 10em;
+	}
+}
+.project-box {
+	.project-detail {
+		background-color: $project-detail-background;
+		min-height: 320px;
+		padding: 2em 3em;
+		margin-bottom: 150px;
+		border-radius: 5px;
+		font-weight: 300;
+		h4 {
+			padding-bottom: 0.5em;
+		}
+	}
+}
 code {
 	background-color: transparent;
 	color: $code-font-normal;
@@ -87,26 +145,27 @@ code {
 		color: $code-font-attribute;
 	}
 }	
+pre {
+	line-height: 0.5em;
+	border: 0;
+	margin-bottom: 1em;
+}
+.code-group {
+	margin: 0.5em 0;
+}
 
-.form-group {
-	label {
-		text-transform: uppercase;
-		font-size: 0.8em;
-		padding-top: 0.5em;
-		padding-left: 0.1em;
+// Footer
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding: 3em 0;
+	background: $secondary-background-color;
+	font-weight: 300;
+	color: $grey-600; 
+	.sub-footer-links {
+		span {
+			@include font-label;
+		}	
 	}
-}
-
-.row {
-	padding: 0;
-}
-
-.btn-primary {
-	background-color: #3D9936;
-	border: #3A8C34;
-	margin: 10px;
-}
-
-.glyphicon {
-	font-size: 0.6em;
 }

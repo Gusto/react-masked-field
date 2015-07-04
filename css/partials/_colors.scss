@@ -1,15 +1,94 @@
-$primary-background-color: #D8EDD7;
-$secondary-background-color: #C5C5C2;
+// Green Scale
+$green-50: #F0F9EF;
+$green-100: #D8EDD7;
+$green-200: #AAD5A7;
+$green-300: #7EBB7A;
+$green-400: #56A850;
+$green-500: #3D9936;
+$green-600: #3A8C34;
+$green-700: #327A2C; 
+$green-800: #2B6C26;
+$green-900: #215B1D;
 
-$project-detail-font: #DBB705;
-$project-detail-background: #F0F0EE;
+// Grey Scale
+$grey-50: #F7F7F6;
+$grey-100: #F0F0EE;
+$grey-200: #E3E3E1;
+$grey-300: #C5C5C2;
+$grey-400: #A5A5A0;
+$grey-500: #8F8F88;
+$grey-600: #6E6E67;
+$grey-700: #575750;
+$grey-800: #3F3F39;
+$grey-900: #23231E;
 
-$body-font-normal: #23231E;
-$body-font-hover: #3F3F39;
+// Yellow Scale
+$canary-100: #FCF9DF;
+$canary-200: #FAF5CD; 
+$canary-300: #F8F1BB;
+$canary-400: #F6EDA8;
+$canary-500: #F7EB93;
+$canary-600: #F4E67D;
+$canary-700: #EEDF6E;
+$canary-800: #E1D261;
+$canary-900: #CFC155;
 
-$code-font-normal: #6E6E67;
-$code-font-variable: #438D9E;
-$code-font-method: #4CBFB9;
-$code-font-attribute: #B25928;
+$canary-a100: #FAFFB3;
+$canary-a300: #FFF86E;
+$canary-a500: #FBE334;
+$canary-a700: #EDCC0A;
 
-$language-react: #F0F0EE;
+// Taupe Scale
+$taupe-50: #EDECE8;
+$taupe-100: #D6D5CC;
+$taupe-200: #A8A594;
+$taupe-300: #807D6B;
+$taupe-400: #6B6856;
+$taupe-500: #5C5947;
+$taupe-600: #504D3F;
+$taupe-700: #444236;
+$taupe-800: #36342B;
+$taupe-900: #272725;
+
+// Blue Scale
+$blue-200: #6DB8C9;
+$blue-400: #438D9E;
+$blue-500: #3B7D8F;
+
+// Aqua Scale
+$aqua-200: #7BD6CF;
+$aqua-400: #45AFAA; 
+$aqua-500: #389B99;
+
+// Red Scale
+$red-500: #CC4934;
+
+// Carrot Scale
+$carrot-500: #E68B46;
+
+// White
+$white: #FFFFFF;
+$black: #000000;
+
+// Body 
+$body-font-normal: $grey-900;
+$body-font-hover: $white;
+
+// Tags
+$tag-react: $canary-a300;
+$tag-node: #000000;
+$tag-backbone: #000000; 
+$tag-ruby: #000000; 
+
+// Home
+$primary-background-color: $green-100;
+$secondary-background-color: $grey-300;
+
+// Default Project
+$project-detail-background: $grey-100;
+
+// Default Project Detail
+$code-font-normal: $grey-600;
+$code-font-variable: $blue-400;
+$code-font-method: $aqua-400;
+$code-font-attribute: $red-500;

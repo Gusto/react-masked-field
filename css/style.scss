@@ -1,5 +1,14 @@
 @import "import_all_styles";
 
+// Home Page
+.message {
+	img {
+		padding-top: 15px;
+		width: 30px;
+		float: right;
+	}
+}
+
 ul.project-list {
 	li {
 		.project {
@@ -15,86 +24,27 @@ ul.project-list {
 	}
 }
 
-.message {
-	img {
-		padding-top: 15px;
-		width: 40px;
-		float: right;
-	}
-}
-
 .tag-type {
-		position: absolute;
-		top: 15px;
-		right: -5px;
-		font-size: 0.9em;
-		font-weight: 700;
-		letter-spacing: 0.15em;
-		padding: 10px 25px;
-		background-color: white;
-		text-transform: uppercase;
-}
-
-ul.project-nav {
-	margin-top: 20px;
-	li {
-		display: inline-block;
-		font-size: 0.8em;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.15em;
-		cursor: pointer;
-		a:hover, a:active {
-			background: none;
-		}
+	@include font-label;
+	position: absolute;
+	top: 15px;
+	right: -5px;
+	padding: 10px 25px;
+	color: $grey-800;
+	&.tag-react {
+		background-color: $canary-600;
 	}
-}
-
-.project-description {
-	padding: 0 15px;
-	margin-bottom: 0;
-	form {
-		padding: 10em;
+	&.tag-node {
+		background-color: $aqua-200;
 	}
-}
-
-.project-box {
-	.project-detail {
-		background-color: $project-detail-background;
-		min-height: 320px;
-		padding: 2em 3em;
-		margin-bottom: 150px;
-		border-radius: 5px;
-		font-weight: 300;
-		h4 {
-			padding-bottom: 0.5em;
-		}
-	}
+	&.tag-ruby {
+		background-color: $carrot-500;
+	}	
 }
 
 .jobs-posting {
 	padding: 20px 0 150px 0;
 	img {
 		width: 80px;
-	}
-}
-
-.footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	padding: 3em 0;
-	background: $secondary-background-color;
-	font-weight: 300;
-	letter-spacing: 0.1em;
-	.sub-footer-links {
-		padding-top: 10px;
-		img {
-			width: 100px;
-		}
-		span {
-			font-weight: 600;
-			text-transform: uppercase;
-		}	
 	}
 }

@@ -1,9 +1,11 @@
 @import url(http://fonts.googleapis.com/css?family=Lato:300,400,700|Raleway:400,300,500);
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700|Raleway:400,300,500);
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700|Raleway:400,300,500);
 #home .jumbotron {
-  background: url("../css/assets/ZP-background-playground.svg") bottom repeat-x, linear-gradient(to bottom, #8dbc8d 0%, #d8edd7 46%, #ffffff 100%); }
+  background: url("../css/assets/ZP-background-playground.svg") bottom repeat-x, linear-gradient(to bottom, #56A850 0%, #AAD5A7 46%, #FFFFFF 100%); }
 
 #react-masked-field .jumbotron {
-  background: url("../css/assets/ZP-background-swingset.svg") bottom repeat-x, linear-gradient(to bottom, #f2c763 0%, #f7eb93 46%, #ffffff 100%); }
+  background: url("../css/assets/ZP-background-swingset.svg") bottom repeat-x, linear-gradient(to bottom, #E1D261 0%, #F7EB93 46%, #FFFFFF 100%); }
 
 .react-masked-field-demo input {
   display: block;
@@ -11,40 +13,61 @@
   padding: 6px 12px;
   font-size: 14px;
   border-radius: 4px;
-  border: 1px solid #ccc; }
+  border: 1px solid #ccc;
+  width: 50%; }
 
 body {
-  position: relative; }
+  font-family: "Lato", sans-serif;
+  font-weight: normal; }
 
-article {
-  padding: 50px 0; }
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Raleway", sans-serif;
+  font-weight: 100; }
+
+p {
+  font-weight: 300;
+  line-height: 1.5em; }
 
 .navbar-default {
   position: absolute;
   width: 100%;
+  margin-top: 20px;
   background: transparent; }
   .navbar-default .navbar-brand img {
     width: 150px; }
+  .navbar-default .navbar-toggle {
+    margin-top: 0.5em;
+    margin-right: 0.5em;
+    padding: 0.5em;
+    font-size: 2em;
+    border: 0; }
+    .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:active {
+      background-color: rgba(255, 255, 255, 0.5); }
   .navbar-default .navbar-nav {
-    font-size: 1em;
-    font-weight: 700;
+    font-family: "Lato", sans-serif;
+    font-size: 0.9em;
     letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 700;
     margin-top: 18px; }
     .navbar-default .navbar-nav .open > a, .navbar-default .navbar-nav .open > a:focus, .navbar-default .navbar-nav .open > a:hover {
+      color: #FFFFFF;
       background: transparent; }
     .navbar-default .navbar-nav li > a {
-      color: #23231E;
-      text-transform: uppercase; }
+      color: #23231E; }
       .navbar-default .navbar-nav li > a:hover, .navbar-default .navbar-nav li > a:active {
         background: none; }
   .navbar-default .navbar-nav > li > .dropdown-menu {
-    padding: 0.5em;
+    padding: 1em;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px; }
     .navbar-default .navbar-nav > li > .dropdown-menu li > a {
+      font-family: "Lato", sans-serif;
+      font-size: 0.9em;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 700;
       padding: 0; }
-      .navbar-default .navbar-nav > li > .dropdown-menu li > a:hover {
-        color: #3F3F39; }
 
 ul.social-media {
   padding-top: 30px;
@@ -56,35 +79,15 @@ ul.social-media {
       width: 25px;
       margin-left: 5px; }
 
-.jumbotron {
-  margin-bottom: 0;
-  background-size: cover; }
-  .jumbotron .project-name {
-    padding: 60px 0 150px 0; }
-    .jumbotron .project-name h1 {
-      font-size: 3em;
-      margin-bottom: 0; }
+body {
+  position: relative; }
 
-code {
-  background-color: transparent;
-  color: #6E6E67;
-  padding: 0;
-  margin-top: 1em; }
-  code span.variable {
-    color: #438D9E; }
-  code span.method {
-    color: #4CBFB9; }
-  code span.attribute {
-    color: #B25928; }
-
-.form-group label {
-  text-transform: uppercase;
-  font-size: 0.8em;
-  padding-top: 0.5em;
-  padding-left: 0.1em; }
+article {
+  padding: 50px 0; }
 
 .row {
-  padding: 0; }
+  padding: 0;
+  margin: 0; }
 
 .btn-primary {
   background-color: #3D9936;
@@ -94,56 +97,30 @@ code {
 .glyphicon {
   font-size: 0.6em; }
 
-body {
+.jumbotron {
+  margin-bottom: 0;
+  background-size: cover; }
+  .jumbotron .project-name {
+    padding: 60px 0 200px 0; }
+    .jumbotron .project-name h1 {
+      font-size: 3em;
+      margin-top: 1em;
+      margin-bottom: 0; }
+
+ul.project-nav li {
   font-family: "Lato", sans-serif;
-  font-weight: normal;
-  font-size: 13px; }
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Raleway", sans-serif;
-  font-weight: normal; }
-
-ul.project-list li .project {
-  position: relative;
-  background: #F0F0EE;
-  cursor: pointer;
-  margin: 0.5em 0;
-  padding: 4.5em 2em 2em 2em;
-  font-size: 1em;
-  font-weight: 300;
-  border-radius: 5px; }
-
-.message img {
-  padding-top: 15px;
-  width: 40px;
-  float: right; }
-
-.tag-type {
-  position: absolute;
-  top: 15px;
-  right: -5px;
   font-size: 0.9em;
-  font-weight: 700;
   letter-spacing: 0.15em;
-  padding: 10px 25px;
-  background-color: white;
-  text-transform: uppercase; }
-
-ul.project-nav {
-  margin-top: 20px; }
-  ul.project-nav li {
-    display: inline-block;
-    font-size: 0.8em;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    cursor: pointer; }
-    ul.project-nav li a:hover, ul.project-nav li a:active {
-      background: none; }
+  text-transform: uppercase;
+  font-weight: 700;
+  display: inline-block;
+  cursor: pointer; }
+  ul.project-nav li a:hover, ul.project-nav li a:active {
+    background: none; }
 
 .project-description {
   padding: 0 15px;
-  margin-bottom: 0; }
+  margin-bottom: 2em; }
   .project-description form {
     padding: 10em; }
 
@@ -157,10 +134,25 @@ ul.project-nav {
   .project-box .project-detail h4 {
     padding-bottom: 0.5em; }
 
-.jobs-posting {
-  padding: 20px 0 150px 0; }
-  .jobs-posting img {
-    width: 80px; }
+code {
+  background-color: transparent;
+  color: #6E6E67;
+  padding: 0;
+  margin-top: 1em; }
+  code span.variable {
+    color: #438D9E; }
+  code span.method {
+    color: #45AFAA; }
+  code span.attribute {
+    color: #CC4934; }
+
+pre {
+  line-height: 0.5em;
+  border: 0;
+  margin-bottom: 1em; }
+
+.code-group {
+  margin: 0.5em 0; }
 
 .footer {
   position: absolute;
@@ -169,13 +161,74 @@ ul.project-nav {
   padding: 3em 0;
   background: #C5C5C2;
   font-weight: 300;
-  letter-spacing: 0.1em; }
-  .footer .sub-footer-links {
-    padding-top: 10px; }
-    .footer .sub-footer-links img {
-      width: 100px; }
-    .footer .sub-footer-links span {
-      font-weight: 600;
-      text-transform: uppercase; }
+  color: #6E6E67; }
+  .footer .sub-footer-links span {
+    font-family: "Lato", sans-serif;
+    font-size: 0.9em;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 700; }
+
+body {
+  font-family: "Lato", sans-serif;
+  font-weight: normal; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Raleway", sans-serif;
+  font-weight: 100; }
+
+p {
+  font-weight: 300;
+  line-height: 1.5em; }
+
+body {
+  font-family: "Lato", sans-serif;
+  font-weight: normal; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Raleway", sans-serif;
+  font-weight: 100; }
+
+p {
+  font-weight: 300;
+  line-height: 1.5em; }
+
+.message img {
+  padding-top: 15px;
+  width: 30px;
+  float: right; }
+
+ul.project-list li .project {
+  position: relative;
+  background: #F0F0EE;
+  cursor: pointer;
+  margin: 0.5em 0;
+  padding: 4.5em 2em 2em 2em;
+  font-size: 1em;
+  font-weight: 300;
+  border-radius: 5px; }
+
+.tag-type {
+  font-family: "Lato", sans-serif;
+  font-size: 0.9em;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 700;
+  position: absolute;
+  top: 15px;
+  right: -5px;
+  padding: 10px 25px;
+  color: #3F3F39; }
+  .tag-type.tag-react {
+    background-color: #F4E67D; }
+  .tag-type.tag-node {
+    background-color: #7BD6CF; }
+  .tag-type.tag-ruby {
+    background-color: #E68B46; }
+
+.jobs-posting {
+  padding: 20px 0 150px 0; }
+  .jobs-posting img {
+    width: 80px; }
 
 /*# sourceMappingURL=style.css.map */

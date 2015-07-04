@@ -25,9 +25,9 @@
 								%li 
 									%a{:href => ""} RoboJeremy
 								%li 
-									%a{:href => ""} P3									
+									%a{:href => ""} P3                  
 						%li
-							%a{:href => "http://engineering.zenpayroll.com/"} Blog 						
+							%a{:href => "http://engineering.zenpayroll.com/"} Blog            
 					.navbar-right
 						%ul.social-media
 							%li
@@ -42,7 +42,7 @@
 							%li
 								%a{:href => ""}
 									%img{:src => "css/assets/ZP-social-twitter.svg"}
-		#react-masked-field							
+		#react-masked-field             
 			%article.jumbotron
 				.container
 					.row.project-name.text-center
@@ -69,7 +69,7 @@
 							%p The example below will only allow a numeric entry for dates.
 							%form
 								.form-group
-									%label Date
+									%label date
 									.react-masked-field-demo
 						#project-installation.project-detail.hidden
 							%h4 Installation
@@ -87,7 +87,7 @@
 										require
 									('react-masked-field');
 							%p 
-								%code									
+								%code                 
 									%span.variable
 										function 
 									handleComplete(date) {
@@ -96,7 +96,7 @@
 										&nbsp; console.log
 									('Date is ' + date);
 									%br/
-									}	
+									} 
 							%p 
 								%code
 									React.render(
@@ -107,10 +107,64 @@
 										&nbsp; document.getElementById
 									('demo')
 									%br/
-									);							
+									);              
 						#project-props.project-detail.hidden
 							%h4 Props
-							%code
+							.form-group
+								%label mask
+								.code-group
+									%code 
+										string 
+										%span.attribute
+											optional                
+								%p The mask applied to the value of the field. For each character of the mask that matches a translation, the input character will be restricted to the corresponding regular expression. If no mask is provided, it will function like a normal input element.
+							.form-group         
+								%label format
+								.code-group
+									%code 
+										string 
+										%span.attribute
+											optional
+									%br/    
+									%code 
+										default
+										%span.method
+											'_'             
+								%p The placeholder used for characters that haven't yet been filled in (.e.g MM/DD/YYYY for a date field). The format string should have a length of 1 or match the length of the mask.
+							.form-group                   
+								%label translations
+								.code-group
+									%code 
+										object
+										%span.attribute
+											optional
+									%br/    
+									%code 
+										default   
+										%br/
+										%span.method 
+											{
+										%br/	
+										%span.method 	
+											&#39;9&#39;: /\d/, 
+										%br/
+										%span.method 
+											&#39;a&#39;: /[A-Za-z]/,
+										%br/
+										%span.method 
+											&#39;*&#39;: /[A-Za-z0-9]/
+										%br/
+										%span.method 	
+											}										
+								%p Additional (or overridden) translations for converting mask characters to regular expressions.
+							.form-group                   
+								%label onComplete
+								.example
+									%code 
+										function
+										%span.attribute
+											optional                
+								%p The onComplete event is triggered when the mask has been completely filled. The value of the field is passed to the event handler.
 
 		%footer.footer
 			.container
@@ -118,7 +172,7 @@
 					.sub-footer-links.col-sm-12.text-center
 						%span
 							Privacy Policy 
-						&#169; 2015 ZenPayroll Engineering. All Rights Reserved.		
+						&#169; 2015 ZenPayroll Engineering. All Rights Reserved.    
 
 		%script{:src => "http://code.jquery.com/jquery-1.11.2.min.js"}
 		%script{:src => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"}
@@ -127,7 +181,7 @@
 		%script{:src => "https://fb.me/JSXTransformer-0.13.3.js"}
 		%script{:src => "https://fb.me/react-with-addons-0.13.3.min.js"}
 		
-		%script{:src => "dist/react-masked-field.min.js"}		
+		%script{:src => "dist/react-masked-field.min.js"}   
 		%script{:src => "js/main.js"}
 		%script{:src => "js/react-masked-field.js", :type => "text/jsx"}
 

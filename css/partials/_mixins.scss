@@ -1,3 +1,5 @@
+@import "typography";
+
 @mixin linear-gradient($fromColor, $toColor) {
   background-color: $toColor; 
   background-image: -webkit-linear-gradient(to bottom, $fromColor, $toColor);
@@ -5,4 +7,16 @@
   background-image:     -ms-linear-gradient(to bottom, $fromColor, $toColor); 
   background-image:      -o-linear-gradient(to bottom, $fromColor, $toColor); 
   background-image:         linear-gradient(to bottom, $fromColor, $toColor);
+}
+
+@mixin font-title {
+	font-family: $raleway;
+}
+
+@mixin font-label {
+	font-family: $lato;
+	font-size: 0.9em;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+	font-weight: 700;
 }

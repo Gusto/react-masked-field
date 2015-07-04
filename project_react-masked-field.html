@@ -103,7 +103,7 @@
               <p>The example below will only allow a numeric entry for dates.</p>
               <form>
                 <div class='form-group'>
-                  <label>Date</label>
+                  <label>date</label>
                   <div class='react-masked-field-demo'></div>
                 </div>
               </form>
@@ -153,7 +153,73 @@
             </div>
             <div class='project-detail hidden' id='project-props'>
               <h4>Props</h4>
-              <code></code>
+              <div class='form-group'>
+                <label>mask</label>
+                <div class='code-group'>
+                  <code>string
+                  <span class='attribute'>
+                    optional
+                  </span></code>
+                </div>
+                <p>The mask applied to the value of the field. For each character of the mask that matches a translation, the input character will be restricted to the corresponding regular expression. If no mask is provided, it will function like a normal input element.</p>
+              </div>
+              <div class='form-group'>
+                <label>format</label>
+                <div class='code-group'>
+                  <code>string
+                  <span class='attribute'>
+                    optional
+                  </span></code>
+                  <br>
+                  <code>default
+                  <span class='method'>
+                    '_'
+                  </span></code>
+                </div>
+                <p>The placeholder used for characters that haven't yet been filled in (.e.g MM/DD/YYYY for a date field). The format string should have a length of 1 or match the length of the mask.</p>
+              </div>
+              <div class='form-group'>
+                <label>translations</label>
+                <div class='code-group'>
+                  <code>object
+                  <span class='attribute'>
+                    optional
+                  </span></code>
+                  <br>
+                  <code>default
+                  <br>
+                  <span class='method'>
+                    {
+                  </span>
+                  <br>
+                  <span class='method'>
+                    &#39;9&#39;: /\d/,
+                  </span>
+                  <br>
+                  <span class='method'>
+                    &#39;a&#39;: /[A-Za-z]/,
+                  </span>
+                  <br>
+                  <span class='method'>
+                    &#39;*&#39;: /[A-Za-z0-9]/
+                  </span>
+                  <br>
+                  <span class='method'>
+                    }
+                  </span></code>
+                </div>
+                <p>Additional (or overridden) translations for converting mask characters to regular expressions.</p>
+              </div>
+              <div class='form-group'>
+                <label>onComplete</label>
+                <div class='example'>
+                  <code>function
+                  <span class='attribute'>
+                    optional
+                  </span></code>
+                </div>
+                <p>The onComplete event is triggered when the mask has been completely filled. The value of the field is passed to the event handler.</p>
+              </div>
             </div>
           </div>
         </div>
