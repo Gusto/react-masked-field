@@ -5,56 +5,69 @@
 .navbar-default {
 	position: absolute;
 	width: 100%;
-	margin-top: 20px;
 	background: transparent;
-	.navbar-brand {
-		img {
-			width: 150px;
-		}
-	}
-	.navbar-toggle {
-		margin-top: 0.5em;
-		margin-right: 0.5em;
-		padding: 0.5em;
-		font-size: 2em;
-		border: 0;
-		&:hover, &:active {
-			background-color: rgba(255,255,255,0.5)
+	.navbar-header {
+		.navbar-brand {
+			img {
+				margin-top: 15px;
+				width: 160px;
+			}
 		}		
-	}
-	.navbar-nav {
-		@include font-label;
-		margin-top: 18px;
-		.open>a, .open>a:focus, .open>a:hover {
-			color: $body-font-hover;
-			background: transparent;
-		}
-		li>a {
-			color: $body-font-normal;
-			&:hover, &:active {
-				background: none;
+		.navbar-toggle {
+			margin-top: 1em;
+			margin-right: 0.5em;
+			padding: 0.5em;
+			font-size: 2em;
+			border: 0;
+			background-color: transparent;
+			&:hover, &:active, &:focus {
+				background-color: transparent;
 			}
 		}
 	}
-	.navbar-nav>li>.dropdown-menu {
-		padding: 1em;
-		border-top-left-radius: 4px;
-		border-top-right-radius: 4px;
-		li>a {
+	.navbar-collapse {
+		border: 0;
+		box-shadow: none;
+		margin-top: 2.5em;
+		.navbar-nav {
 			@include font-label;
-			padding: 0;
+			margin-top: 10px;
+			li>a {
+				color: $body-font-normal;
+				padding: 0.5em 1em 0.1em 1em;
+				&:hover, &:active {
+					background: none;
+				}
+			}	
+			.dropdown-menu {
+				padding: 1em;
+				border: 0;
+				box-shadow: none;
+				border-top-right-radius: 4px;
+				a {
+					@include font-label;
+					text-transform: lowercase;
+					padding: 0;
+					font-weight: 400;
+				}
+			}
+			.open>a, .open>a:focus, .open>a:hover {
+				background: $white;
+				border-top-left-radius: 4px;
+				border-top-right-radius: 4px;
+			}								
 		}
 	}
 }
 ul.social-media {
-	padding-top: 30px;
-	padding-right: 30px;
+	padding: 12px;
 	list-style: none;
 	li {
 		display: inline-block;
 		img {
 			width: 25px;
 			margin-left: 5px;
+			margin-right: 5px;
 		}
 	}
 }
@@ -167,5 +180,35 @@ pre {
 		span {
 			@include font-label;
 		}	
+	}
+}
+
+@media (max-width:768px) {
+	.navbar-default {
+		.navbar-collapse {
+			margin-top: 0;
+			.navbar-nav {
+				text-align: center;
+				padding: 4em;
+				margin-top: 0;
+				margin-bottom: 0;
+				background-color: rgba(255,255,255,0.9);		
+				.dropdown-menu {
+					text-align: center;
+					padding: 1em 2em;
+					li>a {
+						text-transform: lowercase;
+						color: $body-font-normal;
+						font-weight: 400;
+					}											
+				}	
+				.open>a, .open>a:focus, .open>a:hover {
+					background: transparent;
+				}															
+			}
+			ul.social-media {
+				display: none;
+			}		
+		}
 	}
 }

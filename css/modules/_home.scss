@@ -3,5 +3,8 @@
 #home {
 	.jumbotron {
 		background: url("../css/assets/ZP-background-playground.svg") bottom repeat-x, linear-gradient(to bottom, $green-400 0%,$green-200 46%,$white 100%);
+		h1 {
+			color: $green-900;
+		}
 	}
 }
