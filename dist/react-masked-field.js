@@ -1,5 +1,5 @@
 /**
-* react-masked-field 0.1.0
+* react-masked-field 0.1.1
 */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.MaskedField = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
@@ -20,51 +20,41 @@ var _require = require('./SelectionUtils');
 var getSelection = _require.getSelection;
 var setSelection = _require.setSelection;
 
-var formatValidator = require('./formatValidator');
-
 var DEFAULT_TRANSLATIONS = {
   '9': /\d/,
   'a': /[A-Za-z]/,
   '*': /[A-Za-z0-9]/
 };
 
+var BLANK_CHAR = '_';
+
 var MaskedField = React.createClass({
   displayName: 'MaskedField',
 
   propTypes: {
     mask: React.PropTypes.string,
-    format: formatValidator,
     translations: React.PropTypes.object,
     value: React.PropTypes.string,
+    placeholder: React.PropTypes.string,
     onChange: React.PropTypes.func,
     onKeyDown: React.PropTypes.func,
     onComplete: React.PropTypes.func,
     onFocus: React.PropTypes.func,
+    onBlur: React.PropTypes.func,
     valueLink: React.PropTypes.object
-  },
-  getDefaultProps: function getDefaultProps() {
-    return { format: '_' };
   },
   getInitialState: function getInitialState() {
     if (this.props.mask == null) {
       return null;
     }
 
-    this._buffer = [];
-    for (var idx = 0; idx < this.props.mask.length; ++idx) {
-      if (this._getPattern(idx)) {
-        if (this._firstNonMaskIdx == null) {
-          this._firstNonMaskIdx = idx;
-        }
-        this._buffer.push(this._getFormatChar(idx));
-      } else {
-        this._buffer.push(this.props.mask[idx]);
-      }
-    }
+    this._buffer = this._initialBuffer();
+    this._cursorPos = this._firstNonMaskIdx;
 
+    var propsValue = this._getPropsValue();
     return {
       // TODO: Any way we can do this in one pass?
-      value: this._maskedValue(this._getPropsValue() || '')
+      value: propsValue ? this._maskedValue(propsValue) : ''
     };
   },
   componentDidUpdate: function componentDidUpdate() {
@@ -79,17 +69,20 @@ var MaskedField = React.createClass({
     }
   },
   render: function render() {
-    var props = undefined;
+    var props = {};
     if (this.props.mask != null) {
       props = {
         onChange: this._handleChange,
         onKeyDown: this._handleKeyDown,
         onFocus: this._handleFocus,
+        onBlur: this._handleBlur,
         value: this.state.value,
         valueLink: null
       };
-    } else {
-      props = {};
+
+      if (this.props.placeholder == null) {
+        props.placeholder = this._initialBuffer().join('');
+      }
     }
 
     return React.createElement('input', _extends({}, this.props, props));
@@ -121,30 +114,61 @@ var MaskedField = React.createClass({
 
     return pattern || DEFAULT_TRANSLATIONS[maskChar];
   },
-  _getFormatChar: function _getFormatChar(idx) {
-    idx = idx < this.props.format.length ? idx : 0;
-    return this.props.format[idx];
-  },
   _resetBuffer: function _resetBuffer(start, end) {
     for (var i = start; i < end; ++i) {
       if (this._getPattern(i)) {
-        this._buffer[i] = this._getFormatChar(i);
+        this._buffer[i] = BLANK_CHAR;
       }
     }
+  },
+  _initialBuffer: function _initialBuffer() {
+    var buffer = [];
+    for (var idx = 0; idx < this.props.mask.length; ++idx) {
+      if (this._getPattern(idx)) {
+        if (this._firstNonMaskIdx == null) {
+          this._firstNonMaskIdx = idx;
+        }
+        buffer.push('_');
+      } else {
+        buffer.push(this.props.mask[idx]);
+      }
+    }
+
+    return buffer;
+  },
+  _isBufferEmpty: function _isBufferEmpty() {
+    var _this = this;
+
+    return this._buffer.every(function (char, idx) {
+      return !_this._getPattern(idx) || char === BLANK_CHAR;
+    });
+  },
+  _isBufferFull: function _isBufferFull() {
+    var _this2 = this;
+
+    return this._buffer.every(function (char, idx) {
+      return !_this2._getPattern(idx) || char !== BLANK_CHAR;
+    });
   },
   _nextNonMaskIdx: function _nextNonMaskIdx(idx) {
-    for (var next = idx + 1; next < this.props.mask.length; ++next) {
+    var next = idx + 1;
+    for (; next < this.props.mask.length; ++next) {
       if (this._getPattern(next)) {
-        return next;
+        break;
       }
     }
+
+    return next;
   },
   _prevNonMaskIdx: function _prevNonMaskIdx(idx) {
-    for (var prev = idx - 1; prev >= 0; --prev) {
+    var prev = idx - 1;
+    for (; prev >= 0; --prev) {
       if (this._getPattern(prev)) {
-        return prev;
+        break;
       }
     }
+
+    return prev;
   },
   _callOnChange: function _callOnChange(value) {
     if (this.props.valueLink != null) {
@@ -154,13 +178,7 @@ var MaskedField = React.createClass({
     }
   },
   _callOnComplete: function _callOnComplete(value) {
-    if (this.props.onComplete) {
-      for (var i = 0; i < this.props.mask.length; ++i) {
-        if (this._getPattern(i) && this._buffer[i] === this._getFormatChar(i)) {
-          return;
-        }
-      }
-
+    if (this.props.onComplete && this._isBufferFull()) {
       this.props.onComplete(value);
     }
   },
@@ -171,14 +189,25 @@ var MaskedField = React.createClass({
     this.setState({ value: value });
   },
   _handleFocus: function _handleFocus(e) {
-    var _this = this;
+    var _this3 = this;
 
     setTimeout(function () {
-      _this._setSelection(_this._cursorPos);
+      _this3._setSelection(_this3._cursorPos);
     }, 0);
 
     if (this.props.onFocus) {
       this.props.onFocus(e);
+    }
+
+    this.setState({ value: this._buffer.join('') });
+  },
+  _handleBlur: function _handleBlur(e) {
+    if (this._isBufferEmpty()) {
+      this._setValue('');
+    }
+
+    if (this.props.onBlur) {
+      this.props.onBlur(e);
     }
   },
   _handleKeyDown: function _handleKeyDown(e) {
@@ -224,23 +253,28 @@ var MaskedField = React.createClass({
     for (var bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; ++bufferIdx) {
       var pattern = this._getPattern(bufferIdx);
       if (pattern) {
-        this._buffer[bufferIdx] = this._getFormatChar(bufferIdx);
-        while (valueIdx < value.length) {
+        var lastPatternIdx = bufferIdx;
+        this._buffer[bufferIdx] = BLANK_CHAR;
+        while (valueIdx < value.length && bufferIdx < this.props.mask.length) {
           var c = value[valueIdx++];
-          if (pattern.test(c)) {
+          if (c === this._buffer[bufferIdx]) {
+            bufferIdx++;
+          } else if (pattern.test(c)) {
             this._buffer[bufferIdx] = c;
             break;
-          } else if (this._cursorPos > bufferIdx) {
+          }
+
+          if (this._cursorPos > lastPatternIdx) {
             this._cursorPos--;
           }
         }
 
         if (valueIdx >= value.length) {
-          this._resetBuffer(bufferIdx + 1, this.props.mask.length);
+          this._resetBuffer(lastPatternIdx + 1, this.props.mask.length);
           break;
         }
       } else {
-        if (valueIdx <= originalCursorPos) {
+        if (valueIdx <= originalCursorPos && this._cursorPos < this.props.mask.length - 1) {
           this._cursorPos++;
         }
         if (this._buffer[bufferIdx] === value[valueIdx]) {
@@ -255,7 +289,7 @@ var MaskedField = React.createClass({
 
 module.exports = MaskedField;
 
-},{"./SelectionUtils":2,"./formatValidator":3,"react":"react"}],2:[function(require,module,exports){
+},{"./SelectionUtils":2,"react":"react"}],2:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -286,21 +320,5 @@ module.exports = {
   }
 };
 
-},{}],3:[function(require,module,exports){
-'use strict';
-
-var React = (window ? window.React : null) || require('react');
-
-module.exports = function (props, propName, componentName) {
-  var result = React.PropTypes.string.apply(null, arguments);
-
-  if (result === null && props.mask != null && props.format != null && props.format.length !== 1 && props.format.length !== props.mask.length) {
-    var msg = 'Invalid prop `' + propName + '` supplied to `' + componentName + '`, length must be 1 or match the length of prop `mask`.';
-    result = new Error(msg);
-  }
-
-  return result;
-};
-
-},{"react":"react"}]},{},[1])(1)
+},{}]},{},[1])(1)
 });
