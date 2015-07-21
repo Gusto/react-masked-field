@@ -683,6 +683,50 @@ describe('MaskedField', function() {
         });
       });
 
+      context("when the mask is '036-9999999999-09'", function() {
+        before(function() {
+          props.mask = '036-9999999999-09';
+        });
+
+        describe('typing a key', function () {
+          context('when the character matches the mask', function() {
+            beforeEach(function() {
+              simulateKeyPress('2');
+            });
+
+            it('adds the character to the value', function() {
+              expect(getFieldValue()[4]).to.equal('2');
+            });
+
+            it('moves the cursor to the correct position', function() {
+              cursorPosShouldEql(5);
+            });
+
+            it('correctly shifts the mask characters', function() {
+              expect(getFieldValue()).to.equal('036-2_________-0_');
+            });
+
+            context('when the next character is a mask character', function () {
+              beforeEach(function () {
+                simulateTyping('345678912');
+              });
+
+              it('adds the character to the value', function() {
+                expect(getFieldValue().substring(5, 14)).to.equal('345678912');
+              });
+
+              it('moves the cursor to the correct position', function() {
+                cursorPosShouldEql(16);
+              });
+
+              it('correctly shifts the mask characters', function() {
+                expect(getFieldValue()).to.equal('036-2345678912-0_');
+              });
+            });
+          });
+        });
+      });
+
       context('when there is no mask', function() {
         before(function() {
           delete props.mask;

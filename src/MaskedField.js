@@ -228,25 +228,30 @@ const MaskedField = React.createClass({
     for (let bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; ++bufferIdx) {
       let pattern = this._getPattern(bufferIdx);
       if (pattern) {
+        let lastPatternIdx = bufferIdx;
         this._buffer[bufferIdx] = BLANK_CHAR;
-        while (valueIdx < value.length) {
+        while (valueIdx < value.length && bufferIdx < this.props.mask.length) {
           let c = value[valueIdx++];
-          if (pattern.test(c)) {
+          if (c === this._buffer[bufferIdx]) {
+            bufferIdx++;
+          }
+          else if (pattern.test(c)) {
             this._buffer[bufferIdx] = c;
             break;
           }
-          else if (this._cursorPos > bufferIdx) {
+
+          if (this._cursorPos > lastPatternIdx) {
             this._cursorPos--;
           }
         }
 
         if (valueIdx >= value.length) {
-          this._resetBuffer(bufferIdx + 1, this.props.mask.length);
+          this._resetBuffer(lastPatternIdx + 1, this.props.mask.length);
           break;
         }
       }
       else {
-        if (valueIdx <= originalCursorPos) {
+        if (valueIdx <= originalCursorPos && this._cursorPos < this.props.mask.length - 1) {
           this._cursorPos++;
         }
         if (this._buffer[bufferIdx] === value[valueIdx]) {
