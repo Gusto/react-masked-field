@@ -1,5 +1,5 @@
 /**
-* react-masked-field 0.1.1
+* react-masked-field 0.1.2
 */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.MaskedField = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
@@ -96,7 +96,7 @@ var MaskedField = React.createClass({
     }
   },
   _setSelection: function _setSelection(start) {
-    var end = arguments[1] === undefined ? start : arguments[1];
+    var end = arguments.length <= 1 || arguments[1] === undefined ? start : arguments[1];
     return (function () {
       setSelection(this.getDOMNode(), start, end);
     }).apply(this, arguments);
@@ -192,7 +192,7 @@ var MaskedField = React.createClass({
     var _this3 = this;
 
     setTimeout(function () {
-      _this3._setSelection(_this3._cursorPos);
+      return _this3._setSelection(_this3._cursorPos);
     }, 0);
 
     if (this.props.onFocus) {
@@ -247,7 +247,7 @@ var MaskedField = React.createClass({
     this._callOnComplete(value);
   },
   _maskedValue: function _maskedValue(value) {
-    var start = arguments[1] === undefined ? 0 : arguments[1];
+    var start = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
     var originalCursorPos = this._cursorPos = this._getSelection().start;
     for (var bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; ++bufferIdx) {
@@ -262,9 +262,7 @@ var MaskedField = React.createClass({
           } else if (pattern.test(c)) {
             this._buffer[bufferIdx] = c;
             break;
-          }
-
-          if (this._cursorPos > lastPatternIdx) {
+          } else if (this._cursorPos > lastPatternIdx) {
             this._cursorPos--;
           }
         }
@@ -274,11 +272,14 @@ var MaskedField = React.createClass({
           break;
         }
       } else {
-        if (valueIdx <= originalCursorPos && this._cursorPos < this.props.mask.length - 1) {
-          this._cursorPos++;
-        }
         if (this._buffer[bufferIdx] === value[valueIdx]) {
+          if (valueIdx === originalCursorPos) {
+            this._cursorPos++;
+          }
+
           valueIdx++;
+        } else if (valueIdx <= originalCursorPos) {
+          this._cursorPos++;
         }
       }
     }
