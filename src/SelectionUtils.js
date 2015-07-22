@@ -8,7 +8,7 @@ module.exports = {
       end = node.selectionEnd;
     }
     else {
-      let range = document.selection.createRange();
+      const range = document.selection.createRange();
       start = 0 - range.duplicate().moveStart('character', -100000);
       end = start + range.text.length;
     }
@@ -20,7 +20,7 @@ module.exports = {
       node.setSelectionRange(start, end);
     }
     else {
-      let range = node.createTextRange();
+      const range = node.createTextRange();
       range.collapse(true);
       range.moveEnd('character', start);
       range.moveStart('character', end);

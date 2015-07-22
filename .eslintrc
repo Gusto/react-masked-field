@@ -95,6 +95,7 @@
     "vars-on-top": 0, // requires to declare all vars on top of their containing scope (off by default)
     "wrap-iife": 0, // require immediate function invocation to be wrapped in parentheses (off by default)
     "yoda": 1, // require or disallow Yoda conditions
+    "prefer-const": 1,
 
     // Strict Mode
     // These rules relate to using strict mode.

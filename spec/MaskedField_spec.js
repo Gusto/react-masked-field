@@ -15,7 +15,7 @@ describe('MaskedField', function() {
   let component;
   let domNode;
   let getField;
-  let props = {};
+  const props = {};
 
   // FIXME:
   // - undo?

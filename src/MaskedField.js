@@ -39,7 +39,7 @@ const MaskedField = React.createClass({
     this._buffer = this._initialBuffer();
     this._cursorPos = this._firstNonMaskIdx;
 
-    var propsValue = this._getPropsValue();
+    const propsValue = this._getPropsValue();
     return {
       // TODO: Any way we can do this in one pass?
       value: propsValue ? this._maskedValue(propsValue) : ''
@@ -51,7 +51,7 @@ const MaskedField = React.createClass({
     }
   },
   componentDidMount() {
-    let propsValue = this._getPropsValue();
+    const propsValue = this._getPropsValue();
     if (this.props.mask != null && propsValue != null && this.state.value !== propsValue) {
       this._callOnChange(this.state.value);
     }
@@ -80,7 +80,7 @@ const MaskedField = React.createClass({
       return getSelection(this.getDOMNode());
     }
     else {
-      let cursorPos = (this._getPropsValue() || '').length;
+      const cursorPos = (this._getPropsValue() || '').length;
       return {start: cursorPos, end: cursorPos};
     }
   },
@@ -96,8 +96,8 @@ const MaskedField = React.createClass({
     }
   },
   _getPattern(idx) {
-    let maskChar = this.props.mask[idx];
-    let pattern = this.props.translations ? this.props.translations[maskChar] : null;
+    const maskChar = this.props.mask[idx];
+    const pattern = this.props.translations ? this.props.translations[maskChar] : null;
 
     return pattern || DEFAULT_TRANSLATIONS[maskChar];
   },
@@ -109,7 +109,7 @@ const MaskedField = React.createClass({
     }
   },
   _initialBuffer() {
-    let buffer = [];
+    const buffer = [];
     for (let idx = 0; idx < this.props.mask.length; ++idx) {
       if (this._getPattern(idx)) {
         if (this._firstNonMaskIdx == null) {
@@ -199,7 +199,7 @@ const MaskedField = React.createClass({
       }
 
       let value;
-      let pattern = this._getPattern(start);
+      const pattern = this._getPattern(start);
       if (pattern && pattern.test(this._buffer[end])) {
         value = this._maskedValue(this.state.value.substring(end), start);
       }
@@ -219,19 +219,19 @@ const MaskedField = React.createClass({
     }
   },
   _handleChange(e) {
-    let value = this._maskedValue(e.target.value);
+    const value = this._maskedValue(e.target.value);
     this._setValue(value);
     this._callOnComplete(value);
   },
   _maskedValue(value, start=0) {
-    let originalCursorPos = this._cursorPos = this._getSelection().start;
+    const originalCursorPos = this._cursorPos = this._getSelection().start;
     for (let bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; ++bufferIdx) {
-      let pattern = this._getPattern(bufferIdx);
+      const pattern = this._getPattern(bufferIdx);
       if (pattern) {
-        let lastPatternIdx = bufferIdx;
+        const lastPatternIdx = bufferIdx;
         this._buffer[bufferIdx] = BLANK_CHAR;
         while (valueIdx < value.length && bufferIdx < this.props.mask.length) {
-          let c = value[valueIdx++];
+          const c = value[valueIdx++];
           if (c === this._buffer[bufferIdx]) {
             bufferIdx++;
           }
