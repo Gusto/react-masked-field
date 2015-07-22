@@ -170,9 +170,7 @@ const MaskedField = React.createClass({
     this.setState({value});
   },
   _handleFocus(e) {
-    setTimeout(() => {
-      this._setSelection(this._cursorPos);
-    }, 0);
+    setTimeout(() => this._setSelection(this._cursorPos), 0);
 
     if (this.props.onFocus) {
       this.props.onFocus(e);
@@ -239,8 +237,7 @@ const MaskedField = React.createClass({
             this._buffer[bufferIdx] = c;
             break;
           }
-
-          if (this._cursorPos > lastPatternIdx) {
+          else if (this._cursorPos > lastPatternIdx) {
             this._cursorPos--;
           }
         }
@@ -251,11 +248,15 @@ const MaskedField = React.createClass({
         }
       }
       else {
-        if (valueIdx <= originalCursorPos && this._cursorPos < this.props.mask.length - 1) {
-          this._cursorPos++;
-        }
         if (this._buffer[bufferIdx] === value[valueIdx]) {
+          if (valueIdx === originalCursorPos) {
+            this._cursorPos++;
+          }
+
           valueIdx++;
+        }
+        else if (valueIdx <= originalCursorPos) {
+          this._cursorPos++;
         }
       }
     }

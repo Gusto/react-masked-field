@@ -125,6 +125,21 @@ describe('MaskedField', function() {
               });
             });
 
+            context('when the cursor is in the middle an empty field', function() {
+              beforeEach(function() {
+                getField()._setSelection(4);
+                simulateKeyPress('5');
+              });
+
+              it('adds the character to the value', function() {
+                expect(getFieldValue()[4]).to.equal('5');
+              });
+
+              it('moves the cursor to the correct position', function() {
+                cursorPosShouldEql(6);
+              });
+            });
+
             context('when field text is selected', function() {
               beforeEach(function() {
                 simulateTyping('345');
