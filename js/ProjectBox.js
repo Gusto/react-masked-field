@@ -12,11 +12,11 @@ export default React.createClass({
     return { activeTab: this.props.defaultTab };
   },
   render() {
-    let links = [];
-    let tabs = [];
+    const links = [];
+    const tabs = [];
 
     React.Children.forEach(this.props.children, child => {
-      let tabName = child.props.tab;
+      const tabName = child.props.tab;
 
       links.push(
         <li key={tabName} className="tab" onClick={() => this.setState({activeTab: tabName})}>
@@ -24,7 +24,7 @@ export default React.createClass({
         </li>
       );
 
-      let className = cx('project-detail', { 'hidden': (tabName !== this.state.activeTab) });
+      const className = cx('project-detail', { 'hidden': (tabName !== this.state.activeTab) });
       tabs.push(
         <div key={tabName} className={className}>
           {child}
