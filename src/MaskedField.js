@@ -73,7 +73,7 @@ const MaskedField = React.createClass({
       }
     }
 
-    return <input {...this.props} {...props} />;
+    return <input {...this.props} {...props} type="text" />;
   },
   _getSelection() {
     if (this.isMounted()) {
