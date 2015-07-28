@@ -15,6 +15,7 @@
     "grunt-contrib-haml": "^0.2.0",
     "grunt-contrib-sass": "^0.7.3",
     "grunt-contrib-watch": "^0.6.1",
+    "highlight.js": "^8.7.0",
     "react": "^0.13.3",
     "react-masked-field": "ZenPayroll/react-masked-field"
   },
