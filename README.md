@@ -32,19 +32,19 @@ A standalone build is also available in the `dist` folder.
 ## Props
 
 #### `mask`
-string *optional*
+**string** *optional*
 
 The mask applied to the value of the field. For each character of the mask that matches a `translation`, the input character will be restricted to the corresponding regular expression. If no mask is provided, it will function like a normal `input` element.
 
 #### `placeholder`
-string *optional*  
-default: the value of the `mask` prop
+**string** *optional*  
+**default:** the value of the `mask` prop
 
 This functions just like a normal `input` `placeholder` prop. If no `placeholder` is provided, the `mask` prop will be used as the `placeholder`.
 
 #### `translations`
-object *optional*  
-default:
+**object** *optional*  
+**default:**
 ```js
 {
   '9': /\d/,
@@ -56,7 +56,7 @@ default:
 Additional (or overridden) translations for converting mask characters to regular expressions.
 
 #### `onComplete`
-function *optional*
+**function** *optional*
 
 The `onComplete` event is triggered when the mask has been completely filled. The `value` of the field is passed to the event handler.
 
