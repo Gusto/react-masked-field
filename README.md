@@ -36,11 +36,11 @@ string *optional*
 
 The mask applied to the value of the field. For each character of the mask that matches a `translation`, the input character will be restricted to the corresponding regular expression. If no mask is provided, it will function like a normal `input` element.
 
-#### `format`
+#### `placeholder`
 string *optional*  
-default: `'_'`
+default: the value of the `mask` prop
 
-The placeholder used for characters that haven't yet been filled in (.e.g `MM/DD/YYYY` for a date field). The format string should have a length of 1 or match the length of the mask.
+This functions just like a normal `input` `placeholder` prop. If no `placeholder` is provided, the `mask` prop will be used as the `placeholder`.
 
 #### `translations`
 object *optional*  
