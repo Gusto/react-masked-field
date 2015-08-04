@@ -5,6 +5,7 @@ import ProjectBox from './ProjectBox';
 import ProjectDemo from './ProjectDemo';
 import ProjectInstallation from './ProjectInstallation';
 import ProjectExample from './ProjectExample';
+import ProjectProps from './ProjectProps';
 
 export default React.createClass({
   render() {
@@ -23,7 +24,7 @@ export default React.createClass({
             <ProjectDemo tab="Demo" />
             <ProjectInstallation tab="Installation" />
             <ProjectExample tab="Example" />
-            <span tab="Props" />
+            <ProjectProps tab="Props" />
           </ProjectBox>
         </div>
       </div>
