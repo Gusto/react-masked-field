@@ -5,3 +5,4 @@ nodejs:
 tests:
   - npm test
   - npm run lint
+firefox: '39.0'
