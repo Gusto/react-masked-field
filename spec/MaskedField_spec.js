@@ -983,12 +983,13 @@ describe('MaskedField', function() {
       getField = () => component.refs.field;
     });
 
-    beforeEach(function() {
+    beforeEach(function(done) {
       component = React.render(
         <LinkWrapper mask="99/99/9999" value={value} />,
         container
       );
       domNode = component.getDOMNode();
+      simulateFocus(done);
     });
 
     describe('setting an initial value', function() {
