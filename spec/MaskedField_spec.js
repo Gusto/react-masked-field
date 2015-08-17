@@ -32,14 +32,12 @@ describe('MaskedField', function() {
   const simulateKeyDown = key => EventUtils.simulateKeyDown(domNode, key);
   const simulatePaste = content => EventUtils.simulateChange(domNode, content);
   const simulateTyping = content => EventUtils.simulateTyping(domNode, content);
-  const simulateFocus = cb => EventUtils.simulateFocus(domNode, cb);
+  const simulateFocus = () => EventUtils.simulateFocus(domNode);
   const simulateBlur = () => EventUtils.simulateBlur(domNode);
 
   function setupTests(additionalTests) {
     context('when the field is focused', function() {
-      beforeEach(function(done) {
-        simulateFocus(done);
-      });
+      beforeEach(simulateFocus);
 
       context("when the mask is '99/99/9999'", function() {
         before(function() {
@@ -526,9 +524,7 @@ describe('MaskedField', function() {
 
         describe('blurring', function() {
           context('when the field contains no valid characters', function () {
-            beforeEach(function() {
-              simulateBlur();
-            });
+            beforeEach(simulateBlur);
 
             it('sets the value to blank', function () {
               expect(getFieldValue()).to.equal('');

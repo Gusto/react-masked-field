@@ -57,10 +57,10 @@ function simulateKeyDown(node, key) {
   }
 }
 
-function simulateFocus(node, cb) {
+function simulateFocus(node) {
   TestUtils.Simulate.focus(node);
   setSelection(node, node.value.length, node.value.length);
-  setTimeout(cb, 0);
+  return new Promise(resolve => setTimeout(resolve, 0));
 }
 
 function simulateBlur(node) {
