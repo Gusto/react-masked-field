@@ -1030,4 +1030,48 @@ describe('MaskedField', function() {
       });
     });
   });
+
+  context('when the parent component contains multiple inputs', function() {
+    const Parent = React.createClass({
+      render() {
+        return (
+          <div>
+            <input onChange={this._onChange} ref="input" />
+            <MaskedField mask="99-99-9999" ref="field" />
+          </div>
+        );
+      },
+      _onChange(e) {
+        this.setState({value: e.target.value});
+      }
+    });
+
+    beforeEach(function(done) {
+      component = React.render(
+        <Parent />,
+        container
+      );
+      EventUtils.simulateFocus(React.findDOMNode(component.refs.input), done);
+    });
+
+    context('when the masked field does not have focus', function() {
+      let fieldNode;
+
+      describe('typing into a sibling input', function() {
+        beforeEach(function() {
+          fieldNode = React.findDOMNode(component.refs.field);
+          sinon.spy(fieldNode, 'setSelectionRange');
+          EventUtils.simulateChange(React.findDOMNode(component.refs.input), 'hello');
+        });
+
+        afterEach(function() {
+          fieldNode.setSelectionRange.restore();
+        });
+
+        it('does not set the cursor position of the masked field', function() {
+          expect(fieldNode.setSelectionRange).to.have.not.been.called;
+        });
+      });
+    });
+  });
 });

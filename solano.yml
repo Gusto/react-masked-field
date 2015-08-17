@@ -7,4 +7,4 @@ tests:
   - npm run lint
 firefox: '39.0'
 environment:
-  'CHROME_BIN': '/usr/bin/google-chrome' 
+  'CHROME_BIN': '/usr/bin/google-chrome'
