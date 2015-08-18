@@ -813,13 +813,13 @@ describe('MaskedField', function() {
     });
   }
 
-  beforeEach(function() {
-    if (container != null) {
-      document.body.removeChild(container);
-    }
-
+  before(function() {
     container = document.createElement('div');
     document.body.appendChild(container);
+  });
+
+  afterEach(function() {
+    React.unmountComponentAtNode(container);
   });
 
   context("when the component isn't controlled", function() {
