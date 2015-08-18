@@ -813,13 +813,13 @@ describe('MaskedField', function() {
     });
   }
 
-  beforeEach(function() {
-    if (container != null) {
-      document.body.removeChild(container);
-    }
-
+  before(function() {
     container = document.createElement('div');
     document.body.appendChild(container);
+  });
+
+  afterEach(function() {
+    React.unmountComponentAtNode(container);
   });
 
   context("when the component isn't controlled", function() {
@@ -989,6 +989,7 @@ describe('MaskedField', function() {
         container
       );
       domNode = component.getDOMNode();
+      return simulateFocus();
     });
 
     describe('setting an initial value', function() {
@@ -1026,6 +1027,50 @@ describe('MaskedField', function() {
       });
       it('updates the state of the parent component', function() {
         expect(component.state.value).to.equal('12/34/____');
+      });
+    });
+  });
+
+  context('when the parent component contains multiple inputs', function() {
+    const Parent = React.createClass({
+      render() {
+        return (
+          <div>
+            <input onChange={this._onChange} ref="input" />
+            <MaskedField mask="99-99-9999" ref="field" />
+          </div>
+        );
+      },
+      _onChange(e) {
+        this.setState({value: e.target.value});
+      }
+    });
+
+    beforeEach(function() {
+      component = React.render(
+        <Parent />,
+        container
+      );
+      return EventUtils.simulateFocus(React.findDOMNode(component.refs.input));
+    });
+
+    context('when the masked field does not have focus', function() {
+      let fieldNode;
+
+      describe('typing into a sibling input', function() {
+        beforeEach(function() {
+          fieldNode = React.findDOMNode(component.refs.field);
+          sinon.spy(fieldNode, 'setSelectionRange');
+          EventUtils.simulateChange(React.findDOMNode(component.refs.input), 'hello');
+        });
+
+        afterEach(function() {
+          fieldNode.setSelectionRange.restore();
+        });
+
+        it('does not set the cursor position of the masked field', function() {
+          expect(fieldNode.setSelectionRange).to.have.not.been.called;
+        });
       });
     });
   });

@@ -85,7 +85,10 @@ const MaskedField = React.createClass({
     }
   },
   _setSelection(start, end=start) {
-    setSelection(this.getDOMNode(), start, end);
+    const domNode = React.findDOMNode(this);
+    if (domNode === document.activeElement) {
+      setSelection(domNode, start, end);
+    }
   },
   _getPropsValue() {
     if (this.props.valueLink != null) {

@@ -58,6 +58,7 @@ function simulateKeyDown(node, key) {
 }
 
 function simulateFocus(node) {
+  node.focus();
   TestUtils.Simulate.focus(node);
   setSelection(node, node.value.length, node.value.length);
   return new Promise(resolve => setTimeout(resolve, 0));
