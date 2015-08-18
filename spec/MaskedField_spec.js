@@ -983,13 +983,13 @@ describe('MaskedField', function() {
       getField = () => component.refs.field;
     });
 
-    beforeEach(function(done) {
+    beforeEach(function() {
       component = React.render(
         <LinkWrapper mask="99/99/9999" value={value} />,
         container
       );
       domNode = component.getDOMNode();
-      simulateFocus(done);
+      return simulateFocus();
     });
 
     describe('setting an initial value', function() {
@@ -1046,12 +1046,12 @@ describe('MaskedField', function() {
       }
     });
 
-    beforeEach(function(done) {
+    beforeEach(function() {
       component = React.render(
         <Parent />,
         container
       );
-      EventUtils.simulateFocus(React.findDOMNode(component.refs.input), done);
+      return EventUtils.simulateFocus(React.findDOMNode(component.refs.input));
     });
 
     context('when the masked field does not have focus', function() {
