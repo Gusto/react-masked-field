@@ -84,7 +84,7 @@ const MaskedField = React.createClass({
       return {start: cursorPos, end: cursorPos};
     }
   },
-  _setSelection(start, end=start) {
+  _setSelection(start, end = start) {
     const domNode = React.findDOMNode(this);
     if (domNode === document.activeElement) {
       setSelection(domNode, start, end);
@@ -158,7 +158,7 @@ const MaskedField = React.createClass({
       this.props.valueLink.requestChange(value);
     }
     else if (this.props.onChange) {
-      this.props.onChange({target: {value: value}});
+      this.props.onChange({target: {value}});
     }
   },
   _callOnComplete(value) {
@@ -224,7 +224,7 @@ const MaskedField = React.createClass({
     this._setValue(value);
     this._callOnComplete(value);
   },
-  _maskedValue(value, start=0) {
+  _maskedValue(value, start = 0) {
     const originalCursorPos = this._cursorPos = this._getSelection().start;
     for (let bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; ++bufferIdx) {
       const pattern = this._getPattern(bufferIdx);
