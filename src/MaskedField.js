@@ -5,8 +5,6 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-'use strict';
-
 const React = (window ? window.React : null) || require('react');
 const {getSelection, setSelection} = require('./SelectionUtils');
 
@@ -32,7 +30,7 @@ const MaskedField = React.createClass({
     valueLink: React.PropTypes.object
   },
   getInitialState() {
-    if (this.props.mask == null) {
+    if (!this.props.mask) {
       return null;
     }
 
@@ -46,19 +44,19 @@ const MaskedField = React.createClass({
     };
   },
   componentDidUpdate() {
-    if (this._cursorPos != null) {
+    if (this._cursorPos !== undefined) {
       this._setSelection(this._cursorPos);
     }
   },
   componentDidMount() {
     const propsValue = this._getPropsValue();
-    if (this.props.mask != null && propsValue != null && this.state.value !== propsValue) {
+    if (this.props.mask && typeof propsValue === 'string' && this.state.value !== propsValue) {
       this._callOnChange(this.state.value);
     }
   },
   render() {
     let props = {};
-    if (this.props.mask != null) {
+    if (this.props.mask) {
       props = {
         onChange: this._handleChange,
         onKeyDown: this._handleKeyDown,
@@ -68,18 +66,17 @@ const MaskedField = React.createClass({
         valueLink: null
       };
 
-      if (this.props.placeholder == null) {
+      if (!this.props.placeholder) {
         props.placeholder = this._initialBuffer().join('');
       }
     }
 
-    return <input {...this.props} {...props} type="text" />;
+    return <input {...this.props} {...props} type='text' />;
   },
   _getSelection() {
     if (this.isMounted()) {
       return getSelection(this.getDOMNode());
-    }
-    else {
+    } else {
       const cursorPos = (this._getPropsValue() || '').length;
       return {start: cursorPos, end: cursorPos};
     }
@@ -91,10 +88,9 @@ const MaskedField = React.createClass({
     }
   },
   _getPropsValue() {
-    if (this.props.valueLink != null) {
+    if (this.props.valueLink) {
       return this.props.valueLink.value;
-    }
-    else {
+    } else {
       return this.props.value;
     }
   },
@@ -115,12 +111,11 @@ const MaskedField = React.createClass({
     const buffer = [];
     for (let idx = 0; idx < this.props.mask.length; ++idx) {
       if (this._getPattern(idx)) {
-        if (this._firstNonMaskIdx == null) {
+        if (this._firstNonMaskIdx === undefined) {
           this._firstNonMaskIdx = idx;
         }
         buffer.push('_');
-      }
-      else {
+      } else {
         buffer.push(this.props.mask[idx]);
       }
     }
@@ -154,10 +149,9 @@ const MaskedField = React.createClass({
     return prev;
   },
   _callOnChange(value) {
-    if (this.props.valueLink != null) {
+    if (this.props.valueLink) {
       this.props.valueLink.requestChange(value);
-    }
-    else if (this.props.onChange) {
+    } else if (this.props.onChange) {
       this.props.onChange({target: {value}});
     }
   },
@@ -203,8 +197,7 @@ const MaskedField = React.createClass({
       const pattern = this._getPattern(start);
       if (pattern && pattern.test(this._buffer[end])) {
         value = this._maskedValue(this.state.value.substring(end), start);
-      }
-      else {
+      } else {
         this._resetBuffer(start, end);
         value = this._buffer.join('');
       }
@@ -235,12 +228,10 @@ const MaskedField = React.createClass({
           const c = value[valueIdx++];
           if (c === this._buffer[bufferIdx]) {
             bufferIdx++;
-          }
-          else if (pattern.test(c)) {
+          } else if (pattern.test(c)) {
             this._buffer[bufferIdx] = c;
             break;
-          }
-          else if (this._cursorPos > lastPatternIdx) {
+          } else if (this._cursorPos > lastPatternIdx) {
             this._cursorPos--;
           }
         }
@@ -249,16 +240,14 @@ const MaskedField = React.createClass({
           this._resetBuffer(lastPatternIdx + 1, this.props.mask.length);
           break;
         }
-      }
-      else {
+      } else {
         if (this._buffer[bufferIdx] === value[valueIdx]) {
           if (valueIdx === originalCursorPos) {
             this._cursorPos++;
           }
 
           valueIdx++;
-        }
-        else if (valueIdx <= originalCursorPos) {
+        } else if (valueIdx <= originalCursorPos) {
           this._cursorPos++;
         }
       }

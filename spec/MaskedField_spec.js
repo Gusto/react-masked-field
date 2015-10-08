@@ -1,5 +1,3 @@
-'use strict';
-
 const React = require('react');
 const TestUtils = require('react/lib/ReactTestUtils');
 const LinkedStateMixin = require('react/lib/LinkedStateMixin');
@@ -372,7 +370,7 @@ describe('MaskedField', function() {
             });
           });
 
-           context('when field text is selected', function() {
+          context('when field text is selected', function() {
             beforeEach(function() {
               simulateTyping('25');
               getField()._setSelection(1, 4);
@@ -523,16 +521,16 @@ describe('MaskedField', function() {
         });
 
         describe('blurring', function() {
-          context('when the field contains no valid characters', function () {
+          context('when the field contains no valid characters', function() {
             beforeEach(simulateBlur);
 
-            it('sets the value to blank', function () {
+            it('sets the value to blank', function() {
               expect(getFieldValue()).to.equal('');
             });
           });
 
 
-          context('when the field contains valid characters', function () {
+          context('when the field contains valid characters', function() {
             beforeEach(function() {
               simulateKeyPress('2');
               simulateBlur();
@@ -555,7 +553,7 @@ describe('MaskedField', function() {
               simulateBlur();
             });
 
-            it('sets the value to blank', function () {
+            it('sets the value to blank', function() {
               expect(getFieldValue()).to.equal('');
             });
 
@@ -699,7 +697,7 @@ describe('MaskedField', function() {
           props.mask = '036-9999999999-09';
         });
 
-        describe('typing a key', function () {
+        describe('typing a key', function() {
           context('when the character matches the mask', function() {
             beforeEach(function() {
               simulateKeyPress('2');
@@ -717,8 +715,8 @@ describe('MaskedField', function() {
               expect(getFieldValue()).to.equal('036-2_________-0_');
             });
 
-            context('when the next character is a mask character', function () {
-              beforeEach(function () {
+            context('when the next character is a mask character', function() {
+              beforeEach(function() {
                 simulateTyping('345678912');
               });
 
@@ -829,7 +827,7 @@ describe('MaskedField', function() {
     });
 
     beforeEach(function() {
-      if (props.value != null && props.onChange == null) {
+      if (props.value && !props.onChange) {
         props.readOnly = true;
       }
       component = React.render(<MaskedField {...props} />, container);
@@ -898,7 +896,7 @@ describe('MaskedField', function() {
             {...this.props}
             value={this.state.value}
             onChange={this.handleChange}
-            ref="field"
+            ref='field'
           />
         );
       }
@@ -975,7 +973,7 @@ describe('MaskedField', function() {
         return {value: this.props.value};
       },
       render() {
-        return <MaskedField {...this.props} valueLink={this.linkState('value')} ref="field" />;
+        return <MaskedField {...this.props} valueLink={this.linkState('value')} ref='field' />;
       }
     });
 
@@ -985,7 +983,7 @@ describe('MaskedField', function() {
 
     beforeEach(function() {
       component = React.render(
-        <LinkWrapper mask="99/99/9999" value={value} />,
+        <LinkWrapper mask='99/99/9999' value={value} />,
         container
       );
       domNode = component.getDOMNode();
@@ -1036,8 +1034,8 @@ describe('MaskedField', function() {
       render() {
         return (
           <div>
-            <input onChange={this._onChange} ref="input" />
-            <MaskedField mask="99-99-9999" ref="field" />
+            <input onChange={this._onChange} ref='input' />
+            <MaskedField mask='99-99-9999' ref='field' />
           </div>
         );
       },

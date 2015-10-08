@@ -1,13 +1,11 @@
-'use strict';
-
 module.exports = {
   getSelection(node) {
-    let start, end;
-    if (node.setSelectionRange != null) {
+    let start;
+    let end;
+    if (node.setSelectionRange) {
       start = node.selectionStart;
       end = node.selectionEnd;
-    }
-    else {
+    } else {
       const range = document.selection.createRange();
       start = 0 - range.duplicate().moveStart('character', -100000);
       end = start + range.text.length;
@@ -16,10 +14,9 @@ module.exports = {
     return {start, end};
   },
   setSelection(node, start, end) {
-    if (node.setSelectionRange != null) {
+    if (node.setSelectionRange) {
       node.setSelectionRange(start, end);
-    }
-    else {
+    } else {
       const range = node.createTextRange();
       range.collapse(true);
       range.moveEnd('character', start);

@@ -1,5 +1,3 @@
-'use strict';
-
 const TestUtils = require('react/lib/ReactTestUtils');
 const {getSelection, setSelection} = require('../src/SelectionUtils');
 
@@ -42,12 +40,10 @@ function simulateKeyDown(node, key) {
     if (start === end) {
       if (key === 'Backspace') {
         newVal = prevVal.substring(0, start - 1) + prevVal.substr(end);
-      }
-      else if (key === 'Delete') {
+      } else if (key === 'Delete') {
         newVal = prevVal.substring(0, start) + prevVal.substr(end + 1);
       }
-    }
-    else {
+    } else {
       newVal = prevVal.substring(0, start) + prevVal.substr(end);
     }
 
