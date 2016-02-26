@@ -7,19 +7,20 @@
     "type": "git",
     "url": "https://github.com/ZenPayroll/react-masked-field.git"
   },
-  "main": "src/MaskedField.js",
+  "main": "lib/MaskedField.js",
   "files": [
     "demo/",
-    "src/"
+    "lib/"
   ],
   "peerDependencies": {
     "react": "^0.13.3"
   },
-  "dependencies": {
-    "babelify": "^6.1.3"
-  },
   "devDependencies": {
+    "babel-cli": "^6.5.1",
     "babel-eslint": "4.1.7",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-react": "^6.5.0",
+    "babelify": "^6.1.3",
     "browserify": "^13.0.0",
     "chai": "^3.5.0",
     "eslint": "1.10.3",
@@ -37,9 +38,12 @@
   },
   "scripts": {
     "start": "karma start karma.dev.js",
-    "build": "./scripts/build.js",
+    "build": "npm run build-dist && npm run build-cjs",
+    "build-dist": "./scripts/build.js",
+    "build-cjs": "babel src -d lib",
     "test": "karma start karma.ci.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepublish": "npm run build"
   },
   "browserify": {
     "transform": [
