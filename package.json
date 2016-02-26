@@ -38,9 +38,7 @@
   },
   "scripts": {
     "start": "karma start karma.dev.js",
-    "build": "npm run build-dist && npm run build-cjs",
-    "build-dist": "./scripts/build.js",
-    "build-cjs": "babel src -d lib",
+    "build": "babel src -d lib",
     "test": "karma start karma.ci.js",
     "lint": "eslint .",
     "prepublish": "npm run build"
