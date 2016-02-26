@@ -1,6 +1,6 @@
-## 0.2.0 (August 17, 2015)
+## 0.2.0 (February 25, 2016)
 
-#### Bug Fixes
+#### Changes
 * Remove `dist` files
 * Internal changes
 
