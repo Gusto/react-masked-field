@@ -49,10 +49,14 @@ const MaskedField = React.createClass({
     }
   },
   componentDidMount() {
+    this._isMounted = true;
     const propsValue = this._getPropsValue();
     if (this.props.mask && typeof propsValue === 'string' && this.state.value !== propsValue) {
       this._callOnChange(this.state.value);
     }
+  },
+  componentWillUnmount() {
+    this._isMounted = false;
   },
   render() {
     let props = {};
@@ -74,7 +78,7 @@ const MaskedField = React.createClass({
     return <input {...this.props} {...props} type='text' />;
   },
   _getSelection() {
-    if (this.isMounted()) {
+    if (this._isMounted) {
       return getSelection(this.getDOMNode());
     } else {
       const cursorPos = (this._getPropsValue() || '').length;
