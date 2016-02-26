@@ -65,9 +65,11 @@
     "guard-for-in": 0, // make sure for-in loops have an if statement
     "no-alert": 2, // disallow the use of alert, confirm, and prompt
     "no-caller": 2, // disallow use of arguments.caller or arguments.callee
+    "no-case-declarations": 2, // disallow lexical declarations in case clauses
     "no-div-regex": 2, // disallow division operators explicitly at beginning of regular expression
     "no-else-return": 0, // disallow else after a return in an if
     "no-empty-label": 2, // disallow use of labels for anything other then loops and switches
+    "no-empty-pattern": 2, // disallow use of empty destructuring patterns
     "no-eq-null": 2, // disallow comparisons to null without a type-checking operator
     "no-eval": 2, // disallow use of eval()
     "no-extend-native": 2, // disallow adding to native types
@@ -80,6 +82,7 @@
     "no-iterator": 2, // disallow usage of __iterator__ property
     "no-lone-blocks": 2, // disallow unnecessary nested blocks
     "no-loop-func": 2, // disallow creation of functions within loops
+    "no-magic-numbers": 0, // disallow the use of magic numbers
     "no-multi-spaces": 0, // disallow use of multiple spaces
     "no-multi-str": 2, // disallow use of multiline strings
     "no-native-reassign": 2, // disallow reassignments of native objects
@@ -158,8 +161,13 @@
       "capIsNewExceptions": [
         "Immutable.Map",
         "Immutable.List",
+        "Immutable.Set",
         "LoadData",
-        "PrefixRoute"
+        "PlanSelection",
+        "WizardNavigation",
+        "PrefixRoute",
+        "Payroll.Components.Benefits.NewPlansApplication.NewPlansCopy",
+        "Deferred"
       ]
     }], // require a capital letter for constructors
     "new-parens": 2, // disallow the omission of parentheses when invoking a constructor with no arguments
@@ -174,6 +182,7 @@
     "no-trailing-spaces": 2, // disallow trailing whitespace at the end of lines
     "no-underscore-dangle": 0, // disallow dangling underscores in identifiers
     "no-mixed-spaces-and-tabs": 2, // disallow mixed spaces and tabs for indentation
+    "no-multiple-empty-lines": 0, // disallow multiple empty lines
     "one-var": [2, "never"], // allow just one var statement per function
     "padded-blocks": 0, // enforce padding within blocks
     "quotes": [2, "single", "avoid-escape"], // specify whether double or single quotes should be used
@@ -197,7 +206,9 @@
     // ECMAScript 6
     // These rules are only relevant to ES6 environments.
 
+    "arrow-body-style": [0, "as-needed"], // require braces in arrow function body
     "constructor-super": 2,
+    "no-arrow-condition": 2, // disallow arrow functions where a condition is expected
     "arrow-spacing": 2, // require space before/after arrow function's arrow
     "no-class-assign": 2,
     "no-const-assign": 2,
@@ -220,13 +231,21 @@
     "react/jsx-boolean-value": 0, // Enforce boolean attributes notation in JSX
     "react/jsx-closing-bracket-location": 0, // Validate closing bracket location in JSX
     "react/jsx-curly-spacing": 0, // Enforce or disallow spaces inside of curly braces in JSX attributes
-    "react/jsx-indent-props": [2, 2],
+    "react/jsx-equals-spacing": [0, "never"], // Enforce or disallow spaces around equal signs in JSX attributes
+    "react/jsx-handler-names": 0, // Enforce event handler naming conventions in JSX
+    "react/jsx-indent-props": [2, 2], // Validate props indentation in JSX
+    "react/jsx-indent": [2, 2], // Validate JSX indentation
+    "react/jsx-key": 2, // Validate JSX has key prop when in array or iterator
+    "react/jsx-no-bind": 0, // Prevent usage of .bind() and arrow functions in JSX props
     "react/jsx-no-duplicate-props": 2, // Prevent duplicate props in JSX
-    "react/jsx-no-undef": 2,
+    "react/jsx-no-undef": 2, // Disallow undeclared variables in JSX
+    "react/jsx-pascal-case": 2, // Enforce PascalCase for user-defined JSX components
     "react/jsx-uses-react": 2,
     "react/jsx-uses-vars": 2,
+    "react/no-deprecated": [0, {"react": "0.13.3"}], // Prevent usage of deprecated methods
     "react/no-did-mount-set-state": [2, "allow-in-func"],
     "react/no-did-update-set-state": [2, "allow-in-func"],
+    "react/no-is-mounted": 2, // Prevent usage of isMounted
     "react/no-unknown-property": 2,
     "react/no-multi-comp": 0,
     "react/no-direct-mutation-state": 2, // Prevent direct mutation of this.state
