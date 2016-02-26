@@ -5,8 +5,8 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const React = (window ? window.React : null) || require('react');
-const {getSelection, setSelection} = require('./SelectionUtils');
+import React from 'react';
+import {getSelection, setSelection} from './SelectionUtils';
 
 const DEFAULT_TRANSLATIONS = {
   '9': /\d/,

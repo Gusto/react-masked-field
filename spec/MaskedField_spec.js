@@ -1,11 +1,12 @@
-const React = require('react');
-const TestUtils = require('react/lib/ReactTestUtils');
-const LinkedStateMixin = require('react/lib/LinkedStateMixin');
-const MaskedField = require('../src/MaskedField');
-const EventUtils = require('./EventUtils');
-const chai = require('chai');
+import React from 'react';
+import TestUtils from 'react/lib/ReactTestUtils';
+import LinkedStateMixin from 'react/lib/LinkedStateMixin';
+import MaskedField from '../src/MaskedField';
+import * as EventUtils from './EventUtils';
+import chai from 'chai';
+import sinon from 'sinon';
+
 const expect = chai.expect;
-const sinon = require('sinon');
 chai.use(require('sinon-chai'));
 
 describe('MaskedField', function() {

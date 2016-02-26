@@ -1,7 +1,7 @@
-const TestUtils = require('react/lib/ReactTestUtils');
-const {getSelection, setSelection} = require('../src/SelectionUtils');
+import TestUtils from 'react/lib/ReactTestUtils';
+import {getSelection, setSelection} from '../src/SelectionUtils';
 
-function simulateChange(node, content) {
+export function simulateChange(node, content) {
   const {start, end} = getSelection(node);
   const newVal = node.value.substring(0, start) + content + node.value.substr(end);
 
@@ -10,7 +10,7 @@ function simulateChange(node, content) {
   TestUtils.Simulate.change(node, {target: node});
 }
 
-function simulateKeyPress(node, key) {
+export function simulateKeyPress(node, key) {
   let defaultPrevented = false;
   TestUtils.Simulate.keyPress(node, {
     key,
@@ -22,11 +22,11 @@ function simulateKeyPress(node, key) {
   }
 }
 
-function simulateTyping(node, content) {
+export function simulateTyping(node, content) {
   content.split('').forEach(key => simulateKeyPress(node, key));
 }
 
-function simulateKeyDown(node, key) {
+export function simulateKeyDown(node, key) {
   let defaultPrevented = false;
   TestUtils.Simulate.keyDown(node, {
     key,
@@ -53,22 +53,13 @@ function simulateKeyDown(node, key) {
   }
 }
 
-function simulateFocus(node) {
+export function simulateFocus(node) {
   node.focus();
   TestUtils.Simulate.focus(node);
   setSelection(node, node.value.length, node.value.length);
   return new Promise(resolve => setTimeout(resolve, 0));
 }
 
-function simulateBlur(node) {
+export function simulateBlur(node) {
   TestUtils.Simulate.blur(node);
 }
-
-module.exports = {
-  simulateChange,
-  simulateKeyPress,
-  simulateTyping,
-  simulateKeyDown,
-  simulateFocus,
-  simulateBlur
-};
