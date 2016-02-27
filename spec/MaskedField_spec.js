@@ -20,7 +20,8 @@ describe('MaskedField', function() {
   // - undo?
 
   function getFieldValue() {
-    return TestUtils.findRenderedDOMComponentWithTag(getField(), 'input').getDOMNode().value;
+    const inputComponent = TestUtils.findRenderedDOMComponentWithTag(getField(), 'input');
+    return React.findDOMNode(inputComponent).value;
   }
 
   function cursorPosShouldEql(pos) {
@@ -832,7 +833,7 @@ describe('MaskedField', function() {
         props.readOnly = true;
       }
       component = React.render(<MaskedField {...props} />, container);
-      domNode = component.getDOMNode();
+      domNode = React.findDOMNode(component);
     });
 
     afterEach(function() {
@@ -910,7 +911,7 @@ describe('MaskedField', function() {
 
     beforeEach(function() {
       component = React.render(<ControlledWrapper {...props} />, container);
-      domNode = component.getDOMNode();
+      domNode = React.findDOMNode(component);
     });
 
     setupTests(function() {
@@ -987,7 +988,7 @@ describe('MaskedField', function() {
         <LinkWrapper mask='99/99/9999' value={value} />,
         container
       );
-      domNode = component.getDOMNode();
+      domNode = React.findDOMNode(component);
       return simulateFocus();
     });
 

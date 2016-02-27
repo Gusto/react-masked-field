@@ -1,3 +1,4 @@
+
 /**
 * Copyright (c) 2015 ZenPayroll
 *
@@ -79,7 +80,7 @@ const MaskedField = React.createClass({
   },
   _getSelection() {
     if (this._isMounted) {
-      return getSelection(this.getDOMNode());
+      return getSelection(React.findDOMNode(this));
     } else {
       const cursorPos = (this._getPropsValue() || '').length;
       return {start: cursorPos, end: cursorPos};
