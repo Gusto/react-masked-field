@@ -46,7 +46,7 @@ const MaskedField = React.createClass({
   },
   componentDidUpdate() {
     if (this._cursorPos !== undefined) {
-      this._setSelection(this._cursorPos);
+      // this._setSelection(this._cursorPos);
     }
   },
   componentDidMount() {
