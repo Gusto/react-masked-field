@@ -1,7 +1,3 @@
-if (process.env.CONTINUOUS_INTEGRATION === 'true') {
-  console.log('THIS IS CI!!!!');
-}
-
 module.exports = function(config) {
   config.set(require('./karma.common'));
 
