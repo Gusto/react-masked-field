@@ -12,3 +12,6 @@ before_install:
 script:
   - npm run lint
   - npm test
+branches:
+  only:
+    - master
