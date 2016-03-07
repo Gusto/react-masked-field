@@ -1,5 +1,6 @@
-// Karma configuration
-// Generated on Wed Mar 04 2015 15:56:21 GMT-0800 (PST)
+if (process.env.CONTINUOUS_INTEGRATION === 'true') {
+  console.log('THIS IS CI!!!!');
+}
 
 module.exports = function(config) {
   config.set(require('./karma.common'));
@@ -8,7 +9,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['dots'],
+    reporters: ['mocha'],
 
     // level of logging
     // possible values:
@@ -24,7 +25,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['ChromeTravisCI', 'Firefox'],
+    browsers: [process.env.CONTINUOUS_INTEGRATION === 'true' ? 'ChromeTravisCI' : 'Chrome', 'Firefox'],
 
     customLaunchers: {
       ChromeTravisCI: {
