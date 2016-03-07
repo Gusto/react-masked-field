@@ -1,4 +1,4 @@
-# React Masked Field [![Build Status](https://ci.solanolabs.com:443/ZenPayroll/react-masked-field/badges/branches/master?badge_token=6a04ee4cc963ca172ff97f2dac0723b8d8977f0a)](https://ci.solanolabs.com:443/ZenPayroll/react-masked-field/suites/244347)
+# React Masked Field [![Build Status](https://travis-ci.org/Gusto/react-masked-field.svg?branch=master)](https://travis-ci.org/Gusto/react-masked-field)
 
 A masked field component built in React.
 
