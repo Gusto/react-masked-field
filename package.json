@@ -1,19 +1,31 @@
 {
   "name": "react-masked-field",
   "description": "A masked field component built in React",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/ZenPayroll/react-masked-field.git"
   },
+  "bugs": {
+    "url": "https://github.com/Gusto/react-masked-field/issues"
+  },
   "main": "lib/MaskedField.js",
   "files": [
-    "demo/",
-    "lib/"
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+    "lib"
+  ],
+  "keywords": [
+    "react",
+    "react-component",
+    "mask",
+    "masked-field",
+    "masked-input"
   ],
   "peerDependencies": {
-    "react": ">=0.13.3"
+    "react": ">=0.13.0"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",

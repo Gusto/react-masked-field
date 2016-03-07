@@ -1,3 +1,8 @@
+## 0.2.1 (March 7, 2016)
+
+#### First published version
+
+
 ## 0.2.0 (February 25, 2016)
 
 #### Changes
