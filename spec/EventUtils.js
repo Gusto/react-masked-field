@@ -14,7 +14,7 @@ export function simulateKeyPress(node, key) {
   let defaultPrevented = false;
   TestUtils.Simulate.keyPress(node, {
     key,
-    preventDefault: () => defaultPrevented = true
+    preventDefault: () => (defaultPrevented = true)
   });
 
   if (!defaultPrevented && key.length === 1) {
@@ -30,7 +30,7 @@ export function simulateKeyDown(node, key) {
   let defaultPrevented = false;
   TestUtils.Simulate.keyDown(node, {
     key,
-    preventDefault: () => defaultPrevented = true
+    preventDefault: () => (defaultPrevented = true)
   });
 
   if (!defaultPrevented) {
