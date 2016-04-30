@@ -76,20 +76,19 @@ const MaskedField = React.createClass({
       }
     }
 
-    return <input {...this.props} {...props} type='text' />;
+    return <input ref={c => (this._input = c)} {...this.props} {...props} type='text' />;
   },
   _getSelection() {
     if (this._isMounted) {
-      return getSelection(React.findDOMNode(this));
+      return getSelection(this._input);
     } else {
       const cursorPos = (this._getPropsValue() || '').length;
       return {start: cursorPos, end: cursorPos};
     }
   },
   _setSelection(start, end = start) {
-    const domNode = React.findDOMNode(this);
-    if (domNode === document.activeElement) {
-      setSelection(domNode, start, end);
+    if (this._input === document.activeElement) {
+      setSelection(this._input, start, end);
     }
   },
   _getPropsValue() {

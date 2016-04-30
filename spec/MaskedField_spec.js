@@ -1,5 +1,6 @@
 import React from 'react';
-import TestUtils from 'react/lib/ReactTestUtils';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-addons-test-utils';
 import LinkedStateMixin from 'react/lib/LinkedStateMixin';
 import MaskedField from '../src/MaskedField';
 import * as EventUtils from './EventUtils';
@@ -20,8 +21,8 @@ describe('MaskedField', function() {
   // - undo?
 
   function getFieldValue() {
-    const inputComponent = TestUtils.findRenderedDOMComponentWithTag(getField(), 'input');
-    return React.findDOMNode(inputComponent).value;
+    const input = TestUtils.findRenderedDOMComponentWithTag(getField(), 'input');
+    return input.value;
   }
 
   function cursorPosShouldEql(pos) {
@@ -819,7 +820,7 @@ describe('MaskedField', function() {
   });
 
   afterEach(function() {
-    React.unmountComponentAtNode(container);
+    ReactDOM.unmountComponentAtNode(container);
   });
 
   context("when the component isn't controlled", function() {
@@ -832,8 +833,8 @@ describe('MaskedField', function() {
       if (props.value && !props.onChange) {
         props.readOnly = true;
       }
-      component = React.render(<MaskedField {...props} />, container);
-      domNode = React.findDOMNode(component);
+      component = ReactDOM.render(<MaskedField {...props} />, container);
+      domNode = ReactDOM.findDOMNode(component);
     });
 
     afterEach(function() {
@@ -910,8 +911,8 @@ describe('MaskedField', function() {
     });
 
     beforeEach(function() {
-      component = React.render(<ControlledWrapper {...props} />, container);
-      domNode = React.findDOMNode(component);
+      component = ReactDOM.render(<ControlledWrapper {...props} />, container);
+      domNode = ReactDOM.findDOMNode(component);
     });
 
     setupTests(function() {
@@ -984,11 +985,11 @@ describe('MaskedField', function() {
     });
 
     beforeEach(function() {
-      component = React.render(
+      component = ReactDOM.render(
         <LinkWrapper mask='99/99/9999' value={value} />,
         container
       );
-      domNode = React.findDOMNode(component);
+      domNode = ReactDOM.findDOMNode(component);
       return simulateFocus();
     });
 
@@ -1032,12 +1033,14 @@ describe('MaskedField', function() {
   });
 
   context('when the parent component contains multiple inputs', function() {
+    let inputNode;
+    let fieldComponent;
     const Parent = React.createClass({
       render() {
         return (
           <div>
-            <input onChange={this._onChange} ref='input' />
-            <MaskedField mask='99-99-9999' ref='field' />
+            <input onChange={this._onChange} ref={c => (inputNode = c)} />
+            <MaskedField mask='99-99-9999' ref={c => (fieldComponent = c)} />
           </div>
         );
       },
@@ -1047,11 +1050,11 @@ describe('MaskedField', function() {
     });
 
     beforeEach(function() {
-      component = React.render(
+      component = ReactDOM.render(
         <Parent />,
         container
       );
-      return EventUtils.simulateFocus(React.findDOMNode(component.refs.input));
+      return EventUtils.simulateFocus(inputNode);
     });
 
     context('when the masked field does not have focus', function() {
@@ -1059,9 +1062,9 @@ describe('MaskedField', function() {
 
       describe('typing into a sibling input', function() {
         beforeEach(function() {
-          fieldNode = React.findDOMNode(component.refs.field);
+          fieldNode = ReactDOM.findDOMNode(fieldComponent);
           sinon.spy(fieldNode, 'setSelectionRange');
-          EventUtils.simulateChange(React.findDOMNode(component.refs.input), 'hello');
+          EventUtils.simulateChange(inputNode, 'hello');
         });
 
         afterEach(function() {
