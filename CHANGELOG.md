@@ -1,3 +1,9 @@
+## 1.0.0 (April 29, 2016)
+
+#### Changes
+* Fix to work with React 15.0
+
+
 ## 0.2.1 (March 7, 2016)
 
 #### First published version
