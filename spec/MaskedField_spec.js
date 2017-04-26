@@ -12,6 +12,7 @@ chai.use(require('sinon-chai'));
 
 // TODO: Move eslint-config-gusto to public npm
 
+// eslint-disable-next-line no-console
 console.error = message => {
   throw new Error(message);
 };
@@ -32,7 +33,7 @@ describe('MaskedField', function() {
   }
 
   function cursorPosShouldEql(pos) {
-    expect(getField()._getSelection()).to.eql({start: pos, end: pos});
+    expect(getField()._getSelection()).to.eql({ start: pos, end: pos });
   }
 
   const simulateKeyPress = key => EventUtils.simulateKeyPress(domNode, key);
@@ -472,7 +473,6 @@ describe('MaskedField', function() {
               it('correctly shifts the mask characters', function() {
                 expect(getFieldValue()).to.equal('16/75/____');
               });
-
             });
           });
 
@@ -790,7 +790,7 @@ describe('MaskedField', function() {
         before(function() {
           props.mask = 'FFF';
           props.translations = {
-            'F': /[F]/
+            F: /[F]/
           };
         });
 
@@ -913,9 +913,9 @@ describe('MaskedField', function() {
 
       _handleChange = (e) => {
         if (this.props.onChange) {
-          this.props.onChange({target: {value: e.target.value}});
+          this.props.onChange({ target: { value: e.target.value } });
         }
-        this.setState({value: e.target.value});
+        this.setState({ value: e.target.value });
       }
     }
 
@@ -1067,7 +1067,7 @@ describe('MaskedField', function() {
       }
 
       _onChange = (e) => {
-        this.setState({value: e.target.value});
+        this.setState({ value: e.target.value });
       }
     }
 

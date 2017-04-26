@@ -1,13 +1,13 @@
 import TestUtils from 'react-dom/test-utils';
-import {getSelection, setSelection} from '../src/SelectionUtils';
+import { getSelection, setSelection } from '../src/SelectionUtils';
 
 export function simulateChange(node, content) {
-  const {start, end} = getSelection(node);
+  const { start, end } = getSelection(node);
   const newVal = node.value.substring(0, start) + content + node.value.substr(end);
 
   node.value = newVal;
   setSelection(node, start + content.length, start + content.length);
-  TestUtils.Simulate.change(node, {target: node});
+  TestUtils.Simulate.change(node, { target: node });
 }
 
 export function simulateKeyPress(node, key) {
@@ -34,7 +34,7 @@ export function simulateKeyDown(node, key) {
   });
 
   if (!defaultPrevented) {
-    const {start, end} = getSelection(node);
+    const { start, end } = getSelection(node);
     const prevVal = node.value;
     let newVal;
     if (start === end) {
@@ -49,7 +49,7 @@ export function simulateKeyDown(node, key) {
 
     node.value = newVal;
     setSelection(node, start, start);
-    TestUtils.Simulate.change(node, {target: node});
+    TestUtils.Simulate.change(node, { target: node });
   }
 }
 

@@ -1,5 +1,7 @@
+const commonConfig = require('./karma.common');
+
 module.exports = function(config) {
-  config.set(require('./karma.common'));
+  config.set(commonConfig);
 
   config.set({
     // test results reporter to use

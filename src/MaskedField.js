@@ -12,8 +12,8 @@ import omit from 'lodash.omit';
 import { getSelection, setSelection } from './SelectionUtils';
 
 const DEFAULT_TRANSLATIONS = {
-  '9': /\d/,
-  'a': /[A-Za-z]/,
+  9: /\d/,
+  a: /[A-Za-z]/,
   '*': /[A-Za-z0-9]/
 };
 
@@ -95,7 +95,7 @@ class MaskedField extends React.Component {
       return getSelection(this._input);
     } else {
       const cursorPos = (this._getPropsValue() || '').length;
-      return {start: cursorPos, end: cursorPos};
+      return { start: cursorPos, end: cursorPos };
     }
   }
 
@@ -178,7 +178,7 @@ class MaskedField extends React.Component {
     if (this.props.valueLink) {
       this.props.valueLink.requestChange(value);
     } else if (this.props.onChange) {
-      this.props.onChange({target: {value}});
+      this.props.onChange({ target: { value } });
     }
   }
 
@@ -192,7 +192,7 @@ class MaskedField extends React.Component {
     if (value !== this.state.value) {
       this._callOnChange(value);
     }
-    this.setState({value});
+    this.setState({ value });
   }
 
   _handleFocus = (e) => {
@@ -202,7 +202,7 @@ class MaskedField extends React.Component {
       this.props.onFocus(e);
     }
 
-    this.setState({value: this._buffer.join('')});
+    this.setState({ value: this._buffer.join('') });
   }
 
   _handleBlur = (e) => {
@@ -217,7 +217,7 @@ class MaskedField extends React.Component {
 
   _handleKeyDown = (e) => {
     if (e.key === 'Backspace' || e.key === 'Delete') {
-      let {start, end} = this._getSelection();
+      let { start, end } = this._getSelection();
 
       if (start === end) {
         start = e.key === 'Delete' ? this._nextNonMaskIdx(start - 1) : this._prevNonMaskIdx(start);
@@ -273,16 +273,14 @@ class MaskedField extends React.Component {
           this._resetBuffer(lastPatternIdx + 1, this.props.mask.length);
           break;
         }
-      } else {
-        if (this._buffer[bufferIdx] === value[valueIdx]) {
-          if (valueIdx === originalCursorPos) {
-            this._cursorPos++;
-          }
-
-          valueIdx++;
-        } else if (valueIdx <= originalCursorPos) {
+      } else if (this._buffer[bufferIdx] === value[valueIdx]) {
+        if (valueIdx === originalCursorPos) {
           this._cursorPos++;
         }
+
+        valueIdx++;
+      } else if (valueIdx <= originalCursorPos) {
+        this._cursorPos++;
       }
     }
 
