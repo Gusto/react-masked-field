@@ -1,3 +1,9 @@
+## 1.0.1 (April 26, 2017)
+
+#### Changes
+* Remove all React 15.4 warnings
+
+
 ## 1.0.0 (April 29, 2016)
 
 #### Changes

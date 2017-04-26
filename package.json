@@ -2,7 +2,7 @@
   "name": "react-masked-field",
   "description": "A masked field component built in React",
   "author": "Rylan Collins <rylan@gusto.com>",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -61,11 +61,6 @@
     "test": "karma start karma.ci.js",
     "lint": "eslint .",
     "prepublish": "npm run build"
-  },
-  "browserify": {
-    "transform": [
-      "babelify"
-    ]
   },
   "dependencies": {
     "lodash.omit": "^4.5.0",
