@@ -10,7 +10,7 @@ export function getSelection(node) {
     end = start + range.text.length;
   }
 
-  return {start, end};
+  return { start, end };
 }
 
 export function setSelection(node, start, end) {

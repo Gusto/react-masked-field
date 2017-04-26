@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
-import LinkedStateMixin from 'react/lib/LinkedStateMixin';
+import TestUtils from 'react-dom/test-utils';
+import PropTypes from 'prop-types';
 import MaskedField from '../src/MaskedField';
 import * as EventUtils from './EventUtils';
 import chai from 'chai';
@@ -9,6 +9,13 @@ import sinon from 'sinon';
 
 const expect = chai.expect;
 chai.use(require('sinon-chai'));
+
+// TODO: Move eslint-config-gusto to public npm
+
+// eslint-disable-next-line no-console
+console.error = message => {
+  throw new Error(message);
+};
 
 describe('MaskedField', function() {
   let container;
@@ -26,7 +33,7 @@ describe('MaskedField', function() {
   }
 
   function cursorPosShouldEql(pos) {
-    expect(getField()._getSelection()).to.eql({start: pos, end: pos});
+    expect(getField()._getSelection()).to.eql({ start: pos, end: pos });
   }
 
   const simulateKeyPress = key => EventUtils.simulateKeyPress(domNode, key);
@@ -36,7 +43,7 @@ describe('MaskedField', function() {
   const simulateFocus = () => EventUtils.simulateFocus(domNode);
   const simulateBlur = () => EventUtils.simulateBlur(domNode);
 
-  function setupTests(additionalTests) {
+  function setupTests(isControlled, additionalTests) {
     context('when the field is focused', function() {
       beforeEach(simulateFocus);
 
@@ -466,7 +473,6 @@ describe('MaskedField', function() {
               it('correctly shifts the mask characters', function() {
                 expect(getFieldValue()).to.equal('16/75/____');
               });
-
             });
           });
 
@@ -749,27 +755,34 @@ describe('MaskedField', function() {
             props.value = '123abc';
           });
 
-          after(function() {
-            delete props.value;
-          });
-
           it('contains the initial value', function() {
             expect(getFieldValue()).to.equal('123abc');
           });
         });
 
         describe('typing keys', function() {
+          before(function() {
+            props.value = '';
+          });
+
           beforeEach(function() {
+            props.onChange.reset();
             simulateTyping('1a2b3c');
           });
 
-          it('adds the characters to the value', function() {
-            expect(getFieldValue()).to.equal('1a2b3c');
+          it('calls the onChange prop', function() {
+            expect(props.onChange).to.have.callCount(6);
           });
 
-          it('moves the cursor to the correct position', function() {
-            cursorPosShouldEql(6);
-          });
+          if (isControlled) {
+            it('adds the characters to the value', function() {
+              expect(getFieldValue()).to.equal('1a2b3c');
+            });
+
+            it('moves the cursor to the correct position', function() {
+              cursorPosShouldEql(6);
+            });
+          }
         });
       });
 
@@ -777,7 +790,7 @@ describe('MaskedField', function() {
         before(function() {
           props.mask = 'FFF';
           props.translations = {
-            'F': /[F]/
+            F: /[F]/
           };
         });
 
@@ -841,7 +854,7 @@ describe('MaskedField', function() {
       delete props.readOnly;
     });
 
-    setupTests(function() {
+    setupTests(false, function() {
       describe('the placeholder', function() {
         context('when a placeholder is given', function() {
           before(function() {
@@ -877,33 +890,34 @@ describe('MaskedField', function() {
   });
 
   context('when the component is controlled', function() {
-    const ControlledWrapper = React.createClass({
-      propTypes: {
-        value: React.PropTypes.string,
-        onChange: React.PropTypes.func
-      },
-      getInitialState() {
-        return {
-          value: this.props.value
-        };
-      },
-      handleChange(e) {
-        if (this.props.onChange) {
-          this.props.onChange({target: {value: e.target.value}});
-        }
-        this.setState({value: e.target.value});
-      },
+    class ControlledWrapper extends React.Component {
+      static propTypes = {
+        value: PropTypes.string,
+        onChange: PropTypes.func
+      };
+
+      state = {
+        value: this.props.value
+      };
+
       render() {
         return (
           <MaskedField
             {...this.props}
             value={this.state.value}
-            onChange={this.handleChange}
+            onChange={this._handleChange}
             ref='field'
           />
         );
       }
-    });
+
+      _handleChange = (e) => {
+        if (this.props.onChange) {
+          this.props.onChange({ target: { value: e.target.value } });
+        }
+        this.setState({ value: e.target.value });
+      }
+    }
 
     before(function() {
       props.value = '';
@@ -915,7 +929,7 @@ describe('MaskedField', function() {
       domNode = ReactDOM.findDOMNode(component);
     });
 
-    setupTests(function() {
+    setupTests(true, function() {
       describe('initial render', function() {
         before(function() {
           props.onChange = sinon.spy();
@@ -969,16 +983,23 @@ describe('MaskedField', function() {
   context('when the component uses ReactLink', function() {
     let value = '';
 
-    const LinkWrapper = React.createClass({
-      propTypes: {value: React.PropTypes.string},
-      mixins: [LinkedStateMixin],
-      getInitialState() {
-        return {value: this.props.value};
-      },
+    class LinkWrapper extends React.Component {
+      static propTypes = {
+        value: PropTypes.string
+      };
+
+      state = {
+        value: this.props.value
+      };
+
       render() {
-        return <MaskedField {...this.props} valueLink={this.linkState('value')} ref='field' />;
+        const valueLink = {
+          value: this.state.value,
+          requestChange: val => this.setState({ value: val })
+        };
+        return <MaskedField {...this.props} valueLink={valueLink} ref='field' />;
       }
-    });
+    }
 
     before(function() {
       getField = () => component.refs.field;
@@ -1035,7 +1056,7 @@ describe('MaskedField', function() {
   context('when the parent component contains multiple inputs', function() {
     let inputNode;
     let fieldComponent;
-    const Parent = React.createClass({
+    class Parent extends React.Component {
       render() {
         return (
           <div>
@@ -1043,11 +1064,12 @@ describe('MaskedField', function() {
             <MaskedField mask='99-99-9999' ref={c => (fieldComponent = c)} />
           </div>
         );
-      },
-      _onChange(e) {
-        this.setState({value: e.target.value});
       }
-    });
+
+      _onChange = (e) => {
+        this.setState({ value: e.target.value });
+      }
+    }
 
     beforeEach(function() {
       component = ReactDOM.render(

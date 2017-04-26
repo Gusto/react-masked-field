@@ -1,8 +1,7 @@
-// Karma configuration
-// Generated on Wed Mar 04 2015 15:56:21 GMT-0800 (PST)
+const commonConfig = require('./karma.common');
 
 module.exports = function(config) {
-  config.set(require('./karma.common'));
+  config.set(commonConfig);
 
   config.set({
     // test results reporter to use

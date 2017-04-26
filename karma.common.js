@@ -4,25 +4,51 @@ module.exports = {
 
   // frameworks to use
   // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-  frameworks: ['browserify', 'mocha'],
+  frameworks: ['mocha'],
 
   // list of files / patterns to load in the browser
-  files: ['spec/**/*.js'],
+  files: ['spec/**/*_spec.js*'],
 
   // preprocess matching files before serving them to the browser
   // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
   preprocessors: {
-    'spec/**/*.js': ['browserify']
+    'spec/**/*.js*': ['webpack']
   },
-
 
   browserify: {
     debug: true
+  },
+
+  webpack: {
+    resolve: {
+      extensions: ['.js', '.jsx', '.json']
+    },
+
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          use: ['babel-loader']
+        }
+      ]
+    }
+  },
+
+  webpackMiddleware: {
+    stats: 'errors-only'
   },
 
   // web server port
   port: 9876,
 
   // enable / disable colors in the output (reporters and logs)
-  colors: true
+  colors: true,
+
+  // NOTE: This is a workaround for https://github.com/karma-runner/karma/issues/2582
+  // Can probably be removed in the future
+  browserConsoleLogOptions: {
+    terminal: true,
+    level: 'log'
+  }
 };
