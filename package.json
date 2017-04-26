@@ -65,5 +65,8 @@
     "transform": [
       "babelify"
     ]
+  },
+  "dependencies": {
+    "prop-types": "^15.5.8"
   }
 }

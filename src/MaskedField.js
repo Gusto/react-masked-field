@@ -7,7 +7,8 @@
 */
 
 import React from 'react';
-import {getSelection, setSelection} from './SelectionUtils';
+import { getSelection, setSelection } from './SelectionUtils';
+import PropTypes from 'prop-types';
 
 const DEFAULT_TRANSLATIONS = {
   '9': /\d/,
@@ -19,16 +20,16 @@ const BLANK_CHAR = '_';
 
 const MaskedField = React.createClass({
   propTypes: {
-    mask: React.PropTypes.string,
-    translations: React.PropTypes.object,
-    value: React.PropTypes.string,
-    placeholder: React.PropTypes.string,
-    onChange: React.PropTypes.func,
-    onKeyDown: React.PropTypes.func,
-    onComplete: React.PropTypes.func,
-    onFocus: React.PropTypes.func,
-    onBlur: React.PropTypes.func,
-    valueLink: React.PropTypes.object
+    mask: PropTypes.string,
+    translations: PropTypes.object,
+    value: PropTypes.string,
+    placeholder: PropTypes.string,
+    onChange: PropTypes.func,
+    onKeyDown: PropTypes.func,
+    onComplete: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
+    valueLink: PropTypes.object
   },
   getInitialState() {
     if (!this.props.mask) {

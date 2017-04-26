@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
+import PropTypes from 'prop-types';
+// TODO: Use package
 import LinkedStateMixin from 'react/lib/LinkedStateMixin';
 import MaskedField from '../src/MaskedField';
 import * as EventUtils from './EventUtils';
@@ -879,8 +881,8 @@ describe('MaskedField', function() {
   context('when the component is controlled', function() {
     const ControlledWrapper = React.createClass({
       propTypes: {
-        value: React.PropTypes.string,
-        onChange: React.PropTypes.func
+        value: PropTypes.string,
+        onChange: PropTypes.func
       },
       getInitialState() {
         return {
@@ -970,7 +972,7 @@ describe('MaskedField', function() {
     let value = '';
 
     const LinkWrapper = React.createClass({
-      propTypes: {value: React.PropTypes.string},
+      propTypes: {value: PropTypes.string},
       mixins: [LinkedStateMixin],
       getInitialState() {
         return {value: this.props.value};
