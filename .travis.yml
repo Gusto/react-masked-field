@@ -2,7 +2,10 @@ language: node_js
 node_js:
   - stable
 sudo: false
-cache: yarn
+cache:
+  yarn: true
+  directories:
+  - node_modules # NPM packages
 before_install:
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
