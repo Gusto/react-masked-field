@@ -1,4 +1,4 @@
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-dom/test-utils';
 import {getSelection, setSelection} from '../src/SelectionUtils';
 
 export function simulateChange(node, content) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 import LinkedStateMixin from 'react/lib/LinkedStateMixin';
 import MaskedField from '../src/MaskedField';
 import * as EventUtils from './EventUtils';
