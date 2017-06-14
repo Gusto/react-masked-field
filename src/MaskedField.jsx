@@ -87,7 +87,7 @@ class MaskedField extends React.Component {
       }
     }
 
-    return <input ref={c => (this._input = c)} {...props} {...maskProps} type='text' />;
+    return <input ref={c => (this._input = c)} {...props} {...maskProps} />;
   }
 
   _getSelection() {
