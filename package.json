@@ -26,8 +26,8 @@
     "masked-input"
   ],
   "peerDependencies": {
-    "react": "^0.14 || ^15.0.0-rc || ^15.0",
-    "react-dom": "^0.14 || ^15.0.0-rc || ^15.0"
+    "react": "^0.14 || ^15.0.0-rc || ^15.0 || ^16.0",
+    "react-dom": "^0.14 || ^15.0.0-rc || ^15.0, || ^16.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -48,8 +48,8 @@
     "karma-mocha-reporter": "^2.2.3",
     "karma-webpack": "^2.0.3",
     "mocha": "^3.3.0",
-    "react": "^15.5.4",
-    "react-dom": "^15.0.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
     "watchify": "^3.9.0",
