@@ -1,3 +1,9 @@
+## 1.1.0 (April 26, 2017)
+
+#### Changes
+* Support React v16
+
+
 ## 1.0.1 (April 26, 2017)
 
 #### Changes
