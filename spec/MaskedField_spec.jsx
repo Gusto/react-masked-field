@@ -1014,6 +1014,17 @@ describe('MaskedField', function() {
       return simulateFocus();
     });
 
+    context('when the cursor starts at a mask index', () => {
+      beforeEach(() => {
+        getField()._setSelection(2, 2); // Set cursor position to the index of a slash
+        simulateKeyPress('2');
+      });
+
+      it('skips over the mask and inserts at next non-mask position', () => {
+        expect(getFieldValue()).to.equal('__/2_/____');
+      });
+    });
+
     describe('setting an initial value', function() {
       before(function() {
         value = '12345';
