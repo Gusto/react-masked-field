@@ -74,6 +74,17 @@ describe('MaskedField', function() {
             props.onComplete.reset();
           });
 
+          context('the initial cursor position is at a mask index', () => {
+            beforeEach(() => {
+              getField()._setSelection(2, 2);
+              simulateKeyPress('2');
+            });
+
+            it('inserts at the index after the mask character', () => {
+              expect(getFieldValue()).to.equal('__/2_/____');
+            });
+          });
+
           context('when the character matches the mask', function() {
             beforeEach(function() {
               simulateKeyPress('2');
@@ -570,6 +581,36 @@ describe('MaskedField', function() {
               expect(props.onChange).to.have.been.calledOnce;
             });
           });
+        });
+      });
+
+      context("when the mask is '(999) 999-9999'", () => {
+        before(() => {
+          props.mask = '(999) 999-9999';
+        });
+
+        beforeEach(() => {
+          getField()._setSelection(9, 9);
+          simulateKeyPress('1');
+        });
+
+        it('inserts at the index after the mask character', () => {
+          expect(getFieldValue()).to.equal('(___) ___-1___');
+        });
+      });
+
+      context("when the mask is '99//99'", () => {
+        before(() => {
+          props.mask = '99//99';
+        });
+
+        beforeEach(() => {
+          getField()._setSelection(2, 2);
+          simulateKeyPress('1');
+        });
+
+        it('inserts at the index after the mask character', () => {
+          expect(getFieldValue()).to.equal('__//1_');
         });
       });
 

@@ -262,6 +262,9 @@ class MaskedField extends React.Component {
           if (c === this._buffer[bufferIdx]) {
             bufferIdx++;
           } else if (pattern.test(c)) {
+            while (this._buffer[bufferIdx] !== '_') {
+              bufferIdx++;
+            }
             this._buffer[bufferIdx] = c;
             break;
           } else if (this._cursorPos > lastPatternIdx) {
