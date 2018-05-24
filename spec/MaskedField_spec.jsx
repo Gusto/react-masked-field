@@ -74,6 +74,17 @@ describe('MaskedField', function() {
             props.onComplete.reset();
           });
 
+          context('the initial cursor position is at a mask index', () => {
+            beforeEach(() => {
+              getField()._setSelection(2, 2); // Set cursor position to the index of a slash
+              simulateKeyPress('2');
+            });
+
+            it('skips over the mask and inserts at next non-mask index', () => {
+              expect(getFieldValue()).to.equal('__/2_/____');
+            });
+          });
+
           context('when the character matches the mask', function() {
             beforeEach(function() {
               simulateKeyPress('2');
@@ -573,6 +584,21 @@ describe('MaskedField', function() {
         });
       });
 
+      context("when the mask is '(999) 999-9999'", () => {
+        before(() => {
+          props.mask = '(999) 999-9999';
+        });
+
+        beforeEach(() => {
+          getField()._setSelection(9, 9);
+          simulateKeyPress('1');
+        });
+
+        it('skips the mask characters', () => {
+          expect(getFieldValue()).to.equal('(___) ___-1___');
+        });
+      });
+
       context("when the mask is 'a-99'", function() {
         before(function() {
           props.mask = 'a-99';
@@ -1007,22 +1033,11 @@ describe('MaskedField', function() {
 
     beforeEach(function() {
       component = ReactDOM.render(
-        <LinkWrapper mask='99/99/9999' value={value} />,
+        <LinkWrapper mask="99/99/9999" value={value} />,
         container
       );
       domNode = ReactDOM.findDOMNode(component);
       return simulateFocus();
-    });
-
-    context('when the cursor starts at a mask index', () => {
-      beforeEach(() => {
-        getField()._setSelection(2, 2); // Set cursor position to the index of a slash
-        simulateKeyPress('2');
-      });
-
-      it('skips over the mask and inserts at next non-mask position', () => {
-        expect(getFieldValue()).to.equal('__/2_/____');
-      });
     });
 
     describe('setting an initial value', function() {
