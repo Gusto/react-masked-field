@@ -76,11 +76,11 @@ describe('MaskedField', function() {
 
           context('the initial cursor position is at a mask index', () => {
             beforeEach(() => {
-              getField()._setSelection(2, 2); // Set cursor position to the index of a slash
+              getField()._setSelection(2, 2);
               simulateKeyPress('2');
             });
 
-            it('skips over the mask and inserts at next non-mask index', () => {
+            it('inserts at the index after the mask character', () => {
               expect(getFieldValue()).to.equal('__/2_/____');
             });
           });
@@ -594,8 +594,23 @@ describe('MaskedField', function() {
           simulateKeyPress('1');
         });
 
-        it('skips the mask characters', () => {
+        it('inserts at the index after the mask character', () => {
           expect(getFieldValue()).to.equal('(___) ___-1___');
+        });
+      });
+
+      context("when the mask is '99//99'", () => {
+        before(() => {
+          props.mask = '99//99';
+        });
+
+        beforeEach(() => {
+          getField()._setSelection(2, 2);
+          simulateKeyPress('1');
+        });
+
+        it('inserts at the index after the mask character', () => {
+          expect(getFieldValue()).to.equal('__//1_');
         });
       });
 
@@ -1033,7 +1048,7 @@ describe('MaskedField', function() {
 
     beforeEach(function() {
       component = ReactDOM.render(
-        <LinkWrapper mask="99/99/9999" value={value} />,
+        <LinkWrapper mask='99/99/9999' value={value} />,
         container
       );
       domNode = ReactDOM.findDOMNode(component);
