@@ -1,4 +1,10 @@
-## 1.1.0 (April 26, 2017)
+## 1.1.1 (May 25, 2018)
+
+### Changes
+* Fix typing when cursor starts at the index a masked character
+
+
+## 1.1.0 (April 26, 2018)
 
 #### Changes
 * Support React v16
