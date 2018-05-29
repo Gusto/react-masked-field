@@ -12,12 +12,7 @@
     "url": "https://github.com/Gusto/react-masked-field/issues"
   },
   "main": "lib/MaskedField.js",
-  "files": [
-    "LICENSE",
-    "README.md",
-    "CHANGELOG.md",
-    "lib"
-  ],
+  "files": ["LICENSE", "README.md", "CHANGELOG.md", "lib"],
   "keywords": [
     "react",
     "react-component",
@@ -38,7 +33,8 @@
     "babel-preset-react": "^6.24.1",
     "chai": "^3.5.0",
     "eslint": "3.19.0",
-    "eslint-config-gusto": "git://github.com/gusto/eslint-config-gusto.git#v5.0.1",
+    "eslint-config-gusto":
+      "git://github.com/gusto/eslint-config-gusto.git#v5.0.1",
     "eslint-plugin-import": "2.2.0",
     "eslint-plugin-react": "6.7.1",
     "karma": "^1.6.0",
@@ -60,7 +56,7 @@
     "build": "babel src -d lib",
     "test": "karma start karma.ci.js",
     "lint": "eslint .",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "dependencies": {
     "lodash.omit": "^4.5.0",
