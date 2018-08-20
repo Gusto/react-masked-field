@@ -1,11 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import TestUtils from 'react-dom/test-utils';
 import PropTypes from 'prop-types';
 import MaskedField from '../src/MaskedField';
 import * as EventUtils from './EventUtils';
 import chai from 'chai';
 import sinon from 'sinon';
+import Enzyme, { mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 const expect = chai.expect;
 chai.use(require('sinon-chai'));
@@ -21,27 +23,32 @@ describe('MaskedField', function() {
   let container;
   let component;
   let domNode;
-  let getField;
   const props = {};
 
   // FIXME:
   // - undo?
 
+  const getField = () => component.find(MaskedField);
   function getFieldValue() {
-    const input = TestUtils.findRenderedDOMComponentWithTag(getField(), 'input');
-    return input.value;
+    const input = getField().find('input');
+    return input.getDOMNode().value;
   }
 
   function cursorPosShouldEql(pos) {
-    expect(getField()._getSelection()).to.eql({ start: pos, end: pos });
+    const node = getField().find('input').getDOMNode();
+    expect(node.selectionStart).to.equal(pos);
+    expect(node.selectionEnd).to.equal(pos);
   }
 
-  const simulateKeyPress = key => EventUtils.simulateKeyPress(domNode, key);
-  const simulateKeyDown = key => EventUtils.simulateKeyDown(domNode, key);
-  const simulatePaste = content => EventUtils.simulateChange(domNode, content);
-  const simulateTyping = content => EventUtils.simulateTyping(domNode, content);
-  const simulateFocus = () => EventUtils.simulateFocus(domNode);
-  const simulateBlur = () => EventUtils.simulateBlur(domNode);
+  const setSelection = (start, end = start) => getField().find('input').getDOMNode().setSelectionRange(start, end);
+  const simulateKeyPress = key => EventUtils.simulateKeyPress(getField(), key);
+  const simulateKeyDown = key => EventUtils.simulateKeyDown(getField(), key);
+  const simulatePaste = content => EventUtils.simulateChange(getField(), content);
+  const simulateTyping = content => EventUtils.simulateTyping(getField(), content);
+  const simulateFocus = () => EventUtils.simulateFocus(getField());
+  const simulateBlur = () => EventUtils.simulateBlur(getField());
+
+  const render = element => mount(element, { attachTo: container });
 
   function setupTests(isControlled, additionalTests) {
     context('when the field is focused', function() {
@@ -76,7 +83,7 @@ describe('MaskedField', function() {
 
           context('the initial cursor position is at a mask index', () => {
             beforeEach(() => {
-              getField()._setSelection(2, 2);
+              setSelection(2, 2);
               simulateKeyPress('2');
             });
 
@@ -129,7 +136,7 @@ describe('MaskedField', function() {
             context('when the cursor is in the middle of the value', function() {
               beforeEach(function() {
                 simulateTyping('34');
-                getField()._setSelection(1);
+                setSelection(1);
                 simulateKeyPress('5');
               });
 
@@ -144,7 +151,7 @@ describe('MaskedField', function() {
 
             context('when the cursor is in the middle an empty field', function() {
               beforeEach(function() {
-                getField()._setSelection(4);
+                setSelection(4);
                 simulateKeyPress('5');
               });
 
@@ -160,7 +167,7 @@ describe('MaskedField', function() {
             context('when field text is selected', function() {
               beforeEach(function() {
                 simulateTyping('345');
-                getField()._setSelection(1, 5);
+                setSelection(1, 5);
                 simulateKeyPress('6');
               });
 
@@ -213,7 +220,7 @@ describe('MaskedField', function() {
             context('when the cursor is in the middle of the value', function() {
               beforeEach(function() {
                 simulateTyping('123');
-                getField()._setSelection(1);
+                setSelection(1);
                 simulateKeyPress('A');
               });
 
@@ -229,7 +236,7 @@ describe('MaskedField', function() {
             context('when field text is selected', function() {
               beforeEach(function() {
                 simulateTyping('12345');
-                getField()._setSelection(1, 5);
+                setSelection(1, 5);
                 simulateKeyPress('A');
               });
 
@@ -297,7 +304,7 @@ describe('MaskedField', function() {
           context('when the next character is a mask character', function() {
             beforeEach(function() {
               simulateKeyPress('3');
-              getField()._setSelection(2);
+              setSelection(2);
               simulateKeyDown('Backspace');
             });
 
@@ -308,7 +315,7 @@ describe('MaskedField', function() {
 
           context('when the cursor is at the beginning', function() {
             beforeEach(function() {
-              getField()._setSelection(0);
+              setSelection(0);
               simulateKeyDown('Backspace');
             });
 
@@ -320,7 +327,7 @@ describe('MaskedField', function() {
           context('when field text is selected', function() {
             beforeEach(function() {
               simulateTyping('345');
-              getField()._setSelection(1, 4);
+              setSelection(1, 4);
               simulateKeyDown('Backspace');
             });
 
@@ -352,7 +359,7 @@ describe('MaskedField', function() {
 
           beforeEach(function() {
             simulateTyping('1234');
-            getField()._setSelection(1);
+            setSelection(1);
             simulateKeyDown('Delete');
           });
 
@@ -374,7 +381,7 @@ describe('MaskedField', function() {
 
           context('when the following character is a mask character', function() {
             beforeEach(function() {
-              getField()._setSelection(2);
+              setSelection(2);
               simulateKeyDown('Delete');
             });
 
@@ -394,7 +401,7 @@ describe('MaskedField', function() {
           context('when field text is selected', function() {
             beforeEach(function() {
               simulateTyping('25');
-              getField()._setSelection(1, 4);
+              setSelection(1, 4);
               simulateKeyDown('Delete');
             });
 
@@ -468,7 +475,7 @@ describe('MaskedField', function() {
 
             context('when field text is selected', function() {
               beforeEach(function() {
-                getField()._setSelection(1, 5);
+                setSelection(1, 5);
                 simulatePaste('67');
               });
 
@@ -503,7 +510,7 @@ describe('MaskedField', function() {
 
             context('when field text is selected', function() {
               beforeEach(function() {
-                getField()._setSelection(1, 5);
+                setSelection(1, 5);
                 simulatePaste('6a7b');
               });
 
@@ -590,7 +597,7 @@ describe('MaskedField', function() {
         });
 
         beforeEach(() => {
-          getField()._setSelection(9, 9);
+          setSelection(9, 9);
           simulateKeyPress('1');
         });
 
@@ -605,7 +612,7 @@ describe('MaskedField', function() {
         });
 
         beforeEach(() => {
-          getField()._setSelection(2, 2);
+          setSelection(2, 2);
           simulateKeyPress('1');
         });
 
@@ -622,7 +629,7 @@ describe('MaskedField', function() {
         describe('pressing the backspace key', function() {
           beforeEach(function() {
             simulateTyping('a12');
-            getField()._setSelection(1);
+            setSelection(1);
             simulateKeyDown('Backspace');
           });
 
@@ -713,7 +720,7 @@ describe('MaskedField', function() {
 
           context('when the entire mask is selected', function() {
             beforeEach(function() {
-              getField()._setSelection(0, 11);
+              setSelection(0, 11);
               simulateKeyDown('Backspace');
             });
 
@@ -874,21 +881,20 @@ describe('MaskedField', function() {
   });
 
   afterEach(function() {
-    ReactDOM.unmountComponentAtNode(container);
+    component.detach();
   });
 
   context("when the component isn't controlled", function() {
     before(function() {
       delete props.value;
-      getField = () => component;
     });
 
     beforeEach(function() {
       if (props.value && !props.onChange) {
         props.readOnly = true;
       }
-      component = ReactDOM.render(<MaskedField {...props} />, container);
-      domNode = ReactDOM.findDOMNode(component);
+      component = render(<MaskedField {...props} />);
+      domNode = component.getDOMNode();
     });
 
     afterEach(function() {
@@ -947,7 +953,6 @@ describe('MaskedField', function() {
             {...this.props}
             value={this.state.value}
             onChange={this._handleChange}
-            ref='field'
           />
         );
       }
@@ -962,12 +967,11 @@ describe('MaskedField', function() {
 
     before(function() {
       props.value = '';
-      getField = () => component.refs.field;
     });
 
     beforeEach(function() {
-      component = ReactDOM.render(<ControlledWrapper {...props} />, container);
-      domNode = ReactDOM.findDOMNode(component);
+      component = render(<ControlledWrapper {...props} />);
+      domNode = component.getDOMNode();
     });
 
     setupTests(true, function() {
@@ -1038,20 +1042,13 @@ describe('MaskedField', function() {
           value: this.state.value,
           requestChange: val => this.setState({ value: val })
         };
-        return <MaskedField {...this.props} valueLink={valueLink} ref='field' />;
+        return <MaskedField {...this.props} valueLink={valueLink} />;
       }
     }
 
-    before(function() {
-      getField = () => component.refs.field;
-    });
-
     beforeEach(function() {
-      component = ReactDOM.render(
-        <LinkWrapper mask='99/99/9999' value={value} />,
-        container
-      );
-      domNode = ReactDOM.findDOMNode(component);
+      component = render(<LinkWrapper mask='99/99/9999' value={value} />);
+      domNode = component.getDOMNode();
       return simulateFocus();
     });
 
@@ -1069,7 +1066,7 @@ describe('MaskedField', function() {
       });
 
       it('sets the state of the parent component', function() {
-        expect(component.state.value).to.equal('12/34/5___');
+        expect(component.state('value')).to.equal('12/34/5___');
       });
     });
 
@@ -1079,7 +1076,7 @@ describe('MaskedField', function() {
       });
 
       it('updates the state of the parent component', function() {
-        expect(component.state.value).to.equal('12/34/5___');
+        expect(component.state('value')).to.equal('12/34/5___');
       });
     });
 
@@ -1089,20 +1086,19 @@ describe('MaskedField', function() {
         simulateKeyDown('Backspace');
       });
       it('updates the state of the parent component', function() {
-        expect(component.state.value).to.equal('12/34/____');
+        expect(component.state('value')).to.equal('12/34/____');
       });
     });
   });
 
   context('when the parent component contains multiple inputs', function() {
-    let inputNode;
-    let fieldComponent;
+    const inputNode = () => component.find('input').at(0);
     class Parent extends React.Component {
       render() {
         return (
           <div>
-            <input onChange={this._onChange} ref={c => (inputNode = c)} />
-            <MaskedField mask='99-99-9999' ref={c => (fieldComponent = c)} />
+            <input onChange={this._onChange} />
+            <MaskedField mask='99-99-9999' />
           </div>
         );
       }
@@ -1113,11 +1109,8 @@ describe('MaskedField', function() {
     }
 
     beforeEach(function() {
-      component = ReactDOM.render(
-        <Parent />,
-        container
-      );
-      return EventUtils.simulateFocus(inputNode);
+      component = render(<Parent />);
+      return EventUtils.simulateFocus(inputNode());
     });
 
     context('when the masked field does not have focus', function() {
@@ -1125,9 +1118,9 @@ describe('MaskedField', function() {
 
       describe('typing into a sibling input', function() {
         beforeEach(function() {
-          fieldNode = ReactDOM.findDOMNode(fieldComponent);
+          fieldNode = component.find(MaskedField).getDOMNode();
           sinon.spy(fieldNode, 'setSelectionRange');
-          EventUtils.simulateChange(inputNode, 'hello');
+          EventUtils.simulateChange(inputNode(), 'hello');
         });
 
         afterEach(function() {
