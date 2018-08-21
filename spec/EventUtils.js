@@ -14,7 +14,9 @@ export function simulateKeyPress(wrapper, key) {
   let defaultPrevented = false;
   wrapper.simulate('keyPress', {
     key,
-    preventDefault: () => (defaultPrevented = true),
+    preventDefault: () => {
+      defaultPrevented = true;
+    },
   });
 
   if (!defaultPrevented && key.length === 1) {
@@ -30,7 +32,9 @@ export function simulateKeyDown(wrapper, key) {
   let defaultPrevented = false;
   wrapper.simulate('keyDown', {
     key,
-    preventDefault: () => (defaultPrevented = true),
+    preventDefault: () => {
+      defaultPrevented = true;
+    },
   });
 
   const node = wrapper.getDOMNode();
