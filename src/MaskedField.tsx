@@ -88,10 +88,7 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
 
   componentDidMount() {
     const propsValue = this.getPropsValue();
-    const { mask } = this.props;
-    // eslint-disable-next-line react/destructuring-assignment
-    if (mask && typeof propsValue === 'string' && this.state.value !== propsValue) {
-      // eslint-disable-next-line react/destructuring-assignment
+    if (typeof propsValue === 'string' && this.state.value !== propsValue) {
       this.callOnChange(this.state.value);
     }
   }
