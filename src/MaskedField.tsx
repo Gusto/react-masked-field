@@ -1,3 +1,4 @@
+
 /**
  * Copyright (c) 2015 ZenPayroll
  *
@@ -5,20 +6,40 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import omit from 'lodash.omit';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
+// import omit = require('lodash.omit');
 import { getSelection, setSelection } from './SelectionUtils';
 
-const DEFAULT_TRANSLATIONS = {
+const DEFAULT_TRANSLATIONS: { [char: string]: RegExp | undefined } = {
   9: /\d/,
   a: /[A-Za-z]/,
-  '*': /[A-Za-z0-9]/,
+  '*': /[A-Za-z0-9]/
 };
 
 const BLANK_CHAR = '_';
 
-class MaskedField extends React.Component {
+type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+
+export interface MaskedFieldProps extends InputProps {
+  mask: string;
+  translations?: {
+    [char: string]: RegExp;
+  };
+  value?: string;
+  onComplete?: (val: string) => void;
+  valueLink?: {
+    value: string;
+    requestChange: (newVal: string) => void;
+  };
+  onChange?: (e: { target: { value: string } }) => void;
+}
+
+interface MaskedFieldState {
+  value: string;
+}
+
+class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
   static propTypes = {
     mask: PropTypes.string,
     translations: PropTypes.objectOf(PropTypes.instanceOf(RegExp)),
@@ -48,12 +69,13 @@ class MaskedField extends React.Component {
     valueLink: undefined,
   };
 
-  constructor(props) {
-    super(props);
+  private buffer: string[];
+  private firstNonMaskIdx: number = -1;
+  private cursorPos: number;
+  private input: HTMLInputElement | null = null;
 
-    if (!props.mask) {
-      return;
-    }
+  constructor(props: Readonly<MaskedFieldProps>) {
+    super(props);
 
     this.buffer = this.initialBuffer();
     this.cursorPos = this.firstNonMaskIdx;
@@ -61,12 +83,11 @@ class MaskedField extends React.Component {
     const propsValue = this.getPropsValue();
     this.state = {
       // TODO: Any way we can do this in one pass?
-      value: propsValue ? this.maskedValue(propsValue) : '',
+      value: propsValue ? this.maskedValue(propsValue) : ''
     };
   }
 
   componentDidMount() {
-    this.mounted = true;
     const propsValue = this.getPropsValue();
     const { mask } = this.props;
     // eslint-disable-next-line react/destructuring-assignment
@@ -77,24 +98,21 @@ class MaskedField extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.cursorPos !== undefined) {
+    if (this.cursorPos !== -1) {
       this.setSelection(this.cursorPos);
     }
   }
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  getSelection() {
-    if (this.mounted) {
+  private getSelection() {
+    if (this.input) {
       return getSelection(this.input);
+    } else {
+      const cursorPos = (this.getPropsValue() || '').length;
+      return { start: cursorPos, end: cursorPos };
     }
-    const cursorPos = (this.getPropsValue() || '').length;
-    return { start: cursorPos, end: cursorPos };
   }
 
-  getPropsValue() {
+  private getPropsValue() {
     const { valueLink, value } = this.props;
     if (valueLink) {
       return valueLink.value;
@@ -102,7 +120,7 @@ class MaskedField extends React.Component {
     return value;
   }
 
-  getPattern(idx) {
+  private getPattern(idx: number) {
     const { mask, translations } = this.props;
     const maskChar = mask[idx];
     const pattern = translations ? translations[maskChar] : null;
@@ -110,13 +128,13 @@ class MaskedField extends React.Component {
     return pattern || DEFAULT_TRANSLATIONS[maskChar];
   }
 
-  setSelection(start, end = start) {
+  private setSelection(start: number, end = start) {
     if (this.input === document.activeElement) {
       setSelection(this.input, start, end);
     }
   }
 
-  setValue(newVal) {
+  private setValue(newVal: string) {
     const { value } = this.state;
     if (newVal !== value) {
       this.callOnChange(newVal);
@@ -124,66 +142,7 @@ class MaskedField extends React.Component {
     this.setState({ value: newVal });
   }
 
-  handleFocus = e => {
-    setTimeout(() => this.setSelection(this.cursorPos), 0);
-
-    const { onFocus } = this.props;
-    if (onFocus) {
-      onFocus(e);
-    }
-
-    this.setState({ value: this.buffer.join('') });
-  };
-
-  handleBlur = e => {
-    if (this.isBufferEmpty()) {
-      this.setValue('');
-    }
-
-    const { onBlur } = this.props;
-    if (onBlur) {
-      onBlur(e);
-    }
-  };
-
-  handleKeyDown = e => {
-    if (e.key === 'Backspace' || e.key === 'Delete') {
-      let { start, end } = this.getSelection();
-
-      if (start === end) {
-        start = e.key === 'Delete' ? this.nextNonMaskIdx(start - 1) : this.prevNonMaskIdx(start);
-        end = this.nextNonMaskIdx(start);
-      }
-
-      let newVal;
-      const pattern = this.getPattern(start);
-      if (pattern && pattern.test(this.buffer[end])) {
-        const { value } = this.state;
-        newVal = this.maskedValue(value.substring(end), start);
-      } else {
-        this.resetBuffer(start, end);
-        newVal = this.buffer.join('');
-      }
-
-      this.setValue(newVal);
-      this.cursorPos = Math.max(start, this.firstNonMaskIdx);
-
-      e.preventDefault();
-    }
-
-    const { onKeyDown } = this.props;
-    if (onKeyDown) {
-      onKeyDown(e);
-    }
-  };
-
-  handleChange = e => {
-    const value = this.maskedValue(e.target.value);
-    this.setValue(value);
-    this.callOnComplete(value);
-  };
-
-  resetBuffer(start, end) {
+  private resetBuffer(start: number, end: number) {
     for (let i = start; i < end; i += 1) {
       if (this.getPattern(i)) {
         this.buffer[i] = BLANK_CHAR;
@@ -191,7 +150,7 @@ class MaskedField extends React.Component {
     }
   }
 
-  initialBuffer() {
+  private initialBuffer() {
     const buffer = [];
     const { mask } = this.props;
     for (let idx = 0; idx < mask.length; idx += 1) {
@@ -208,15 +167,15 @@ class MaskedField extends React.Component {
     return buffer;
   }
 
-  isBufferEmpty() {
+  private isBufferEmpty() {
     return this.buffer.every((char, idx) => !this.getPattern(idx) || char === BLANK_CHAR);
   }
 
-  isBufferFull() {
+  private isBufferFull() {
     return this.buffer.every((char, idx) => !this.getPattern(idx) || char !== BLANK_CHAR);
   }
 
-  nextNonMaskIdx(idx) {
+  private nextNonMaskIdx(idx: number) {
     let next = idx + 1;
     const { mask } = this.props;
     for (; next < mask.length; next += 1) {
@@ -228,7 +187,7 @@ class MaskedField extends React.Component {
     return next;
   }
 
-  prevNonMaskIdx(idx) {
+  private prevNonMaskIdx(idx: number) {
     let prev = idx - 1;
     for (; prev >= 0; prev -= 1) {
       if (this.getPattern(prev)) {
@@ -239,23 +198,76 @@ class MaskedField extends React.Component {
     return prev;
   }
 
-  callOnChange(value) {
-    const { valueLink, onChange } = this.props;
-    if (valueLink) {
-      valueLink.requestChange(value);
-    } else if (onChange) {
-      onChange({ target: { value } });
+  private callOnChange(value: string) {
+    if (this.props.valueLink) {
+      this.props.valueLink.requestChange(value);
+    } else if (this.props.onChange) {
+      this.props.onChange({ target: { value } });
     }
   }
 
-  callOnComplete(value) {
-    const { onComplete } = this.props;
-    if (onComplete && this.isBufferFull()) {
-      onComplete(value);
+  private callOnComplete(value: string) {
+    if (this.props.onComplete && this.isBufferFull()) {
+      this.props.onComplete(value);
     }
   }
 
-  maskedValue(value, start = 0) {
+  private handleFocus: React.FocusEventHandler<HTMLInputElement> = (e) => {
+    setTimeout(() => this.setSelection(this.cursorPos), 0);
+
+    if (this.props.onFocus) {
+      this.props.onFocus(e);
+    }
+
+    this.setState({ value: this.buffer.join('') });
+  }
+
+  private handleBlur: React.FocusEventHandler<HTMLInputElement> = (e) => {
+    if (this.isBufferEmpty()) {
+      this.setValue('');
+    }
+
+    if (this.props.onBlur) {
+      this.props.onBlur(e);
+    }
+  }
+
+  private handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+      let { start, end } = this.getSelection();
+
+      if (start === end) {
+        start = e.key === 'Delete' ? this.nextNonMaskIdx(start - 1) : this.prevNonMaskIdx(start);
+        end = this.nextNonMaskIdx(start);
+      }
+
+      let value;
+      const pattern = this.getPattern(start);
+      if (pattern && pattern.test(this.buffer[end])) {
+        value = this.maskedValue(this.state.value.substring(end), start);
+      } else {
+        this.resetBuffer(start, end);
+        value = this.buffer.join('');
+      }
+
+      this.setValue(value);
+      this.cursorPos = Math.max(start, this.firstNonMaskIdx);
+
+      e.preventDefault();
+    }
+
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(e);
+    }
+  }
+
+  private handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const value = this.maskedValue(e.target.value);
+    this.setValue(value);
+    this.callOnComplete(value);
+  }
+
+  private maskedValue(value: string, start = 0) {
     this.cursorPos = this.getSelection().start;
     const originalCursorPos = this.cursorPos;
     const { mask } = this.props;
@@ -299,35 +311,29 @@ class MaskedField extends React.Component {
   }
 
   render() {
-    const props = omit(this.props, 'mask', 'translations', 'onComplete', 'valueLink');
-    let maskProps = {};
-    const { mask, placeholder } = this.props;
-    if (mask) {
-      const { value } = this.state;
-      maskProps = {
-        onChange: this.handleChange,
-        onKeyDown: this.handleKeyDown,
-        onFocus: this.handleFocus,
-        onBlur: this.handleBlur,
-        value,
-      };
-
-      if (!placeholder) {
-        maskProps.placeholder = this.initialBuffer().join('');
-      }
-    }
+    const {
+      mask,
+      translations,
+      onComplete,
+      valueLink,
+      placeholder,
+      ...props
+    } = this.props;
 
     return (
       <input
-        ref={c => {
-          this.input = c;
-        }}
+        ref={c => (this.input = c)}
         {...props}
-        {...maskProps}
-        type="text"
+        onChange={this.handleChange}
+        onKeyDown={this.handleKeyDown}
+        onFocus={this.handleFocus}
+        onBlur={this.handleBlur}
+        value={this.state.value}
+        placeholder={placeholder || this.initialBuffer().join('')}
+        type='text'
       />
     );
   }
 }
 
-module.exports = MaskedField;
+export default MaskedField;

@@ -1,3 +1,5 @@
+const { DefinePlugin } = require('webpack');
+
 module.exports = {
   // base path that will be used to resolve all patterns (eg. files, exclude)
   basePath: '',
@@ -7,32 +9,35 @@ module.exports = {
   frameworks: ['mocha'],
 
   // list of files / patterns to load in the browser
-  files: ['spec/**/*_spec.js*'],
+  files: ['spec/**/*_spec.ts*'],
 
   // preprocess matching files before serving them to the browser
   // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
   preprocessors: {
-    'spec/**/*.js*': ['webpack'],
-  },
-
-  browserify: {
-    debug: true,
+    'spec/**/*.ts*': ['webpack'],
   },
 
   webpack: {
     resolve: {
-      extensions: ['.js', '.jsx', '.json'],
+      extensions: ['.json', '.ts', '.tsx', '.js'],
     },
 
     module: {
       rules: [
         {
-          test: /\.jsx?$/,
+          test: /\.tsx?$/,
           exclude: /node_modules/,
-          use: ['babel-loader'],
+          use: ['ts-loader'],
         },
       ],
     },
+    plugins: [
+      new DefinePlugin({
+        'process.env': {
+          NODE_ENV: '"DEVELOPMENT"',
+        },
+      }),
+    ],
   },
 
   webpackMiddleware: {

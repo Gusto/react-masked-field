@@ -1,7 +1,10 @@
+import {  ReactWrapper } from 'enzyme';
 import { getSelection, setSelection } from '../src/SelectionUtils';
 
-export function simulateChange(wrapper, content) {
-  const node = wrapper.getDOMNode();
+const inputNode = (wrapper: ReactWrapper) => wrapper.find('input').getDOMNode() as HTMLInputElement;
+
+export function simulateChange(wrapper: ReactWrapper, content: string) {
+  const node = inputNode(wrapper);
   const { start, end } = getSelection(node);
   const newVal = node.value.substring(0, start) + content + node.value.substr(end);
 
@@ -10,7 +13,7 @@ export function simulateChange(wrapper, content) {
   wrapper.simulate('change');
 }
 
-export function simulateKeyPress(wrapper, key) {
+export function simulateKeyPress(wrapper: ReactWrapper, key: string) {
   let defaultPrevented = false;
   wrapper.simulate('keyPress', {
     key,
@@ -24,11 +27,11 @@ export function simulateKeyPress(wrapper, key) {
   }
 }
 
-export function simulateTyping(wrapper, content) {
+export function simulateTyping(wrapper: ReactWrapper, content: string) {
   content.split('').forEach(key => simulateKeyPress(wrapper, key));
 }
 
-export function simulateKeyDown(wrapper, key) {
+export function simulateKeyDown(wrapper: ReactWrapper, key: string) {
   let defaultPrevented = false;
   wrapper.simulate('keyDown', {
     key,
@@ -37,12 +40,12 @@ export function simulateKeyDown(wrapper, key) {
     },
   });
 
-  const node = wrapper.getDOMNode();
+  const node = inputNode(wrapper);
 
   if (!defaultPrevented) {
     const { start, end } = getSelection(node);
     const prevVal = node.value;
-    let newVal;
+    let newVal = '';
     if (start === end) {
       if (key === 'Backspace') {
         newVal = prevVal.substring(0, start - 1) + prevVal.substr(end);
@@ -59,14 +62,14 @@ export function simulateKeyDown(wrapper, key) {
   }
 }
 
-export function simulateFocus(wrapper) {
-  const node = wrapper.getDOMNode();
+export function simulateFocus(wrapper: ReactWrapper) {
+  const node = inputNode(wrapper);
   node.focus();
   wrapper.simulate('focus');
   setSelection(node, node.value.length, node.value.length);
   return new Promise(resolve => setTimeout(resolve, 0));
 }
 
-export function simulateBlur(wrapper) {
+export function simulateBlur(wrapper: ReactWrapper) {
   wrapper.simulate('blur');
 }
