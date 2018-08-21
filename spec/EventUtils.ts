@@ -1,4 +1,4 @@
-import {  ReactWrapper } from 'enzyme';
+import { ReactWrapper } from 'enzyme';
 import { getSelection, setSelection } from '../src/SelectionUtils';
 
 const inputNode = (wrapper: ReactWrapper) => wrapper.find('input').getDOMNode() as HTMLInputElement;

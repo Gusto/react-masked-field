@@ -1,10 +1,9 @@
-
 /**
-* Copyright (c) 2015 ZenPayroll
-*
-* This source code is licensed under the MIT license found in the
-* LICENSE file in the root directory of this source tree.
-*/
+ * Copyright (c) 2015 ZenPayroll
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
@@ -22,10 +21,9 @@ export interface OptionallyMaskedFieldProps extends Omit<MaskedFieldProps, 'mask
 const OptionallyMaskedField: React.SFC<OptionallyMaskedFieldProps> = ({ mask, ...props }) => {
   if (mask) {
     return <MaskedField mask={mask} {...props} />;
-  } else {
-    // TODO: Omit unknown props?
-    return <input {...props} type="text" />;
   }
+  // TODO: Omit unknown props?
+  return <input {...props} type="text" />;
 };
 
 OptionallyMaskedField.propTypes = {

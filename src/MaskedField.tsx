@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2015 ZenPayroll
  *
@@ -14,7 +13,7 @@ import { getSelection, setSelection } from './SelectionUtils';
 const DEFAULT_TRANSLATIONS: { [char: string]: RegExp | undefined } = {
   9: /\d/,
   a: /[A-Za-z]/,
-  '*': /[A-Za-z0-9]/
+  '*': /[A-Za-z0-9]/,
 };
 
 const BLANK_CHAR = '_';
@@ -83,7 +82,7 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
     const propsValue = this.getPropsValue();
     this.state = {
       // TODO: Any way we can do this in one pass?
-      value: propsValue ? this.maskedValue(propsValue) : ''
+      value: propsValue ? this.maskedValue(propsValue) : '',
     };
   }
 
@@ -106,18 +105,16 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
   private getSelection() {
     if (this.input) {
       return getSelection(this.input);
-    } else {
-      const cursorPos = (this.getPropsValue() || '').length;
-      return { start: cursorPos, end: cursorPos };
     }
+    const cursorPos = (this.getPropsValue() || '').length;
+    return { start: cursorPos, end: cursorPos };
   }
 
   private getPropsValue() {
-    const { valueLink, value } = this.props;
-    if (valueLink) {
-      return valueLink.value;
+    if (this.props.valueLink) {
+      return this.props.valueLink.value;
     }
-    return value;
+    return this.props.value;
   }
 
   private getPattern(idx: number) {
@@ -212,7 +209,7 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
     }
   }
 
-  private handleFocus: React.FocusEventHandler<HTMLInputElement> = (e) => {
+  private handleFocus: React.FocusEventHandler<HTMLInputElement> = e => {
     setTimeout(() => this.setSelection(this.cursorPos), 0);
 
     if (this.props.onFocus) {
@@ -220,9 +217,9 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
     }
 
     this.setState({ value: this.buffer.join('') });
-  }
+  };
 
-  private handleBlur: React.FocusEventHandler<HTMLInputElement> = (e) => {
+  private handleBlur: React.FocusEventHandler<HTMLInputElement> = e => {
     if (this.isBufferEmpty()) {
       this.setValue('');
     }
@@ -230,9 +227,9 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
     if (this.props.onBlur) {
       this.props.onBlur(e);
     }
-  }
+  };
 
-  private handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+  private handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = e => {
     if (e.key === 'Backspace' || e.key === 'Delete') {
       let { start, end } = this.getSelection();
 
@@ -259,13 +256,13 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(e);
     }
-  }
+  };
 
-  private handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  private handleChange: React.ChangeEventHandler<HTMLInputElement> = e => {
     const value = this.maskedValue(e.target.value);
     this.setValue(value);
     this.callOnComplete(value);
-  }
+  };
 
   private maskedValue(value: string, start = 0) {
     this.cursorPos = this.getSelection().start;
@@ -311,18 +308,13 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
   }
 
   render() {
-    const {
-      mask,
-      translations,
-      onComplete,
-      valueLink,
-      placeholder,
-      ...props
-    } = this.props;
+    const { mask, translations, onComplete, valueLink, placeholder, ...props } = this.props;
 
     return (
       <input
-        ref={c => (this.input = c)}
+        ref={c => {
+          this.input = c;
+        }}
         {...props}
         onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}
@@ -330,7 +322,7 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
         onBlur={this.handleBlur}
         value={this.state.value}
         placeholder={placeholder || this.initialBuffer().join('')}
-        type='text'
+        type="text"
       />
     );
   }

@@ -64,7 +64,7 @@
     "start": "karma start karma.dev.js",
     "build": "tsc",
     "test": "karma start karma.ci.js",
-    "lint": "eslint --ext .js,.jsx .",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "prepare": "npm run build"
   },
   "dependencies": {

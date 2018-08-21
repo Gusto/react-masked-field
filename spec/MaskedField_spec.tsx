@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import * as chai from 'chai';
@@ -952,7 +954,7 @@ describe('MaskedField', () => {
     });
   });
 
-  context('when the component is controlled', function() {
+  context('when the component is controlled', () => {
     class ControlledWrapper extends React.Component<OptionallyMaskedFieldProps> {
       static propTypes = {
         value: PropTypes.string,
@@ -968,22 +970,22 @@ describe('MaskedField', () => {
         value: this.props.value,
       };
 
-      render() {
-        return (
-          <OptionallyMaskedField
-            {...this.props}
-            value={this.state.value}
-            onChange={this._handleChange}
-          />
-        );
-      }
-
-      _handleChange: OptionallyMaskedFieldProps['onChange'] = e => {
+      handleChange: OptionallyMaskedFieldProps['onChange'] = e => {
         if (this.props.onChange) {
           this.props.onChange({ target: { value: e.target.value } });
         }
         this.setState({ value: e.target.value });
       };
+
+      render() {
+        return (
+          <OptionallyMaskedField
+            {...this.props}
+            value={this.state.value}
+            onChange={this.handleChange}
+          />
+        );
+      }
     }
 
     before(() => {
@@ -1123,10 +1125,10 @@ describe('MaskedField', () => {
   });
 
   context('when the parent component contains multiple inputs', () => {
-    const inputNode = () => component.find('input').at(0);
+    const plainInputNode = () => component.find('input').at(0);
 
     class Parent extends React.Component {
-      onChange = e => {
+      onChange: React.ChangeEventHandler<HTMLInputElement> = e => {
         // eslint-disable-next-line react/no-unused-state
         this.setState({ value: e.target.value });
       };
@@ -1134,20 +1136,16 @@ describe('MaskedField', () => {
       render() {
         return (
           <div>
-            <input onChange={this._onChange} />
+            <input onChange={this.onChange} />
             <OptionallyMaskedField mask="99-99-9999" />
           </div>
         );
       }
-
-      _onChange: React.ChangeEventHandler<HTMLInputElement> = e => {
-        this.setState({ value: e.target.value });
-      };
     }
 
     beforeEach(() => {
       component = render(<Parent />);
-      return EventUtils.simulateFocus(inputNode());
+      return EventUtils.simulateFocus(plainInputNode());
     });
 
     context('when the masked field does not have focus', () => {
@@ -1160,7 +1158,7 @@ describe('MaskedField', () => {
         beforeEach(() => {
           fieldNode = component.find(OptionallyMaskedField).getDOMNode() as SpiedHTMLInputElement;
           sinon.spy(fieldNode, 'setSelectionRange');
-          EventUtils.simulateChange(inputNode(), 'hello');
+          EventUtils.simulateChange(plainInputNode(), 'hello');
         });
 
         afterEach(() => {
