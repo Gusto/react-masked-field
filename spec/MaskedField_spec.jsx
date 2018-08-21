@@ -1,15 +1,17 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import PropTypes from 'prop-types';
-import MaskedField from '../src/MaskedField';
-import * as EventUtils from './EventUtils';
 import chai from 'chai';
 import sinon from 'sinon';
 import Enzyme, { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import MaskedField from '../src/MaskedField';
+import * as EventUtils from './EventUtils';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-const expect = chai.expect;
+const { expect } = chai;
 chai.use(require('sinon-chai'));
 
 // TODO: Move eslint-config-gusto to public npm
@@ -116,7 +118,7 @@ describe('MaskedField', () => {
             });
 
             it('calls the onChange callback', () => {
-              expect(props.onChange).to.have.been.calledOnce;
+              expect(props.onChange).to.have.callCount(1);
               expect(props.onChange).to.have.been.calledWithExactly({
                 target: {
                   value: '2_/__/____',
@@ -125,7 +127,7 @@ describe('MaskedField', () => {
             });
 
             it("doesn't call the onComplete callback", () => {
-              expect(props.onComplete).to.have.not.been.called;
+              expect(props.onComplete).to.have.callCount(0);
             });
 
             context('when the next character is a mask character', () => {
@@ -200,7 +202,7 @@ describe('MaskedField', () => {
               });
 
               it('calls the onComplete callback', () => {
-                expect(props.onComplete).to.have.been.calledOnce;
+                expect(props.onComplete).to.have.callCount(1);
                 expect(props.onComplete).to.have.been.calledWithExactly('22/34/5678');
               });
             });
@@ -220,7 +222,7 @@ describe('MaskedField', () => {
             });
 
             it("doesn't call the onChange callback", () => {
-              expect(props.onChange).to.have.not.been.called;
+              expect(props.onChange).to.have.callCount(0);
             });
 
             context('when the cursor is in the middle of the value', () => {
@@ -382,7 +384,7 @@ describe('MaskedField', () => {
           });
 
           it('calls the onKeyDown callback', () => {
-            expect(props.onKeyDown).to.have.been.calledOnce;
+            expect(props.onKeyDown).to.have.callCount(1);
           });
 
           context('when the following character is a mask character', () => {
@@ -456,7 +458,7 @@ describe('MaskedField', () => {
             });
 
             it('calls the onChange callback', () => {
-              expect(props.onChange).to.have.been.calledOnce;
+              expect(props.onChange).to.have.callCount(1);
               expect(props.onChange).to.have.been.calledWithExactly({
                 target: {
                   value: '12/34/5___',
@@ -465,7 +467,7 @@ describe('MaskedField', () => {
             });
 
             it("doesn't call the onComplete callback", () => {
-              expect(props.onComplete).to.have.not.been.called;
+              expect(props.onComplete).to.have.callCount(0);
             });
 
             context('when the entire mask is filled', () => {
@@ -474,7 +476,7 @@ describe('MaskedField', () => {
               });
 
               it('calls the onComplete callback', () => {
-                expect(props.onComplete).to.have.been.calledOnce;
+                expect(props.onComplete).to.have.callCount(1);
                 expect(props.onComplete).to.have.been.calledWithExactly('12/34/5678');
               });
             });
@@ -590,7 +592,7 @@ describe('MaskedField', () => {
             });
 
             it('calls the onChange callback', () => {
-              expect(props.onChange).to.have.been.calledOnce;
+              expect(props.onChange).to.have.callCount(1);
             });
           });
         });
@@ -683,7 +685,7 @@ describe('MaskedField', () => {
           });
 
           it('calls the onKeyPress callback', () => {
-            expect(props.onKeyPress).to.have.been.calledOnce;
+            expect(props.onKeyPress).to.have.callCount(1);
           });
         });
       });
@@ -940,29 +942,34 @@ describe('MaskedField', () => {
     });
   });
 
-  context('when the component is controlled', function() {
+  context('when the component is controlled', () => {
     class ControlledWrapper extends React.Component {
       static propTypes = {
         value: PropTypes.string,
         onChange: PropTypes.func,
       };
 
+      static defaultProps = {
+        value: undefined,
+        onChange: undefined,
+      };
+
       state = {
         value: this.props.value,
       };
 
-      render() {
-        return (
-          <MaskedField {...this.props} value={this.state.value} onChange={this._handleChange} />
-        );
-      }
-
-      _handleChange = e => {
+      handleChange = e => {
         if (this.props.onChange) {
           this.props.onChange({ target: { value: e.target.value } });
         }
         this.setState({ value: e.target.value });
       };
+
+      render() {
+        return (
+          <MaskedField {...this.props} value={this.state.value} onChange={this.handleChange} />
+        );
+      }
     }
 
     before(() => {
@@ -990,7 +997,7 @@ describe('MaskedField', () => {
 
         context('when the initial value is blank', () => {
           it('does not call the onChange callback', () => {
-            expect(props.onChange).to.have.not.been.called;
+            expect(props.onChange).to.have.callCount(0);
           });
         });
 
@@ -1004,7 +1011,7 @@ describe('MaskedField', () => {
           });
 
           it('does not call the onChange callback', () => {
-            expect(props.onChange).to.have.not.been.called;
+            expect(props.onChange).to.have.callCount(0);
           });
         });
 
@@ -1018,19 +1025,23 @@ describe('MaskedField', () => {
           });
 
           it('does not call the onChange callback', () => {
-            expect(props.onChange).to.have.not.been.called;
+            expect(props.onChange).to.have.callCount(0);
           });
         });
       });
     });
   });
 
-  context('when the component uses ReactLink', function() {
+  context('when the component uses ReactLink', () => {
     let value = '';
 
     class LinkWrapper extends React.Component {
       static propTypes = {
         value: PropTypes.string,
+      };
+
+      static defaultProps = {
+        value: undefined,
       };
 
       state = {
@@ -1091,21 +1102,23 @@ describe('MaskedField', () => {
     });
   });
 
-  context('when the parent component contains multiple inputs', function() {
+  context('when the parent component contains multiple inputs', () => {
     const inputNode = () => component.find('input').at(0);
+
     class Parent extends React.Component {
+      onChange = e => {
+        // eslint-disable-next-line react/no-unused-state
+        this.setState({ value: e.target.value });
+      };
+
       render() {
         return (
           <div>
-            <input onChange={this._onChange} />
+            <input onChange={this.onChange} />
             <MaskedField mask="99-99-9999" />
           </div>
         );
       }
-
-      _onChange = e => {
-        this.setState({ value: e.target.value });
-      };
     }
 
     beforeEach(() => {
@@ -1128,7 +1141,7 @@ describe('MaskedField', () => {
         });
 
         it('does not set the cursor position of the masked field', () => {
-          expect(fieldNode.setSelectionRange).to.have.not.been.called;
+          expect(fieldNode.setSelectionRange).to.have.callCount(0);
         });
       });
     });
