@@ -1,10 +1,9 @@
-
 /**
-* Copyright (c) 2015 ZenPayroll
-*
-* This source code is licensed under the MIT license found in the
-* LICENSE file in the root directory of this source tree.
-*/
+ * Copyright (c) 2015 ZenPayroll
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -14,13 +13,13 @@ import { getSelection, setSelection } from './SelectionUtils';
 const DEFAULT_TRANSLATIONS = {
   9: /\d/,
   a: /[A-Za-z]/,
-  '*': /[A-Za-z0-9]/
+  '*': /[A-Za-z0-9]/,
 };
 
 const BLANK_CHAR = '_';
 
 class MaskedField extends React.Component {
-  static propTypes =  {
+  static propTypes = {
     mask: PropTypes.string,
     translations: PropTypes.object,
     value: PropTypes.string,
@@ -31,7 +30,7 @@ class MaskedField extends React.Component {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     // TODO: shape
-    valueLink: PropTypes.object
+    valueLink: PropTypes.object,
   };
 
   constructor(props) {
@@ -47,7 +46,7 @@ class MaskedField extends React.Component {
     const propsValue = this._getPropsValue();
     this.state = {
       // TODO: Any way we can do this in one pass?
-      value: propsValue ? this._maskedValue(propsValue) : ''
+      value: propsValue ? this._maskedValue(propsValue) : '',
     };
   }
 
@@ -78,7 +77,7 @@ class MaskedField extends React.Component {
         onKeyDown: this._handleKeyDown,
         onFocus: this._handleFocus,
         onBlur: this._handleBlur,
-        value: this.state.value
+        value: this.state.value,
       };
       props = omit(props, 'valueLink');
 
@@ -87,16 +86,15 @@ class MaskedField extends React.Component {
       }
     }
 
-    return <input ref={c => (this._input = c)} {...props} {...maskProps} type='text' />;
+    return <input ref={c => (this._input = c)} {...props} {...maskProps} type="text" />;
   }
 
   _getSelection() {
     if (this._isMounted) {
       return getSelection(this._input);
-    } else {
-      const cursorPos = (this._getPropsValue() || '').length;
-      return { start: cursorPos, end: cursorPos };
     }
+    const cursorPos = (this._getPropsValue() || '').length;
+    return { start: cursorPos, end: cursorPos };
   }
 
   _setSelection(start, end = start) {
@@ -108,9 +106,8 @@ class MaskedField extends React.Component {
   _getPropsValue() {
     if (this.props.valueLink) {
       return this.props.valueLink.value;
-    } else {
-      return this.props.value;
     }
+    return this.props.value;
   }
 
   _getPattern(idx) {
@@ -195,7 +192,7 @@ class MaskedField extends React.Component {
     this.setState({ value });
   }
 
-  _handleFocus = (e) => {
+  _handleFocus = e => {
     setTimeout(() => this._setSelection(this._cursorPos), 0);
 
     if (this.props.onFocus) {
@@ -203,9 +200,9 @@ class MaskedField extends React.Component {
     }
 
     this.setState({ value: this._buffer.join('') });
-  }
+  };
 
-  _handleBlur = (e) => {
+  _handleBlur = e => {
     if (this._isBufferEmpty()) {
       this._setValue('');
     }
@@ -213,9 +210,9 @@ class MaskedField extends React.Component {
     if (this.props.onBlur) {
       this.props.onBlur(e);
     }
-  }
+  };
 
-  _handleKeyDown = (e) => {
+  _handleKeyDown = e => {
     if (e.key === 'Backspace' || e.key === 'Delete') {
       let { start, end } = this._getSelection();
 
@@ -242,16 +239,16 @@ class MaskedField extends React.Component {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(e);
     }
-  }
+  };
 
-  _handleChange = (e) => {
+  _handleChange = e => {
     const value = this._maskedValue(e.target.value);
     this._setValue(value);
     this._callOnComplete(value);
-  }
+  };
 
   _maskedValue(value, start = 0) {
-    const originalCursorPos = this._cursorPos = this._getSelection().start;
+    const originalCursorPos = (this._cursorPos = this._getSelection().start);
     for (let bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; ++bufferIdx) {
       const pattern = this._getPattern(bufferIdx);
       if (pattern) {

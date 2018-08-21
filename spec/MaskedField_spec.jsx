@@ -19,7 +19,7 @@ console.error = message => {
   throw new Error(message);
 };
 
-describe('MaskedField', function() {
+describe('MaskedField', () => {
   let container;
   let component;
   let domNode;
@@ -35,12 +35,18 @@ describe('MaskedField', function() {
   }
 
   function cursorPosShouldEql(pos) {
-    const node = getField().find('input').getDOMNode();
+    const node = getField()
+      .find('input')
+      .getDOMNode();
     expect(node.selectionStart).to.equal(pos);
     expect(node.selectionEnd).to.equal(pos);
   }
 
-  const setSelection = (start, end = start) => getField().find('input').getDOMNode().setSelectionRange(start, end);
+  const setSelection = (start, end = start) =>
+    getField()
+      .find('input')
+      .getDOMNode()
+      .setSelectionRange(start, end);
   const simulateKeyPress = key => EventUtils.simulateKeyPress(getField(), key);
   const simulateKeyDown = key => EventUtils.simulateKeyDown(getField(), key);
   const simulatePaste = content => EventUtils.simulateChange(getField(), content);
@@ -51,32 +57,32 @@ describe('MaskedField', function() {
   const render = element => mount(element, { attachTo: container });
 
   function setupTests(isControlled, additionalTests) {
-    context('when the field is focused', function() {
+    context('when the field is focused', () => {
       beforeEach(simulateFocus);
 
-      context("when the mask is '99/99/9999'", function() {
-        before(function() {
+      context("when the mask is '99/99/9999'", () => {
+        before(() => {
           props.mask = '99/99/9999';
         });
 
         additionalTests();
 
-        describe('typing a key', function() {
-          before(function() {
+        describe('typing a key', () => {
+          before(() => {
             props.onChange = sinon.spy();
             props.onComplete = sinon.spy();
           });
 
-          after(function() {
+          after(() => {
             delete props.onChange;
             delete props.onComplete;
           });
 
-          beforeEach(function() {
+          beforeEach(() => {
             props.onChange.reset();
           });
 
-          afterEach(function() {
+          afterEach(() => {
             props.onChange.reset();
             props.onComplete.reset();
           });
@@ -92,499 +98,498 @@ describe('MaskedField', function() {
             });
           });
 
-          context('when the character matches the mask', function() {
-            beforeEach(function() {
+          context('when the character matches the mask', () => {
+            beforeEach(() => {
               simulateKeyPress('2');
             });
 
-            it('adds the character to the value', function() {
+            it('adds the character to the value', () => {
               expect(getFieldValue()[0]).to.equal('2');
             });
 
-            it('moves the cursor to the correct position', function() {
+            it('moves the cursor to the correct position', () => {
               cursorPosShouldEql(1);
             });
 
-            it('correctly shifts the mask characters', function() {
+            it('correctly shifts the mask characters', () => {
               expect(getFieldValue()).to.equal('2_/__/____');
             });
 
-            it('calls the onChange callback', function() {
+            it('calls the onChange callback', () => {
               expect(props.onChange).to.have.been.calledOnce;
               expect(props.onChange).to.have.been.calledWithExactly({
                 target: {
-                  value: '2_/__/____'
-                }
+                  value: '2_/__/____',
+                },
               });
             });
 
-            it("doesn't call the onComplete callback", function() {
+            it("doesn't call the onComplete callback", () => {
               expect(props.onComplete).to.have.not.been.called;
             });
 
-            context('when the next character is a mask character', function() {
-              beforeEach(function() {
+            context('when the next character is a mask character', () => {
+              beforeEach(() => {
                 simulateKeyPress('3');
               });
 
-              it('moves the cursor past the mask character', function() {
+              it('moves the cursor past the mask character', () => {
                 expect(getFieldValue()).to.equal('23/__/____');
                 cursorPosShouldEql(3);
               });
             });
 
-            context('when the cursor is in the middle of the value', function() {
-              beforeEach(function() {
+            context('when the cursor is in the middle of the value', () => {
+              beforeEach(() => {
                 simulateTyping('34');
                 setSelection(1);
                 simulateKeyPress('5');
               });
 
-              it('adds the character to the value', function() {
+              it('adds the character to the value', () => {
                 expect(getFieldValue()[1]).to.equal('5');
               });
 
-              it('moves the cursor to the correct position', function() {
+              it('moves the cursor to the correct position', () => {
                 cursorPosShouldEql(3);
               });
             });
 
-            context('when the cursor is in the middle an empty field', function() {
-              beforeEach(function() {
+            context('when the cursor is in the middle an empty field', () => {
+              beforeEach(() => {
                 setSelection(4);
                 simulateKeyPress('5');
               });
 
-              it('adds the character to the value', function() {
+              it('adds the character to the value', () => {
                 expect(getFieldValue()[4]).to.equal('5');
               });
 
-              it('moves the cursor to the correct position', function() {
+              it('moves the cursor to the correct position', () => {
                 cursorPosShouldEql(6);
               });
             });
 
-            context('when field text is selected', function() {
-              beforeEach(function() {
+            context('when field text is selected', () => {
+              beforeEach(() => {
                 simulateTyping('345');
                 setSelection(1, 5);
                 simulateKeyPress('6');
               });
 
-              it('replaces the selected characters', function() {
+              it('replaces the selected characters', () => {
                 expect(getFieldValue().substring(1, 5)).to.equal('6/__');
               });
 
-              it('moves the cursor to the correct position', function() {
+              it('moves the cursor to the correct position', () => {
                 cursorPosShouldEql(3);
               });
 
-              it('correctly shifts the mask characters', function() {
+              it('correctly shifts the mask characters', () => {
                 expect(getFieldValue()).to.equal('26/__/____');
               });
 
-              it('calls the onChange callback', function() {
+              it('calls the onChange callback', () => {
                 expect(props.onChange.callCount).to.equal(5);
               });
             });
 
-            context('when the entire mask is filled', function() {
-              beforeEach(function() {
+            context('when the entire mask is filled', () => {
+              beforeEach(() => {
                 simulateTyping('2345678');
               });
 
-              it('calls the onComplete callback', function() {
+              it('calls the onComplete callback', () => {
                 expect(props.onComplete).to.have.been.calledOnce;
                 expect(props.onComplete).to.have.been.calledWithExactly('22/34/5678');
               });
             });
           });
 
-          context("when the character doesn't match the mask", function() {
-            beforeEach(function() {
+          context("when the character doesn't match the mask", () => {
+            beforeEach(() => {
               simulateKeyPress('A');
             });
 
-            it("doesn't change the value", function() {
+            it("doesn't change the value", () => {
               expect(getFieldValue()).to.equal('__/__/____');
             });
 
-            it("doesn't change the cursor position", function() {
+            it("doesn't change the cursor position", () => {
               cursorPosShouldEql(0);
             });
 
-            it("doesn't call the onChange callback", function() {
+            it("doesn't call the onChange callback", () => {
               expect(props.onChange).to.have.not.been.called;
             });
 
-            context('when the cursor is in the middle of the value', function() {
-              beforeEach(function() {
+            context('when the cursor is in the middle of the value', () => {
+              beforeEach(() => {
                 simulateTyping('123');
                 setSelection(1);
                 simulateKeyPress('A');
               });
 
-              it("doesn't change the value", function() {
+              it("doesn't change the value", () => {
                 expect(getFieldValue()).to.equal('12/3_/____');
               });
 
-              it("doesn't change the cursor position", function() {
+              it("doesn't change the cursor position", () => {
                 cursorPosShouldEql(1);
               });
             });
 
-            context('when field text is selected', function() {
-              beforeEach(function() {
+            context('when field text is selected', () => {
+              beforeEach(() => {
                 simulateTyping('12345');
                 setSelection(1, 5);
                 simulateKeyPress('A');
               });
 
-              it('removes the selected characters', function() {
+              it('removes the selected characters', () => {
                 expect(getFieldValue().substring(1, 5)).to.equal('5/__');
               });
 
-              it('moves the cursor to the correct position', function() {
+              it('moves the cursor to the correct position', () => {
                 cursorPosShouldEql(1);
               });
 
-              it('correctly shifts the mask characters', function() {
+              it('correctly shifts the mask characters', () => {
                 expect(getFieldValue()).to.equal('15/__/____');
               });
             });
           });
         });
 
-        describe('pressing the backspace key', function() {
-          beforeEach(function() {
+        describe('pressing the backspace key', () => {
+          beforeEach(() => {
             simulateTyping('123');
             simulateKeyDown('Backspace');
           });
 
-          it('removes the preceding character', function() {
+          it('removes the preceding character', () => {
             expect(getFieldValue()[3]).to.equal('_');
           });
 
-          it('moves the cursor to the correct position', function() {
+          it('moves the cursor to the correct position', () => {
             cursorPosShouldEql(3);
           });
 
-          it('correctly shifts the mask characters', function() {
+          it('correctly shifts the mask characters', () => {
             expect(getFieldValue()).to.equal('12/__/____');
           });
 
-          context('when the previous character is a mask character', function() {
-            beforeEach(function() {
+          context('when the previous character is a mask character', () => {
+            beforeEach(() => {
               simulateKeyDown('Backspace');
             });
 
-            it('removes the preceding non-mask character', function() {
+            it('removes the preceding non-mask character', () => {
               expect(getFieldValue()[1]).to.equal('_');
             });
 
-            it('moves the cursor to the correct position', function() {
+            it('moves the cursor to the correct position', () => {
               cursorPosShouldEql(1);
             });
 
-            it('correctly shifts the mask characters', function() {
+            it('correctly shifts the mask characters', () => {
               expect(getFieldValue()).to.equal('1_/__/____');
             });
 
-            describe('typing another character', function() {
-              beforeEach(function() {
+            describe('typing another character', () => {
+              beforeEach(() => {
                 simulateKeyPress('1');
               });
 
-              it('moves the cursor to the correct position', function() {
+              it('moves the cursor to the correct position', () => {
                 cursorPosShouldEql(3);
               });
             });
           });
 
-          context('when the next character is a mask character', function() {
-            beforeEach(function() {
+          context('when the next character is a mask character', () => {
+            beforeEach(() => {
               simulateKeyPress('3');
               setSelection(2);
               simulateKeyDown('Backspace');
             });
 
-            it('correctly shifts the non-mask characters', function() {
+            it('correctly shifts the non-mask characters', () => {
               expect(getFieldValue()).to.equal('13/__/____');
             });
           });
 
-          context('when the cursor is at the beginning', function() {
-            beforeEach(function() {
+          context('when the cursor is at the beginning', () => {
+            beforeEach(() => {
               setSelection(0);
               simulateKeyDown('Backspace');
             });
 
-            it("doesn't change the value", function() {
+            it("doesn't change the value", () => {
               expect(getFieldValue()).to.equal('12/__/____');
             });
           });
 
-          context('when field text is selected', function() {
-            beforeEach(function() {
+          context('when field text is selected', () => {
+            beforeEach(() => {
               simulateTyping('345');
               setSelection(1, 4);
               simulateKeyDown('Backspace');
             });
 
-            it('removes the selected characters', function() {
+            it('removes the selected characters', () => {
               expect(getFieldValue().substring(1, 4)).to.equal('4/5');
             });
 
-            it('moves the cursor to the correct position', function() {
+            it('moves the cursor to the correct position', () => {
               cursorPosShouldEql(1);
             });
 
-            it('correctly shifts the mask characters', function() {
+            it('correctly shifts the mask characters', () => {
               expect(getFieldValue()).to.equal('14/5_/____');
             });
           });
         });
-        describe('pressing the delete key', function() {
-          before(function() {
+        describe('pressing the delete key', () => {
+          before(() => {
             props.onKeyDown = sinon.spy();
           });
 
-          after(function() {
+          after(() => {
             delete props.onKeyDown;
           });
 
-          afterEach(function() {
+          afterEach(() => {
             props.onKeyDown.reset();
           });
 
-          beforeEach(function() {
+          beforeEach(() => {
             simulateTyping('1234');
             setSelection(1);
             simulateKeyDown('Delete');
           });
 
-          it('removes the following non-mask character', function() {
+          it('removes the following non-mask character', () => {
             expect(getFieldValue()[3]).to.equal('4');
           });
 
-          it("doesn't move the cursor", function() {
+          it("doesn't move the cursor", () => {
             cursorPosShouldEql(1);
           });
 
-          it('correctly shifts the mask characters', function() {
+          it('correctly shifts the mask characters', () => {
             expect(getFieldValue()).to.equal('13/4_/____');
           });
 
-          it('calls the onKeyDown callback', function() {
+          it('calls the onKeyDown callback', () => {
             expect(props.onKeyDown).to.have.been.calledOnce;
           });
 
-          context('when the following character is a mask character', function() {
-            beforeEach(function() {
+          context('when the following character is a mask character', () => {
+            beforeEach(() => {
               setSelection(2);
               simulateKeyDown('Delete');
             });
 
-            it('removes the following non-mask character', function() {
+            it('removes the following non-mask character', () => {
               expect(getFieldValue()[3]).to.equal('_');
             });
 
-            it('moves the cursor to the correct position', function() {
+            it('moves the cursor to the correct position', () => {
               cursorPosShouldEql(3);
             });
 
-            it('correctly shifts the mask characters', function() {
+            it('correctly shifts the mask characters', () => {
               expect(getFieldValue()).to.equal('13/__/____');
             });
           });
 
-          context('when field text is selected', function() {
-            beforeEach(function() {
+          context('when field text is selected', () => {
+            beforeEach(() => {
               simulateTyping('25');
               setSelection(1, 4);
               simulateKeyDown('Delete');
             });
 
-            it('removes the selected characters', function() {
+            it('removes the selected characters', () => {
               expect(getFieldValue().substring(1, 4)).to.equal('3/4');
             });
 
-            it("doesn't move the cursor", function() {
+            it("doesn't move the cursor", () => {
               cursorPosShouldEql(1);
             });
 
-            it('correctly shifts the mask characters', function() {
+            it('correctly shifts the mask characters', () => {
               expect(getFieldValue()).to.equal('13/4_/____');
             });
           });
         });
 
-        describe('pasting', function() {
-          context('when the pasted content contains only valid characters', function() {
-            before(function() {
+        describe('pasting', () => {
+          context('when the pasted content contains only valid characters', () => {
+            before(() => {
               props.onChange = sinon.spy();
               props.onComplete = sinon.spy();
             });
 
-            after(function() {
+            after(() => {
               delete props.onChange;
               delete props.onComplete;
             });
 
-            beforeEach(function() {
+            beforeEach(() => {
               props.onChange.reset();
               simulatePaste('12345');
             });
 
-            afterEach(function() {
+            afterEach(() => {
               props.onChange.reset();
               props.onComplete.reset();
             });
 
-            it('adds the content to the value', function() {
+            it('adds the content to the value', () => {
               expect(getFieldValue()).to.equal('12/34/5___');
             });
 
-            it('moves the cursor to the correct position', function() {
+            it('moves the cursor to the correct position', () => {
               cursorPosShouldEql(7);
             });
 
-            it('calls the onChange callback', function() {
+            it('calls the onChange callback', () => {
               expect(props.onChange).to.have.been.calledOnce;
               expect(props.onChange).to.have.been.calledWithExactly({
                 target: {
-                  value: '12/34/5___'
-                }
+                  value: '12/34/5___',
+                },
               });
             });
 
-            it("doesn't call the onComplete callback", function() {
+            it("doesn't call the onComplete callback", () => {
               expect(props.onComplete).to.have.not.been.called;
             });
 
-            context('when the entire mask is filled', function() {
-              beforeEach(function() {
+            context('when the entire mask is filled', () => {
+              beforeEach(() => {
                 simulatePaste('678');
               });
 
-              it('calls the onComplete callback', function() {
+              it('calls the onComplete callback', () => {
                 expect(props.onComplete).to.have.been.calledOnce;
                 expect(props.onComplete).to.have.been.calledWithExactly('12/34/5678');
               });
             });
 
-            context('when field text is selected', function() {
-              beforeEach(function() {
+            context('when field text is selected', () => {
+              beforeEach(() => {
                 setSelection(1, 5);
                 simulatePaste('67');
               });
 
-              it('replaces the selected characters', function() {
+              it('replaces the selected characters', () => {
                 expect(getFieldValue().substring(1, 5)).to.equal('6/75');
               });
 
               // TODO: Is this the right behavior?
-              it('moves the cursor to the correct position', function() {
+              it('moves the cursor to the correct position', () => {
                 cursorPosShouldEql(4);
               });
 
-              it('correctly shifts the mask characters', function() {
+              it('correctly shifts the mask characters', () => {
                 expect(getFieldValue()).to.equal('16/75/____');
               });
             });
           });
 
-          context('when the pasted content contains invalid characters', function() {
-            beforeEach(function() {
+          context('when the pasted content contains invalid characters', () => {
+            beforeEach(() => {
               simulateKeyPress('1');
               simulatePaste('2a3b4c5');
             });
 
-            it('adds the valid content to the value', function() {
+            it('adds the valid content to the value', () => {
               expect(getFieldValue()).to.equal('12/34/5___');
             });
 
-            it('moves the cursor to the correct position', function() {
+            it('moves the cursor to the correct position', () => {
               cursorPosShouldEql(7);
             });
 
-            context('when field text is selected', function() {
-              beforeEach(function() {
+            context('when field text is selected', () => {
+              beforeEach(() => {
                 setSelection(1, 5);
                 simulatePaste('6a7b');
               });
 
-              it('replaces the selected characters', function() {
+              it('replaces the selected characters', () => {
                 expect(getFieldValue().substring(1, 5)).to.equal('6/75');
               });
 
-              it('moves the cursor to the correct position', function() {
+              it('moves the cursor to the correct position', () => {
                 cursorPosShouldEql(4);
               });
 
-              it('correctly shifts the mask characters', function() {
+              it('correctly shifts the mask characters', () => {
                 expect(getFieldValue()).to.equal('16/75/____');
               });
             });
           });
         });
 
-        describe('setting an initial value', function() {
-          before(function() {
+        describe('setting an initial value', () => {
+          before(() => {
             props.value = '0101201';
           });
 
-          after(function() {
+          after(() => {
             delete props.value;
           });
 
-          it('correctly masks the initial value', function() {
+          it('correctly masks the initial value', () => {
             expect(getFieldValue()).to.equal('01/01/201_');
           });
 
-          it('moves the cursor to the correct position', function() {
+          it('moves the cursor to the correct position', () => {
             cursorPosShouldEql(9);
           });
         });
 
-        describe('blurring', function() {
-          context('when the field contains no valid characters', function() {
+        describe('blurring', () => {
+          context('when the field contains no valid characters', () => {
             beforeEach(simulateBlur);
 
-            it('sets the value to blank', function() {
+            it('sets the value to blank', () => {
               expect(getFieldValue()).to.equal('');
             });
           });
 
-
-          context('when the field contains valid characters', function() {
-            beforeEach(function() {
+          context('when the field contains valid characters', () => {
+            beforeEach(() => {
               simulateKeyPress('2');
               simulateBlur();
             });
 
-            it('does not change the value', function() {
+            it('does not change the value', () => {
               expect(getFieldValue()).to.equal('2_/__/____');
             });
           });
 
-          context('when the field removes all valid characters', function() {
-            before(function() {
+          context('when the field removes all valid characters', () => {
+            before(() => {
               props.onChange = sinon.spy();
             });
 
-            beforeEach(function() {
+            beforeEach(() => {
               simulateKeyPress('2');
               simulateKeyDown('Backspace');
               props.onChange.reset();
               simulateBlur();
             });
 
-            it('sets the value to blank', function() {
+            it('sets the value to blank', () => {
               expect(getFieldValue()).to.equal('');
             });
 
-            it('calls the onChange callback', function() {
+            it('calls the onChange callback', () => {
               expect(props.onChange).to.have.been.calledOnce;
             });
           });
@@ -621,171 +626,170 @@ describe('MaskedField', function() {
         });
       });
 
-      context("when the mask is 'a-99'", function() {
-        before(function() {
+      context("when the mask is 'a-99'", () => {
+        before(() => {
           props.mask = 'a-99';
         });
 
-        describe('pressing the backspace key', function() {
-          beforeEach(function() {
+        describe('pressing the backspace key', () => {
+          beforeEach(() => {
             simulateTyping('a12');
             setSelection(1);
             simulateKeyDown('Backspace');
           });
 
-          it('removes the preceding character', function() {
+          it('removes the preceding character', () => {
             expect(getFieldValue()[0]).to.equal('_');
           });
 
-          it('moves the cursor to the correct position', function() {
+          it('moves the cursor to the correct position', () => {
             cursorPosShouldEql(0);
           });
 
-          it('correctly shifts the mask characters', function() {
+          it('correctly shifts the mask characters', () => {
             expect(getFieldValue()).to.equal('_-12');
           });
         });
       });
 
-      context("when the mask is 'aaaaaaaa'", function() {
-        before(function() {
+      context("when the mask is 'aaaaaaaa'", () => {
+        before(() => {
           props.mask = 'aaaaaaaa';
         });
 
-        it('sets the placeholder correctly', function() {
+        it('sets the placeholder correctly', () => {
           expect(domNode.placeholder).to.equal('________');
         });
 
-        describe('pressing the enter key', function() {
-          before(function() {
+        describe('pressing the enter key', () => {
+          before(() => {
             props.onKeyPress = sinon.spy();
           });
 
-          after(function() {
+          after(() => {
             delete props.onKeyPress;
           });
 
-          beforeEach(function() {
+          beforeEach(() => {
             simulateKeyPress('Enter');
           });
 
-          afterEach(function() {
+          afterEach(() => {
             props.onKeyPress.reset();
           });
 
-          it("doesn't change the value", function() {
+          it("doesn't change the value", () => {
             expect(getFieldValue()).to.equal('________');
           });
 
-          it('calls the onKeyPress callback', function() {
+          it('calls the onKeyPress callback', () => {
             expect(props.onKeyPress).to.have.been.calledOnce;
           });
         });
       });
 
-      context("when the mask is '21-99999999'", function() {
-        before(function() {
+      context("when the mask is '21-99999999'", () => {
+        before(() => {
           props.mask = '21-99999999';
         });
 
-        describe('initial state', function() {
-          it('sets the cursor to the first non-mask character', function() {
+        describe('initial state', () => {
+          it('sets the cursor to the first non-mask character', () => {
             cursorPosShouldEql(3);
           });
         });
 
-        describe('pasting', function() {
-          context('when the cursor is at the beginning', function() {
-            beforeEach(function() {
+        describe('pasting', () => {
+          context('when the cursor is at the beginning', () => {
+            beforeEach(() => {
               simulatePaste('12345678');
             });
 
-            it('adds the content to the value', function() {
+            it('adds the content to the value', () => {
               expect(getFieldValue()).to.equal('21-12345678');
             });
           });
         });
 
-        describe('pressing the backspace key', function() {
-          context('when the cursor is after a non-mask character', function() {
-            beforeEach(function() {
+        describe('pressing the backspace key', () => {
+          context('when the cursor is after a non-mask character', () => {
+            beforeEach(() => {
               simulateKeyDown('Backspace');
             });
 
-            it('moves the cursor to the first non-mask position', function() {
+            it('moves the cursor to the first non-mask position', () => {
               cursorPosShouldEql(3);
             });
           });
 
-
-          context('when the entire mask is selected', function() {
-            beforeEach(function() {
+          context('when the entire mask is selected', () => {
+            beforeEach(() => {
               setSelection(0, 11);
               simulateKeyDown('Backspace');
             });
 
-            it('moves the cursor to the first non-mask position', function() {
+            it('moves the cursor to the first non-mask position', () => {
               cursorPosShouldEql(3);
             });
           });
         });
       });
 
-      context("when the mask is 'ZZ-999-ZZ-999'", function() {
-        before(function() {
+      context("when the mask is 'ZZ-999-ZZ-999'", () => {
+        before(() => {
           props.mask = 'ZZ-999-ZZ-999';
         });
 
-        describe('pasting', function() {
-          context('when the cursor is at the beginning', function() {
-            beforeEach(function() {
+        describe('pasting', () => {
+          context('when the cursor is at the beginning', () => {
+            beforeEach(() => {
               simulatePaste('123123');
             });
 
-            it('adds the content to the value', function() {
+            it('adds the content to the value', () => {
               expect(getFieldValue()).to.equal('ZZ-123-ZZ-123');
             });
           });
         });
       });
 
-      context("when the mask is '036-9999999999-09'", function() {
-        before(function() {
+      context("when the mask is '036-9999999999-09'", () => {
+        before(() => {
           props.mask = '036-9999999999-09';
         });
 
-        describe('typing a key', function() {
-          context('when the character matches the mask', function() {
-            beforeEach(function() {
+        describe('typing a key', () => {
+          context('when the character matches the mask', () => {
+            beforeEach(() => {
               simulateKeyPress('2');
             });
 
-            it('adds the character to the value', function() {
+            it('adds the character to the value', () => {
               expect(getFieldValue()[4]).to.equal('2');
             });
 
-            it('moves the cursor to the correct position', function() {
+            it('moves the cursor to the correct position', () => {
               cursorPosShouldEql(5);
             });
 
-            it('correctly shifts the mask characters', function() {
+            it('correctly shifts the mask characters', () => {
               expect(getFieldValue()).to.equal('036-2_________-0_');
             });
 
-            context('when the next character is a mask character', function() {
-              beforeEach(function() {
+            context('when the next character is a mask character', () => {
+              beforeEach(() => {
                 simulateTyping('345678912');
               });
 
-              it('adds the character to the value', function() {
+              it('adds the character to the value', () => {
                 expect(getFieldValue().substring(5, 14)).to.equal('345678912');
               });
 
-              it('moves the cursor to the correct position', function() {
+              it('moves the cursor to the correct position', () => {
                 cursorPosShouldEql(16);
               });
 
-              it('correctly shifts the mask characters', function() {
+              it('correctly shifts the mask characters', () => {
                 expect(getFieldValue()).to.equal('036-2345678912-0_');
               });
             });
@@ -793,80 +797,80 @@ describe('MaskedField', function() {
         });
       });
 
-      context('when there is no mask', function() {
-        before(function() {
+      context('when there is no mask', () => {
+        before(() => {
           delete props.mask;
         });
 
-        describe('setting an initial value', function() {
-          before(function() {
+        describe('setting an initial value', () => {
+          before(() => {
             props.value = '123abc';
           });
 
-          it('contains the initial value', function() {
+          it('contains the initial value', () => {
             expect(getFieldValue()).to.equal('123abc');
           });
         });
 
-        describe('typing keys', function() {
-          before(function() {
+        describe('typing keys', () => {
+          before(() => {
             props.value = '';
           });
 
-          beforeEach(function() {
+          beforeEach(() => {
             props.onChange.reset();
             simulateTyping('1a2b3c');
           });
 
-          it('calls the onChange prop', function() {
+          it('calls the onChange prop', () => {
             expect(props.onChange).to.have.callCount(6);
           });
 
           if (isControlled) {
-            it('adds the characters to the value', function() {
+            it('adds the characters to the value', () => {
               expect(getFieldValue()).to.equal('1a2b3c');
             });
 
-            it('moves the cursor to the correct position', function() {
+            it('moves the cursor to the correct position', () => {
               cursorPosShouldEql(6);
             });
           }
         });
       });
 
-      context('when there is a pattern provided', function() {
-        before(function() {
+      context('when there is a pattern provided', () => {
+        before(() => {
           props.mask = 'FFF';
           props.translations = {
-            F: /[F]/
+            F: /[F]/,
           };
         });
 
-        describe('typing a key', function() {
-          context('when the character matches the mask', function() {
-            beforeEach(function() {
+        describe('typing a key', () => {
+          context('when the character matches the mask', () => {
+            beforeEach(() => {
               simulateKeyPress('F');
             });
 
-            it('adds the character to the value', function() {
+            it('adds the character to the value', () => {
               expect(getFieldValue()[0]).to.equal('F');
             });
 
-            it('moves the cursor to the correct position', function() {
+            it('moves the cursor to the correct position', () => {
               cursorPosShouldEql(1);
             });
           });
 
-          context("when the character doesn't match the mask", function() {
-            beforeEach(function() {
+          context("when the character doesn't match the mask", () => {
+            beforeEach(() => {
               simulateKeyPress('A');
             });
 
-            it("doesn't change the value", function() {
+            it("doesn't change the value", () => {
               expect(getFieldValue()).to.equal('___');
             });
 
-            it("doesn't change the cursor position", function() {
+            it("doesn't change the cursor position", () => {
               cursorPosShouldEql(0);
             });
           });
@@ -875,21 +879,21 @@ describe('MaskedField', function() {
     });
   }
 
-  before(function() {
+  before(() => {
     container = document.createElement('div');
     document.body.appendChild(container);
   });
 
-  afterEach(function() {
+  afterEach(() => {
     component.detach();
   });
 
-  context("when the component isn't controlled", function() {
-    before(function() {
+  context("when the component isn't controlled", () => {
+    before(() => {
       delete props.value;
     });
 
-    beforeEach(function() {
+    beforeEach(() => {
       if (props.value && !props.onChange) {
         props.readOnly = true;
       }
@@ -897,40 +901,40 @@ describe('MaskedField', function() {
       domNode = component.getDOMNode();
     });
 
-    afterEach(function() {
+    afterEach(() => {
       delete props.readOnly;
     });
 
-    setupTests(false, function() {
-      describe('the placeholder', function() {
-        context('when a placeholder is given', function() {
-          before(function() {
+    setupTests(false, () => {
+      describe('the placeholder', () => {
+        context('when a placeholder is given', () => {
+          before(() => {
             props.placeholder = 'mm/dd/yyyy';
           });
 
-          after(function() {
+          after(() => {
             delete props.placeholder;
           });
 
-          it('fills in the placeholder with the provided characters', function() {
+          it('fills in the placeholder with the provided characters', () => {
             expect(domNode.placeholder).to.equal('mm/dd/yyyy');
           });
         });
 
-        context('when no placeholder is given', function() {
-          it('fills in the placeholder with the default character', function() {
+        context('when no placeholder is given', () => {
+          it('fills in the placeholder with the default character', () => {
             expect(domNode.placeholder).to.equal('__/__/____');
           });
         });
       });
     });
 
-    context('when the field is not focused', function() {
-      before(function() {
+    context('when the field is not focused', () => {
+      before(() => {
         props.mask = '99/99/9999';
       });
 
-      it('has a blank value', function() {
+      it('has a blank value', () => {
         expect(getFieldValue()).to.equal('');
       });
     });
@@ -940,84 +944,80 @@ describe('MaskedField', function() {
     class ControlledWrapper extends React.Component {
       static propTypes = {
         value: PropTypes.string,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
       };
 
       state = {
-        value: this.props.value
+        value: this.props.value,
       };
 
       render() {
         return (
-          <MaskedField
-            {...this.props}
-            value={this.state.value}
-            onChange={this._handleChange}
-          />
+          <MaskedField {...this.props} value={this.state.value} onChange={this._handleChange} />
         );
       }
 
-      _handleChange = (e) => {
+      _handleChange = e => {
         if (this.props.onChange) {
           this.props.onChange({ target: { value: e.target.value } });
         }
         this.setState({ value: e.target.value });
-      }
+      };
     }
 
-    before(function() {
+    before(() => {
       props.value = '';
     });
 
-    beforeEach(function() {
+    beforeEach(() => {
       component = render(<ControlledWrapper {...props} />);
       domNode = component.getDOMNode();
     });
 
-    setupTests(true, function() {
-      describe('initial render', function() {
-        before(function() {
+    setupTests(true, () => {
+      describe('initial render', () => {
+        before(() => {
           props.onChange = sinon.spy();
         });
 
-        after(function() {
+        after(() => {
           delete props.onChange;
         });
 
-        afterEach(function() {
+        afterEach(() => {
           props.onChange.reset();
         });
 
-        context('when the initial value is blank', function() {
-          it('does not call the onChange callback', function() {
+        context('when the initial value is blank', () => {
+          it('does not call the onChange callback', () => {
             expect(props.onChange).to.have.not.been.called;
           });
         });
 
-        context('when the initial value matches the placeholder', function() {
-          before(function() {
+        context('when the initial value matches the placeholder', () => {
+          before(() => {
             props.value = '__/__/____';
           });
 
-          after(function() {
+          after(() => {
             props.value = '';
           });
 
-          it('does not call the onChange callback', function() {
+          it('does not call the onChange callback', () => {
             expect(props.onChange).to.have.not.been.called;
           });
         });
 
-        context("when the initial value doesn't change when masked", function() {
-          before(function() {
+        context("when the initial value doesn't change when masked", () => {
+          before(() => {
             props.value = '1_/__/____';
           });
 
-          after(function() {
+          after(() => {
             props.value = '';
           });
 
-          it('does not call the onChange callback', function() {
+          it('does not call the onChange callback', () => {
             expect(props.onChange).to.have.not.been.called;
           });
         });
@@ -1030,62 +1030,62 @@ describe('MaskedField', function() {
 
     class LinkWrapper extends React.Component {
       static propTypes = {
-        value: PropTypes.string
+        value: PropTypes.string,
       };
 
       state = {
-        value: this.props.value
+        value: this.props.value,
       };
 
       render() {
         const valueLink = {
           value: this.state.value,
-          requestChange: val => this.setState({ value: val })
+          requestChange: val => this.setState({ value: val }),
         };
         return <MaskedField {...this.props} valueLink={valueLink} />;
       }
     }
 
-    beforeEach(function() {
-      component = render(<LinkWrapper mask='99/99/9999' value={value} />);
+    beforeEach(() => {
+      component = render(<LinkWrapper mask="99/99/9999" value={value} />);
       domNode = component.getDOMNode();
       return simulateFocus();
     });
 
-    describe('setting an initial value', function() {
-      before(function() {
+    describe('setting an initial value', () => {
+      before(() => {
         value = '12345';
       });
 
-      after(function() {
+      after(() => {
         value = '';
       });
 
-      it('sets the field value', function() {
+      it('sets the field value', () => {
         expect(getFieldValue()).to.equal('12/34/5___');
       });
 
-      it('sets the state of the parent component', function() {
+      it('sets the state of the parent component', () => {
         expect(component.state('value')).to.equal('12/34/5___');
       });
     });
 
-    describe('pasting', function() {
-      beforeEach(function() {
+    describe('pasting', () => {
+      beforeEach(() => {
         simulatePaste('12345');
       });
 
-      it('updates the state of the parent component', function() {
+      it('updates the state of the parent component', () => {
         expect(component.state('value')).to.equal('12/34/5___');
       });
     });
 
-    describe('pressing the backspace key', function() {
-      beforeEach(function() {
+    describe('pressing the backspace key', () => {
+      beforeEach(() => {
         simulateTyping('12345');
         simulateKeyDown('Backspace');
       });
-      it('updates the state of the parent component', function() {
+      it('updates the state of the parent component', () => {
         expect(component.state('value')).to.equal('12/34/____');
       });
     });
@@ -1098,36 +1098,36 @@ describe('MaskedField', function() {
         return (
           <div>
             <input onChange={this._onChange} />
-            <MaskedField mask='99-99-9999' />
+            <MaskedField mask="99-99-9999" />
           </div>
         );
       }
 
-      _onChange = (e) => {
+      _onChange = e => {
         this.setState({ value: e.target.value });
-      }
+      };
     }
 
-    beforeEach(function() {
+    beforeEach(() => {
       component = render(<Parent />);
       return EventUtils.simulateFocus(inputNode());
     });
 
-    context('when the masked field does not have focus', function() {
+    context('when the masked field does not have focus', () => {
       let fieldNode;
 
-      describe('typing into a sibling input', function() {
-        beforeEach(function() {
+      describe('typing into a sibling input', () => {
+        beforeEach(() => {
           fieldNode = component.find(MaskedField).getDOMNode();
           sinon.spy(fieldNode, 'setSelectionRange');
           EventUtils.simulateChange(inputNode(), 'hello');
         });
 
-        afterEach(function() {
+        afterEach(() => {
           fieldNode.setSelectionRange.restore();
         });
 
-        it('does not set the cursor position of the masked field', function() {
+        it('does not set the cursor position of the masked field', () => {
           expect(fieldNode.setSelectionRange).to.have.not.been.called;
         });
       });

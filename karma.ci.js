@@ -23,17 +23,20 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: [process.env.CONTINUOUS_INTEGRATION === 'true' ? 'ChromeTravisCI' : 'Chrome', 'Firefox'],
+    browsers: [
+      process.env.CONTINUOUS_INTEGRATION === 'true' ? 'ChromeTravisCI' : 'Chrome',
+      'Firefox',
+    ],
 
     customLaunchers: {
       ChromeTravisCI: {
         base: 'Chrome',
-        flags: ['--no-sandbox']
-      }
+        flags: ['--no-sandbox'],
+      },
     },
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
+    singleRun: true,
   });
 };
