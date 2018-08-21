@@ -1,10 +1,11 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import OptionallyMaskedField, { OptionallyMaskedFieldProps } from '../src/index';
-import * as EventUtils from './EventUtils';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import { mount, configure as configureEnzyme, ReactWrapper } from 'enzyme';
+import * as EventUtils from './EventUtils';
+import OptionallyMaskedField, { OptionallyMaskedFieldProps } from '../src/index';
+
 import Adapter = require('enzyme-adapter-react-16');
 
 configureEnzyme({ adapter: new Adapter() });
@@ -31,7 +32,7 @@ interface TestProps {
   translations?: OptionallyMaskedFieldProps['translations'];
 }
 
-describe('MaskedField', function() {
+describe('MaskedField', () => {
   let container: HTMLDivElement;
   let component: ReactWrapper;
   let domNode: HTMLInputElement;
@@ -41,15 +42,17 @@ describe('MaskedField', function() {
   // - undo?
 
   const getField = () => component.find(OptionallyMaskedField);
+  const inputNode = () =>
+    getField()
+      .find('input')
+      .getDOMNode() as HTMLInputElement;
   const getFieldValue = () => inputNode().value;
-  const inputNode = () => getField().find('input').getDOMNode() as HTMLInputElement;
 
   function cursorPosShouldEql(pos: number) {
     const node = inputNode();
     expect(node.selectionStart).to.equal(pos);
     expect(node.selectionEnd).to.equal(pos);
   }
-
 
   const setSelection = (start: number, end = start) => inputNode().setSelectionRange(start, end);
   const simulateKeyPress = (key: string) => EventUtils.simulateKeyPress(getField(), key);
@@ -59,12 +62,14 @@ describe('MaskedField', function() {
   const simulateFocus = () => EventUtils.simulateFocus(getField());
   const simulateBlur = () => EventUtils.simulateBlur(getField());
 
-  function render<C extends React.Component, P = C['props'], S = C['state']>(element: React.ReactElement<P>): ReactWrapper<P, S, C> {
+  function render<C extends React.Component, P = C['props'], S = C['state']>(
+    element: React.ReactElement<P>,
+  ): ReactWrapper<P, S, C> {
     return mount(element, { attachTo: container });
   }
 
   function setupTests(isControlled: boolean, additionalTests: () => void) {
-    context('when the field is focused', function() {
+    context('when the field is focused', () => {
       beforeEach(simulateFocus);
 
       context("when the mask is '99/99/9999'", () => {
@@ -85,11 +90,11 @@ describe('MaskedField', function() {
             delete props.onComplete;
           });
 
-          beforeEach(function() {
+          beforeEach(() => {
             props.onChange!.reset();
           });
 
-          afterEach(function() {
+          afterEach(() => {
             props.onChange!.reset();
             props.onComplete!.reset();
           });
@@ -196,7 +201,7 @@ describe('MaskedField', function() {
                 expect(getFieldValue()).to.equal('26/__/____');
               });
 
-              it('calls the onChange callback', function() {
+              it('calls the onChange callback', () => {
                 expect(props.onChange!.callCount).to.equal(5);
               });
             });
@@ -366,7 +371,7 @@ describe('MaskedField', function() {
             delete props.onKeyDown;
           });
 
-          afterEach(function() {
+          afterEach(() => {
             props.onKeyDown!.reset();
           });
 
@@ -444,12 +449,12 @@ describe('MaskedField', function() {
               delete props.onComplete;
             });
 
-            beforeEach(function() {
+            beforeEach(() => {
               props.onChange!.reset();
               simulatePaste('12345');
             });
 
-            afterEach(function() {
+            afterEach(() => {
               props.onChange!.reset();
               props.onComplete!.reset();
             });
@@ -681,7 +686,7 @@ describe('MaskedField', function() {
             simulateKeyPress('Enter');
           });
 
-          afterEach(function() {
+          afterEach(() => {
             props.onKeyPress!.reset();
           });
 
@@ -824,7 +829,7 @@ describe('MaskedField', function() {
             props.value = '';
           });
 
-          beforeEach(function() {
+          beforeEach(() => {
             props.onChange!.reset();
             simulateTyping('1a2b3c');
           });
@@ -973,7 +978,7 @@ describe('MaskedField', function() {
         );
       }
 
-      _handleChange: OptionallyMaskedFieldProps['onChange'] = (e) => {
+      _handleChange: OptionallyMaskedFieldProps['onChange'] = e => {
         if (this.props.onChange) {
           this.props.onChange({ target: { value: e.target.value } });
         }
@@ -1000,7 +1005,7 @@ describe('MaskedField', function() {
           delete props.onChange;
         });
 
-        afterEach(function() {
+        afterEach(() => {
           props.onChange!.reset();
         });
 
@@ -1066,14 +1071,14 @@ describe('MaskedField', function() {
         const { value } = this.state;
         const valueLink = {
           value: this.state.value,
-          requestChange: (val: string) => this.setState({ value: val })
+          requestChange: (val: string) => this.setState({ value: val }),
         };
         return <OptionallyMaskedField {...this.props} valueLink={valueLink} />;
       }
     }
 
-    beforeEach(function() {
-      component = render(<LinkWrapper mask='99/99/9999' value={initialVal} />);
+    beforeEach(() => {
+      component = render(<LinkWrapper mask="99/99/9999" value={initialVal} />);
       domNode = inputNode();
       return simulateFocus();
     });
@@ -1130,14 +1135,14 @@ describe('MaskedField', function() {
         return (
           <div>
             <input onChange={this._onChange} />
-            <OptionallyMaskedField mask='99-99-9999' />
+            <OptionallyMaskedField mask="99-99-9999" />
           </div>
         );
       }
 
-      _onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+      _onChange: React.ChangeEventHandler<HTMLInputElement> = e => {
         this.setState({ value: e.target.value });
-      }
+      };
     }
 
     beforeEach(() => {
@@ -1145,14 +1150,14 @@ describe('MaskedField', function() {
       return EventUtils.simulateFocus(inputNode());
     });
 
-    context('when the masked field does not have focus', function() {
+    context('when the masked field does not have focus', () => {
       interface SpiedHTMLInputElement extends HTMLInputElement {
         setSelectionRange: sinon.SinonSpy;
       }
       let fieldNode: SpiedHTMLInputElement;
 
-      describe('typing into a sibling input', function() {
-        beforeEach(function() {
+      describe('typing into a sibling input', () => {
+        beforeEach(() => {
           fieldNode = component.find(OptionallyMaskedField).getDOMNode() as SpiedHTMLInputElement;
           sinon.spy(fieldNode, 'setSelectionRange');
           EventUtils.simulateChange(inputNode(), 'hello');
