@@ -152,7 +152,7 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
     const { mask } = this.props;
     for (let idx = 0; idx < mask.length; idx += 1) {
       if (this.getPattern(idx)) {
-        if (this.firstNonMaskIdx === undefined) {
+        if (this.firstNonMaskIdx === -1) {
           this.firstNonMaskIdx = idx;
         }
         buffer.push('_');
