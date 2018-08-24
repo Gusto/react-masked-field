@@ -1,12 +1,12 @@
 /* eslint-disable react/no-multi-comp */
 
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
-import * as chai from 'chai';
-import * as sinon from 'sinon';
+import React from 'react';
+import PropTypes from 'prop-types';
+import chai from 'chai';
+import sinon from 'sinon';
 import { mount, configure as configureEnzyme, ReactWrapper } from 'enzyme';
-import * as sinonChai from 'sinon-chai';
-import * as Adapter from 'enzyme-adapter-react-16';
+import sinonChai from 'sinon-chai';
+import Adapter from 'enzyme-adapter-react-16';
 import * as EventUtils from './EventUtils';
 import OptionallyMaskedField, { OptionallyMaskedFieldProps } from '../src/index';
 

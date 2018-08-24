@@ -53,6 +53,7 @@
     "mocha": "^3.3.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "rimraf": "^2.6.2",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
     "ts-loader": "^4.5.0",
@@ -62,6 +63,7 @@
   },
   "scripts": {
     "start": "karma start karma.dev.js",
+    "prebuild": "rimraf lib",
     "build": "tsc",
     "test": "karma start karma.ci.js",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",

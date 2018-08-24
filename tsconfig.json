@@ -13,6 +13,7 @@
     "strict": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
+    "esModuleInterop": true,
   },
   "include": [
     "./src/**/*",

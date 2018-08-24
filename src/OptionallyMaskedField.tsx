@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import MaskedField, { MaskedFieldProps } from './MaskedField';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
@@ -17,7 +17,7 @@ export interface OptionallyMaskedFieldProps extends Omit<MaskedFieldProps, 'mask
 
 // TODO:
 // - rename this file? (MaskedField and RequiredMaskField)?
-// - setup linting
+// - figure out how to export without breaking (or maybe just break it?)
 
 const OptionallyMaskedField: React.SFC<OptionallyMaskedFieldProps> = ({ mask, ...props }) => {
   if (mask) {
