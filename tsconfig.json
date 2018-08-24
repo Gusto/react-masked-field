@@ -1,25 +1,4 @@
 {
-  "compilerOptions": {
-    "declaration": true,
-    "jsx": "react",
-    "lib": ["es2015", "dom"],
-    "module": "commonjs",
-    "noEmitOnError": true,
-    "moduleResolution": "node",
-    "outDir": "lib",
-    "pretty": true,
-    "sourceMap": true,
-    "target": "es3",
-    "strict": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
-    "esModuleInterop": true,
-  },
-  "include": [
-    "./src/**/*",
-  ],
-  "exclude": [
-    "node_modules",
-    "lib",
-  ]
+  "extends": "./tsconfig.base.json",
+  "include": ["src", "spec"],
 }

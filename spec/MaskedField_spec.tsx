@@ -7,8 +7,8 @@ import sinon from 'sinon';
 import { mount, configure as configureEnzyme, ReactWrapper } from 'enzyme';
 import sinonChai from 'sinon-chai';
 import Adapter from 'enzyme-adapter-react-16';
-import * as EventUtils from './EventUtils';
 import OptionallyMaskedField, { OptionallyMaskedFieldProps } from '../src/index';
+import * as EventUtils from './EventUtils';
 
 configureEnzyme({ adapter: new Adapter() });
 
@@ -64,11 +64,7 @@ describe('MaskedField', () => {
   const simulateFocus = () => EventUtils.simulateFocus(getField());
   const simulateBlur = () => EventUtils.simulateBlur(getField());
 
-  function render<C extends React.Component, P = C['props'], S = C['state']>(
-    element: React.ReactElement<P>,
-  ): ReactWrapper<P, S, C> {
-    return mount(element, { attachTo: container });
-  }
+  const render = (element: JSX.Element) => mount(element, { attachTo: container });
 
   function setupTests(isControlled: boolean, additionalTests: () => void) {
     context('when the field is focused', () => {
