@@ -7,7 +7,7 @@ import sinon from 'sinon';
 import { mount, configure as configureEnzyme, ReactWrapper } from 'enzyme';
 import sinonChai from 'sinon-chai';
 import Adapter from 'enzyme-adapter-react-16';
-import OptionallyMaskedField, { OptionallyMaskedFieldProps } from '../src/index';
+import MaskedField, { MaskedFieldProps } from '../src/index';
 import * as EventUtils from './EventUtils';
 
 configureEnzyme({ adapter: new Adapter() });
@@ -31,7 +31,7 @@ interface TestProps {
   onKeyPress?: sinon.SinonSpy;
   readOnly?: boolean;
   placeholder?: string;
-  translations?: OptionallyMaskedFieldProps['translations'];
+  translations?: MaskedFieldProps['translations'];
 }
 
 describe('MaskedField', () => {
@@ -43,7 +43,7 @@ describe('MaskedField', () => {
   // FIXME:
   // - undo?
 
-  const getField = () => component.find(OptionallyMaskedField);
+  const getField = () => component.find(MaskedField);
   const inputNode = () =>
     getField()
       .find('input')
@@ -907,7 +907,7 @@ describe('MaskedField', () => {
       if (props.value && !props.onChange) {
         props.readOnly = true;
       }
-      component = render(<OptionallyMaskedField {...props} />);
+      component = render(<MaskedField {...props} />);
       domNode = inputNode();
     });
 
@@ -951,7 +951,7 @@ describe('MaskedField', () => {
   });
 
   context('when the component is controlled', () => {
-    class ControlledWrapper extends React.Component<OptionallyMaskedFieldProps> {
+    class ControlledWrapper extends React.Component<MaskedFieldProps> {
       static propTypes = {
         value: PropTypes.string,
         onChange: PropTypes.func,
@@ -967,7 +967,7 @@ describe('MaskedField', () => {
         value: this.props.value,
       };
 
-      handleChange: OptionallyMaskedFieldProps['onChange'] = e => {
+      handleChange: MaskedFieldProps['onChange'] = e => {
         const { onChange } = this.props;
         if (onChange) {
           onChange({ target: { value: e.target.value } });
@@ -977,7 +977,7 @@ describe('MaskedField', () => {
 
       render() {
         const { value } = this.state;
-        return <OptionallyMaskedField {...this.props} value={value} onChange={this.handleChange} />;
+        return <MaskedField {...this.props} value={value} onChange={this.handleChange} />;
       }
     }
 
@@ -1044,7 +1044,7 @@ describe('MaskedField', () => {
   context('when the component uses ReactLink', () => {
     let initialVal = '';
 
-    interface LinkWrapperProps extends OptionallyMaskedFieldProps {
+    interface LinkWrapperProps extends MaskedFieldProps {
       value: string;
     }
 
@@ -1068,7 +1068,7 @@ describe('MaskedField', () => {
           value,
           requestChange: (val: string) => this.setState({ value: val }),
         };
-        return <OptionallyMaskedField {...this.props} valueLink={valueLink} />;
+        return <MaskedField {...this.props} valueLink={valueLink} />;
       }
     }
 
@@ -1130,7 +1130,7 @@ describe('MaskedField', () => {
         return (
           <div>
             <input onChange={this.onChange} />
-            <OptionallyMaskedField mask="99-99-9999" />
+            <MaskedField mask="99-99-9999" />
           </div>
         );
       }
@@ -1149,7 +1149,7 @@ describe('MaskedField', () => {
 
       describe('typing into a sibling input', () => {
         beforeEach(() => {
-          fieldNode = component.find(OptionallyMaskedField).getDOMNode() as SpiedHTMLInputElement;
+          fieldNode = component.find(MaskedField).getDOMNode() as SpiedHTMLInputElement;
           sinon.spy(fieldNode, 'setSelectionRange');
           EventUtils.simulateChange(plainInputNode(), 'hello');
         });

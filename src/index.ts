@@ -1,2 +1,2 @@
-export { default } from './OptionallyMaskedField';
-export * from './OptionallyMaskedField';
+export { default } from './MaskedField';
+export * from './MaskedField';
