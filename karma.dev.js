@@ -1,6 +1,6 @@
 const commonConfig = require('./karma.common');
 
-module.exports = function(config) {
+module.exports = config => {
   config.set(commonConfig);
 
   config.set({

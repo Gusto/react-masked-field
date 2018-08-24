@@ -68,7 +68,10 @@ class MaskedField extends React.Component {
   componentDidMount() {
     this.mounted = true;
     const propsValue = this.getPropsValue();
-    if (this.props.mask && typeof propsValue === 'string' && this.state.value !== propsValue) {
+    const { mask } = this.props;
+    // eslint-disable-next-line react/destructuring-assignment
+    if (mask && typeof propsValue === 'string' && this.state.value !== propsValue) {
+      // eslint-disable-next-line react/destructuring-assignment
       this.callOnChange(this.state.value);
     }
   }
@@ -92,15 +95,17 @@ class MaskedField extends React.Component {
   }
 
   getPropsValue() {
-    if (this.props.valueLink) {
-      return this.props.valueLink.value;
+    const { valueLink, value } = this.props;
+    if (valueLink) {
+      return valueLink.value;
     }
-    return this.props.value;
+    return value;
   }
 
   getPattern(idx) {
-    const maskChar = this.props.mask[idx];
-    const pattern = this.props.translations ? this.props.translations[maskChar] : null;
+    const { mask, translations } = this.props;
+    const maskChar = mask[idx];
+    const pattern = translations ? translations[maskChar] : null;
 
     return pattern || DEFAULT_TRANSLATIONS[maskChar];
   }
@@ -111,12 +116,72 @@ class MaskedField extends React.Component {
     }
   }
 
-  setValue(value) {
-    if (value !== this.state.value) {
-      this.callOnChange(value);
+  setValue(newVal) {
+    const { value } = this.state;
+    if (newVal !== value) {
+      this.callOnChange(newVal);
     }
-    this.setState({ value });
+    this.setState({ value: newVal });
   }
+
+  handleFocus = e => {
+    setTimeout(() => this.setSelection(this.cursorPos), 0);
+
+    const { onFocus } = this.props;
+    if (onFocus) {
+      onFocus(e);
+    }
+
+    this.setState({ value: this.buffer.join('') });
+  };
+
+  handleBlur = e => {
+    if (this.isBufferEmpty()) {
+      this.setValue('');
+    }
+
+    const { onBlur } = this.props;
+    if (onBlur) {
+      onBlur(e);
+    }
+  };
+
+  handleKeyDown = e => {
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+      let { start, end } = this.getSelection();
+
+      if (start === end) {
+        start = e.key === 'Delete' ? this.nextNonMaskIdx(start - 1) : this.prevNonMaskIdx(start);
+        end = this.nextNonMaskIdx(start);
+      }
+
+      let newVal;
+      const pattern = this.getPattern(start);
+      if (pattern && pattern.test(this.buffer[end])) {
+        const { value } = this.state;
+        newVal = this.maskedValue(value.substring(end), start);
+      } else {
+        this.resetBuffer(start, end);
+        newVal = this.buffer.join('');
+      }
+
+      this.setValue(newVal);
+      this.cursorPos = Math.max(start, this.firstNonMaskIdx);
+
+      e.preventDefault();
+    }
+
+    const { onKeyDown } = this.props;
+    if (onKeyDown) {
+      onKeyDown(e);
+    }
+  };
+
+  handleChange = e => {
+    const value = this.maskedValue(e.target.value);
+    this.setValue(value);
+    this.callOnComplete(value);
+  };
 
   resetBuffer(start, end) {
     for (let i = start; i < end; i += 1) {
@@ -128,14 +193,15 @@ class MaskedField extends React.Component {
 
   initialBuffer() {
     const buffer = [];
-    for (let idx = 0; idx < this.props.mask.length; idx += 1) {
+    const { mask } = this.props;
+    for (let idx = 0; idx < mask.length; idx += 1) {
       if (this.getPattern(idx)) {
         if (this.firstNonMaskIdx === undefined) {
           this.firstNonMaskIdx = idx;
         }
         buffer.push('_');
       } else {
-        buffer.push(this.props.mask[idx]);
+        buffer.push(mask[idx]);
       }
     }
 
@@ -152,7 +218,8 @@ class MaskedField extends React.Component {
 
   nextNonMaskIdx(idx) {
     let next = idx + 1;
-    for (; next < this.props.mask.length; next += 1) {
+    const { mask } = this.props;
+    for (; next < mask.length; next += 1) {
       if (this.getPattern(next)) {
         break;
       }
@@ -173,83 +240,31 @@ class MaskedField extends React.Component {
   }
 
   callOnChange(value) {
-    if (this.props.valueLink) {
-      this.props.valueLink.requestChange(value);
-    } else if (this.props.onChange) {
-      this.props.onChange({ target: { value } });
+    const { valueLink, onChange } = this.props;
+    if (valueLink) {
+      valueLink.requestChange(value);
+    } else if (onChange) {
+      onChange({ target: { value } });
     }
   }
 
   callOnComplete(value) {
-    if (this.props.onComplete && this.isBufferFull()) {
-      this.props.onComplete(value);
+    const { onComplete } = this.props;
+    if (onComplete && this.isBufferFull()) {
+      onComplete(value);
     }
   }
-
-  handleFocus = e => {
-    setTimeout(() => this.setSelection(this.cursorPos), 0);
-
-    if (this.props.onFocus) {
-      this.props.onFocus(e);
-    }
-
-    this.setState({ value: this.buffer.join('') });
-  };
-
-  handleBlur = e => {
-    if (this.isBufferEmpty()) {
-      this.setValue('');
-    }
-
-    if (this.props.onBlur) {
-      this.props.onBlur(e);
-    }
-  };
-
-  handleKeyDown = e => {
-    if (e.key === 'Backspace' || e.key === 'Delete') {
-      let { start, end } = this.getSelection();
-
-      if (start === end) {
-        start = e.key === 'Delete' ? this.nextNonMaskIdx(start - 1) : this.prevNonMaskIdx(start);
-        end = this.nextNonMaskIdx(start);
-      }
-
-      let value;
-      const pattern = this.getPattern(start);
-      if (pattern && pattern.test(this.buffer[end])) {
-        value = this.maskedValue(this.state.value.substring(end), start);
-      } else {
-        this.resetBuffer(start, end);
-        value = this.buffer.join('');
-      }
-
-      this.setValue(value);
-      this.cursorPos = Math.max(start, this.firstNonMaskIdx);
-
-      e.preventDefault();
-    }
-
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(e);
-    }
-  };
-
-  handleChange = e => {
-    const value = this.maskedValue(e.target.value);
-    this.setValue(value);
-    this.callOnComplete(value);
-  };
 
   maskedValue(value, start = 0) {
     this.cursorPos = this.getSelection().start;
     const originalCursorPos = this.cursorPos;
-    for (let bufferIdx = start, valueIdx = 0; bufferIdx < this.props.mask.length; bufferIdx += 1) {
+    const { mask } = this.props;
+    for (let bufferIdx = start, valueIdx = 0; bufferIdx < mask.length; bufferIdx += 1) {
       const pattern = this.getPattern(bufferIdx);
       if (pattern) {
         const lastPatternIdx = bufferIdx;
         this.buffer[bufferIdx] = BLANK_CHAR;
-        while (valueIdx < value.length && bufferIdx < this.props.mask.length) {
+        while (valueIdx < value.length && bufferIdx < mask.length) {
           const c = value[valueIdx];
           valueIdx += 1;
           if (c === this.buffer[bufferIdx]) {
@@ -266,7 +281,7 @@ class MaskedField extends React.Component {
         }
 
         if (valueIdx >= value.length) {
-          this.resetBuffer(lastPatternIdx + 1, this.props.mask.length);
+          this.resetBuffer(lastPatternIdx + 1, mask.length);
           break;
         }
       } else if (this.buffer[bufferIdx] === value[valueIdx]) {
@@ -286,16 +301,18 @@ class MaskedField extends React.Component {
   render() {
     const props = omit(this.props, 'mask', 'translations', 'onComplete', 'valueLink');
     let maskProps = {};
-    if (this.props.mask) {
+    const { mask, placeholder } = this.props;
+    if (mask) {
+      const { value } = this.state;
       maskProps = {
         onChange: this.handleChange,
         onKeyDown: this.handleKeyDown,
         onFocus: this.handleFocus,
         onBlur: this.handleBlur,
-        value: this.state.value,
+        value,
       };
 
-      if (!this.props.placeholder) {
+      if (!placeholder) {
         maskProps.placeholder = this.initialBuffer().join('');
       }
     }
