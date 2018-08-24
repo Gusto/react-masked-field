@@ -1,6 +1,9 @@
 module.exports = {
   parser: 'typescript-eslint-parser',
   extends: 'gusto',
+  plugins: [
+    'typescript',
+  ],
   env: {
     'browser': true,
   },
@@ -13,7 +16,7 @@ module.exports = {
   },
   rules: {
     'no-undef': 'off',
-    'no-unused-vars': 'off',
+    'typescript/no-unused-vars': 'error',
     'import/extensions': ['error', 'always', {
       js: 'never',
       jsx: 'never',

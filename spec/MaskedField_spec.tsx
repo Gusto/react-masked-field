@@ -5,15 +5,15 @@ import * as PropTypes from 'prop-types';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import { mount, configure as configureEnzyme, ReactWrapper } from 'enzyme';
+import * as sinonChai from 'sinon-chai';
+import * as Adapter from 'enzyme-adapter-react-16';
 import * as EventUtils from './EventUtils';
 import OptionallyMaskedField, { OptionallyMaskedFieldProps } from '../src/index';
-
-import Adapter = require('enzyme-adapter-react-16');
 
 configureEnzyme({ adapter: new Adapter() });
 
 const { expect } = chai;
-chai.use(require('sinon-chai'));
+chai.use(sinonChai);
 
 // TODO: Move eslint-config-gusto to public npm
 
