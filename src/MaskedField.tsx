@@ -7,7 +7,6 @@
 
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-// import omit = require('lodash.omit');
 import { getSelection, setSelection } from './SelectionUtils';
 
 const DEFAULT_TRANSLATIONS: { [char: string]: RegExp | undefined } = {
@@ -141,6 +140,65 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
     this.setState({ value: newVal });
   }
 
+  private handleFocus: React.FocusEventHandler<HTMLInputElement> = e => {
+    setTimeout(() => this.setSelection(this.cursorPos), 0);
+
+    const { onFocus } = this.props;
+    if (onFocus) {
+      onFocus(e);
+    }
+
+    this.setState({ value: this.buffer.join('') });
+  };
+
+  private handleBlur: React.FocusEventHandler<HTMLInputElement> = e => {
+    if (this.isBufferEmpty()) {
+      this.setValue('');
+    }
+
+    const { onBlur } = this.props;
+    if (onBlur) {
+      onBlur(e);
+    }
+  };
+
+  private handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = e => {
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+      let { start, end } = this.getSelection();
+
+      if (start === end) {
+        start = e.key === 'Delete' ? this.nextNonMaskIdx(start - 1) : this.prevNonMaskIdx(start);
+        end = this.nextNonMaskIdx(start);
+      }
+
+      let newVal;
+      const pattern = this.getPattern(start);
+      if (pattern && pattern.test(this.buffer[end])) {
+        const { value } = this.state;
+        newVal = this.maskedValue(value.substring(end), start);
+      } else {
+        this.resetBuffer(start, end);
+        newVal = this.buffer.join('');
+      }
+
+      this.setValue(newVal);
+      this.cursorPos = Math.max(start, this.firstNonMaskIdx);
+
+      e.preventDefault();
+    }
+
+    const { onKeyDown } = this.props;
+    if (onKeyDown) {
+      onKeyDown(e);
+    }
+  };
+
+  private handleChange: React.ChangeEventHandler<HTMLInputElement> = e => {
+    const value = this.maskedValue(e.target.value);
+    this.setValue(value);
+    this.callOnComplete(value);
+  };
+
   private resetBuffer(start: number, end: number) {
     for (let i = start; i < end; i += 1) {
       if (this.getPattern(i)) {
@@ -212,65 +270,6 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
       onComplete(value);
     }
   }
-
-  private handleFocus: React.FocusEventHandler<HTMLInputElement> = e => {
-    setTimeout(() => this.setSelection(this.cursorPos), 0);
-
-    const { onFocus } = this.props;
-    if (onFocus) {
-      onFocus(e);
-    }
-
-    this.setState({ value: this.buffer.join('') });
-  };
-
-  private handleBlur: React.FocusEventHandler<HTMLInputElement> = e => {
-    if (this.isBufferEmpty()) {
-      this.setValue('');
-    }
-
-    const { onBlur } = this.props;
-    if (onBlur) {
-      onBlur(e);
-    }
-  };
-
-  private handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = e => {
-    if (e.key === 'Backspace' || e.key === 'Delete') {
-      let { start, end } = this.getSelection();
-
-      if (start === end) {
-        start = e.key === 'Delete' ? this.nextNonMaskIdx(start - 1) : this.prevNonMaskIdx(start);
-        end = this.nextNonMaskIdx(start);
-      }
-
-      let newVal;
-      const pattern = this.getPattern(start);
-      if (pattern && pattern.test(this.buffer[end])) {
-        const { value } = this.state;
-        newVal = this.maskedValue(value.substring(end), start);
-      } else {
-        this.resetBuffer(start, end);
-        newVal = this.buffer.join('');
-      }
-
-      this.setValue(newVal);
-      this.cursorPos = Math.max(start, this.firstNonMaskIdx);
-
-      e.preventDefault();
-    }
-
-    const { onKeyDown } = this.props;
-    if (onKeyDown) {
-      onKeyDown(e);
-    }
-  };
-
-  private handleChange: React.ChangeEventHandler<HTMLInputElement> = e => {
-    const value = this.maskedValue(e.target.value);
-    this.setValue(value);
-    this.callOnComplete(value);
-  };
 
   private maskedValue(value: string, start = 0) {
     this.cursorPos = this.getSelection().start;
