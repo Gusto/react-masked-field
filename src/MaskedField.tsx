@@ -69,8 +69,11 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
   };
 
   private buffer: string[];
+
   private firstNonMaskIdx: number = -1;
+
   private cursorPos: number;
+
   private input: HTMLInputElement | null = null;
 
   constructor(props: Readonly<MaskedFieldProps>) {
@@ -88,8 +91,9 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
 
   componentDidMount() {
     const propsValue = this.getPropsValue();
-    if (typeof propsValue === 'string' && this.state.value !== propsValue) {
-      this.callOnChange(this.state.value);
+    const { value } = this.state;
+    if (typeof propsValue === 'string' && value !== propsValue) {
+      this.callOnChange(value);
     }
   }
 
@@ -108,10 +112,11 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
   }
 
   private getPropsValue() {
-    if (this.props.valueLink) {
-      return this.props.valueLink.value;
+    const { valueLink, value } = this.props;
+    if (valueLink) {
+      return valueLink.value;
     }
-    return this.props.value;
+    return value;
   }
 
   private getPattern(idx: number) {
@@ -193,24 +198,27 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
   }
 
   private callOnChange(value: string) {
-    if (this.props.valueLink) {
-      this.props.valueLink.requestChange(value);
-    } else if (this.props.onChange) {
-      this.props.onChange({ target: { value } });
+    const { valueLink, onChange } = this.props;
+    if (valueLink) {
+      valueLink.requestChange(value);
+    } else if (onChange) {
+      onChange({ target: { value } });
     }
   }
 
   private callOnComplete(value: string) {
-    if (this.props.onComplete && this.isBufferFull()) {
-      this.props.onComplete(value);
+    const { onComplete } = this.props;
+    if (onComplete && this.isBufferFull()) {
+      onComplete(value);
     }
   }
 
   private handleFocus: React.FocusEventHandler<HTMLInputElement> = e => {
     setTimeout(() => this.setSelection(this.cursorPos), 0);
 
-    if (this.props.onFocus) {
-      this.props.onFocus(e);
+    const { onFocus } = this.props;
+    if (onFocus) {
+      onFocus(e);
     }
 
     this.setState({ value: this.buffer.join('') });
@@ -221,8 +229,9 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
       this.setValue('');
     }
 
-    if (this.props.onBlur) {
-      this.props.onBlur(e);
+    const { onBlur } = this.props;
+    if (onBlur) {
+      onBlur(e);
     }
   };
 
@@ -235,23 +244,25 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
         end = this.nextNonMaskIdx(start);
       }
 
-      let value;
+      let newVal;
       const pattern = this.getPattern(start);
       if (pattern && pattern.test(this.buffer[end])) {
-        value = this.maskedValue(this.state.value.substring(end), start);
+        const { value } = this.state;
+        newVal = this.maskedValue(value.substring(end), start);
       } else {
         this.resetBuffer(start, end);
-        value = this.buffer.join('');
+        newVal = this.buffer.join('');
       }
 
-      this.setValue(value);
+      this.setValue(newVal);
       this.cursorPos = Math.max(start, this.firstNonMaskIdx);
 
       e.preventDefault();
     }
 
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(e);
+    const { onKeyDown } = this.props;
+    if (onKeyDown) {
+      onKeyDown(e);
     }
   };
 
@@ -306,6 +317,7 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
 
   render() {
     const { mask, translations, onComplete, valueLink, placeholder, ...props } = this.props;
+    const { value } = this.state;
 
     return (
       <input
@@ -317,7 +329,7 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
         onKeyDown={this.handleKeyDown}
         onFocus={this.handleFocus}
         onBlur={this.handleBlur}
-        value={this.state.value}
+        value={value}
         placeholder={placeholder || this.initialBuffer().join('')}
         type="text"
       />
