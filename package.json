@@ -33,7 +33,6 @@
     "@types/chai": "^3.5.0",
     "@types/enzyme": "^3.1.13",
     "@types/enzyme-adapter-react-16": "^1.0.3",
-    "@types/lodash.omit": "^4.5.4",
     "@types/mocha": "^5.0.0",
     "@types/prop-types": "^15.5.5",
     "@types/react": "16.4.7",
@@ -68,7 +67,6 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "lodash.omit": "^4.5.0",
     "prop-types": "^15.6.2"
   },
   "resolutions": {

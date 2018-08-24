@@ -8,7 +8,8 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import MaskedField, { MaskedFieldProps } from './MaskedField';
-import { Omit } from 'lodash';
+
+type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export interface OptionallyMaskedFieldProps extends Omit<MaskedFieldProps, 'mask'> {
   mask?: string;
@@ -28,6 +29,10 @@ const OptionallyMaskedField: React.SFC<OptionallyMaskedFieldProps> = ({ mask, ..
 
 OptionallyMaskedField.propTypes = {
   mask: PropTypes.string,
+};
+
+OptionallyMaskedField.defaultProps = {
+  mask: undefined,
 };
 
 export default OptionallyMaskedField;
