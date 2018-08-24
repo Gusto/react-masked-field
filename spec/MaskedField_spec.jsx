@@ -955,20 +955,21 @@ describe('MaskedField', () => {
       };
 
       state = {
+        // eslint-disable-next-line react/destructuring-assignment
         value: this.props.value,
       };
 
       handleChange = e => {
-        if (this.props.onChange) {
-          this.props.onChange({ target: { value: e.target.value } });
+        const { onChange } = this.props;
+        if (onChange) {
+          onChange({ target: { value: e.target.value } });
         }
         this.setState({ value: e.target.value });
       };
 
       render() {
-        return (
-          <MaskedField {...this.props} value={this.state.value} onChange={this.handleChange} />
-        );
+        const { value } = this.state;
+        return <MaskedField {...this.props} value={value} onChange={this.handleChange} />;
       }
     }
 
@@ -1033,7 +1034,7 @@ describe('MaskedField', () => {
   });
 
   context('when the component uses ReactLink', () => {
-    let value = '';
+    let initialVal = '';
 
     class LinkWrapper extends React.Component {
       static propTypes = {
@@ -1045,12 +1046,14 @@ describe('MaskedField', () => {
       };
 
       state = {
+        // eslint-disable-next-line react/destructuring-assignment
         value: this.props.value,
       };
 
       render() {
+        const { value } = this.state;
         const valueLink = {
-          value: this.state.value,
+          value,
           requestChange: val => this.setState({ value: val }),
         };
         return <MaskedField {...this.props} valueLink={valueLink} />;
@@ -1058,18 +1061,18 @@ describe('MaskedField', () => {
     }
 
     beforeEach(() => {
-      component = render(<LinkWrapper mask="99/99/9999" value={value} />);
+      component = render(<LinkWrapper mask="99/99/9999" value={initialVal} />);
       domNode = component.getDOMNode();
       return simulateFocus();
     });
 
     describe('setting an initial value', () => {
       before(() => {
-        value = '12345';
+        initialVal = '12345';
       });
 
       after(() => {
-        value = '';
+        initialVal = '';
       });
 
       it('sets the field value', () => {
