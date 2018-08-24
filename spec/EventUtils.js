@@ -1,37 +1,39 @@
-import TestUtils from 'react-dom/test-utils';
 import { getSelection, setSelection } from '../src/SelectionUtils';
 
-export function simulateChange(node, content) {
+export function simulateChange(wrapper, content) {
+  const node = wrapper.getDOMNode();
   const { start, end } = getSelection(node);
   const newVal = node.value.substring(0, start) + content + node.value.substr(end);
 
   node.value = newVal;
   setSelection(node, start + content.length, start + content.length);
-  TestUtils.Simulate.change(node, { target: node });
+  wrapper.simulate('change');
 }
 
-export function simulateKeyPress(node, key) {
+export function simulateKeyPress(wrapper, key) {
   let defaultPrevented = false;
-  TestUtils.Simulate.keyPress(node, {
+  wrapper.simulate('keyPress', {
     key,
     preventDefault: () => (defaultPrevented = true)
   });
 
   if (!defaultPrevented && key.length === 1) {
-    simulateChange(node, key);
+    simulateChange(wrapper, key);
   }
 }
 
-export function simulateTyping(node, content) {
-  content.split('').forEach(key => simulateKeyPress(node, key));
+export function simulateTyping(wrapper, content) {
+  content.split('').forEach(key => simulateKeyPress(wrapper, key));
 }
 
-export function simulateKeyDown(node, key) {
+export function simulateKeyDown(wrapper, key) {
   let defaultPrevented = false;
-  TestUtils.Simulate.keyDown(node, {
+  wrapper.simulate('keyDown', {
     key,
     preventDefault: () => (defaultPrevented = true)
   });
+
+  const node = wrapper.getDOMNode();
 
   if (!defaultPrevented) {
     const { start, end } = getSelection(node);
@@ -49,17 +51,18 @@ export function simulateKeyDown(node, key) {
 
     node.value = newVal;
     setSelection(node, start, start);
-    TestUtils.Simulate.change(node, { target: node });
+    wrapper.simulate('change');
   }
 }
 
-export function simulateFocus(node) {
+export function simulateFocus(wrapper) {
+  const node = wrapper.getDOMNode();
   node.focus();
-  TestUtils.Simulate.focus(node);
+  wrapper.simulate('focus');
   setSelection(node, node.value.length, node.value.length);
   return new Promise(resolve => setTimeout(resolve, 0));
 }
 
-export function simulateBlur(node) {
-  TestUtils.Simulate.blur(node);
+export function simulateBlur(wrapper) {
+  wrapper.simulate('blur');
 }
