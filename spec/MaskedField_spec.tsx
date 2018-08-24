@@ -967,24 +967,21 @@ describe('MaskedField', () => {
       };
 
       state = {
+        // eslint-disable-next-line react/destructuring-assignment
         value: this.props.value,
       };
 
       handleChange: OptionallyMaskedFieldProps['onChange'] = e => {
-        if (this.props.onChange) {
-          this.props.onChange({ target: { value: e.target.value } });
+        const { onChange } = this.props;
+        if (onChange) {
+          onChange({ target: { value: e.target.value } });
         }
         this.setState({ value: e.target.value });
       };
 
       render() {
-        return (
-          <OptionallyMaskedField
-            {...this.props}
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
-        );
+        const { value } = this.state;
+        return <OptionallyMaskedField {...this.props} value={value} onChange={this.handleChange} />;
       }
     }
 
@@ -1072,7 +1069,7 @@ describe('MaskedField', () => {
       render() {
         const { value } = this.state;
         const valueLink = {
-          value: this.state.value,
+          value,
           requestChange: (val: string) => this.setState({ value: val }),
         };
         return <OptionallyMaskedField {...this.props} valueLink={valueLink} />;

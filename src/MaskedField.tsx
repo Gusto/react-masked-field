@@ -67,11 +67,11 @@ class MaskedField extends React.Component<MaskedFieldProps, MaskedFieldState> {
     valueLink: undefined,
   };
 
-  private buffer: string[];
+  private buffer: string[] = [];
 
   private firstNonMaskIdx: number = -1;
 
-  private cursorPos: number;
+  private cursorPos: number = -1;
 
   private input: HTMLInputElement | null = null;
 
