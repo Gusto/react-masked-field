@@ -38,7 +38,7 @@
     "chai": "^3.5.0",
     "enzyme": "^3.4.4",
     "enzyme-adapter-react-16": "^1.2.0",
-    "eslint-config-gusto": "^8.0.2",
+    "eslint-config-gusto": "^9.0.0",
     "karma": "^1.6.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-firefox-launcher": "^1.0.1",
@@ -50,7 +50,6 @@
     "react-dom": "^16.4.2",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
-    "watchify": "^3.9.0",
     "webpack": "^2.4.1"
   },
   "scripts": {
