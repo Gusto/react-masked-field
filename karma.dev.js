@@ -1,6 +1,6 @@
 const commonConfig = require('./karma.common');
 
-module.exports = function(config) {
+module.exports = config => {
   config.set(commonConfig);
 
   config.set({
@@ -27,6 +27,6 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: false,
   });
 };

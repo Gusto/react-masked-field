@@ -12,16 +12,16 @@ module.exports = {
   // preprocess matching files before serving them to the browser
   // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
   preprocessors: {
-    'spec/**/*.js*': ['webpack']
+    'spec/**/*.js*': ['webpack'],
   },
 
   browserify: {
-    debug: true
+    debug: true,
   },
 
   webpack: {
     resolve: {
-      extensions: ['.js', '.jsx', '.json']
+      extensions: ['.js', '.jsx', '.json'],
     },
 
     module: {
@@ -29,14 +29,14 @@ module.exports = {
         {
           test: /\.jsx?$/,
           exclude: /node_modules/,
-          use: ['babel-loader']
-        }
-      ]
-    }
+          use: ['babel-loader'],
+        },
+      ],
+    },
   },
 
   webpackMiddleware: {
-    stats: 'errors-only'
+    stats: 'errors-only',
   },
 
   // web server port
@@ -49,6 +49,6 @@ module.exports = {
   // Can probably be removed in the future
   browserConsoleLogOptions: {
     terminal: true,
-    level: 'log'
-  }
+    level: 'log',
+  },
 };
