@@ -75,7 +75,7 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
 
   private input: HTMLInputElement | null = null;
 
-  constructor(props: Readonly<AlwaysMaskedFieldProps>) {
+  public constructor(props: Readonly<AlwaysMaskedFieldProps>) {
     super(props);
 
     this.buffer = this.initialBuffer();
@@ -88,7 +88,7 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
     };
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     const propsValue = this.getPropsValue();
     const { value } = this.state;
     if (typeof propsValue === 'string' && value !== propsValue) {
@@ -96,7 +96,7 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
     }
   }
 
-  componentDidUpdate() {
+  public componentDidUpdate() {
     if (this.cursorPos !== -1) {
       this.setSelection(this.cursorPos);
     }
@@ -314,7 +314,7 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
     return this.buffer.join('');
   }
 
-  render() {
+  public render() {
     const { mask, translations, onComplete, valueLink, placeholder, ...props } = this.props;
     const { value } = this.state;
 

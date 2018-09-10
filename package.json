@@ -12,6 +12,7 @@
     "url": "https://github.com/Gusto/react-masked-field/issues"
   },
   "main": "lib/index.js",
+  "module": "lib/index.esm.js",
   "files": [
     "LICENSE",
     "README.md",
@@ -54,6 +55,7 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "rimraf": "^2.6.2",
+    "rollup": "^0.65.2",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
     "ts-loader": "^4.5.0",
@@ -63,14 +65,15 @@
   },
   "scripts": {
     "start": "karma start karma.dev.js",
-    "prebuild": "rimraf lib",
-    "build": "tsc -p tsconfig.base.json",
+    "prebuild": "rimraf lib compiled",
+    "build": "tsc -p tsconfig.base.json && rollup -c",
     "test": "karma start karma.ci.js",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "prepare": "npm run build"
   },
   "dependencies": {
-    "prop-types": "^15.6.2"
+    "prop-types": "^15.6.2",
+    "tslib": "^1.9.3"
   },
   "resolutions": {
     "@types/react": "16.4.7"

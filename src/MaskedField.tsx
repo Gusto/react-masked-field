@@ -15,9 +15,6 @@ export interface MaskedFieldProps extends Omit<AlwaysMaskedFieldProps, 'mask'> {
   mask?: string;
 }
 
-// TODO:
-// - figure out how to export without breaking (or maybe just break it?)
-
 const MaskedField: React.SFC<MaskedFieldProps> = ({ mask, ...props }) => {
   if (mask) {
     return <AlwaysMaskedField mask={mask} {...props} />;

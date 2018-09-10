@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "declaration": true,
+    "declarationDir": "lib",
+    "importHelpers": true,
     "jsx": "react",
     "lib": ["es2015", "dom"],
-    "module": "commonjs",
+    "module": "es2015",
     "noEmitOnError": true,
     "moduleResolution": "node",
-    "outDir": "lib",
+    "outDir": "compiled",
     "pretty": true,
     "sourceMap": true,
     "target": "es3",
