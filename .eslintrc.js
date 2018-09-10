@@ -24,5 +24,12 @@ module.exports = {
       tsx: 'never',
     }],
     'react/jsx-filename-extension': ['error', { extensions: ['.jsx', '.tsx'] }],
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: ['**/spec/**', 'karma.*.js'],
+        optionalDependencies: false,
+      },
+    ],
   },
 };
