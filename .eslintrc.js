@@ -10,7 +10,7 @@ module.exports = {
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx']
+        extensions: ['.js', '.ts', '.tsx']
       }
     },
   },
@@ -19,7 +19,6 @@ module.exports = {
     'typescript/no-unused-vars': 'error',
     'import/extensions': ['error', 'always', {
       js: 'never',
-      jsx: 'never',
       ts: 'never',
       tsx: 'never',
     }],
