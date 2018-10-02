@@ -31,6 +31,7 @@ export interface AlwaysMaskedFieldProps extends InputProps {
     requestChange: (newVal: string) => void;
   };
   onChange?: (e: { target: { value: string } }) => void;
+  inputRef?: (node: HTMLInputElement | null) => any;
 }
 
 interface MaskedFieldState {
@@ -315,13 +316,24 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
   }
 
   public render() {
-    const { mask, translations, onComplete, valueLink, placeholder, ...props } = this.props;
+    const {
+      mask,
+      translations,
+      onComplete,
+      valueLink,
+      placeholder,
+      inputRef,
+      ...props
+    } = this.props;
     const { value } = this.state;
 
     return (
       <input
         ref={c => {
           this.input = c;
+          if (inputRef) {
+            inputRef(c);
+          }
         }}
         {...props}
         onChange={this.handleChange}

@@ -19,7 +19,7 @@ const MaskedField: React.SFC<MaskedFieldProps> = ({ mask, ...props }) => {
   if (mask) {
     return <AlwaysMaskedField mask={mask} {...props} />;
   }
-  const { translations, onComplete, valueLink, ...inputProps } = props;
+  const { translations, onComplete, valueLink, inputRef, ...inputProps } = props;
   return <input {...inputProps} type="text" />;
 };
 

@@ -32,6 +32,7 @@ interface TestProps {
   readOnly?: boolean;
   placeholder?: string;
   translations?: MaskedFieldProps['translations'];
+  inputRef?: (node: HTMLInputElement | null) => any;
 }
 
 describe('MaskedField', () => {
@@ -935,6 +936,23 @@ describe('MaskedField', () => {
           it('fills in the placeholder with the default character', () => {
             expect(domNode.placeholder).to.equal('__/__/____');
           });
+        });
+      });
+
+      describe('the input ref', () => {
+        let refNode: HTMLInputElement;
+
+        before(() => {
+          props.inputRef = node => {
+            if (node) {
+              refNode = node;
+            }
+          };
+        });
+
+        it('correctly passes the input ref', () => {
+          debugger;
+          expect(refNode).to.equal(inputNode());
         });
       });
     });
