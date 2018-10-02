@@ -1,3 +1,17 @@
+## 2.0.0 (Oct 2, 2018)
+
+### Breaking changes
+* MaskedField is a stateless functional component now, so a `ref` cannot be passed to it. If you need a ref to the `input` node, use the `inputRef` prop.
+
+### New features
+* Typescript types now included
+* Accept an `inputRef` prop to obtain a ref of the input node
+
+### Internal changes
+* Rewritten in Typescript
+* Tests rewritten using enzyme
+
+
 ## 1.1.1 (May 25, 2018)
 
 ### Changes
