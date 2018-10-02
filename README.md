@@ -7,15 +7,11 @@ The `MaskedField` component is a text input field that allows you to restrict an
 ## Example
 
 ```js
-var MaskedField = require('react-masked-field');
+import MaskedField from 'react-masked-field';
 
-function handleComplete(date) {
-  console.log('Date is ' + date);
-}
-
-React.render(
-  <MaskedField mask="99/99/9999" onComplete={handleComplete} />,
-  document.getElementById('demo')
+ReactDOM.render(
+  <MaskedField mask="99/99/9999" onComplete={() => console.log('Date is ' + date)} />,
+  document.getElementById('demo'),
 );
 ```
 
@@ -26,8 +22,6 @@ Install from npm:
 ```
 npm install react-masked-field
 ```
-
-A standalone build is also available in the `dist` folder.
 
 ## Props
 
