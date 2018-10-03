@@ -951,7 +951,6 @@ describe('MaskedField', () => {
         });
 
         it('correctly passes the input ref', () => {
-          debugger;
           expect(refNode).to.equal(inputNode());
         });
       });
