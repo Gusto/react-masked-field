@@ -20,6 +20,8 @@ const BLANK_CHAR = '_';
 type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 export interface AlwaysMaskedFieldProps extends InputProps {
+  id: string;
+  name: string;
   mask: string;
   translations?: {
     [char: string]: RegExp;
@@ -30,7 +32,7 @@ export interface AlwaysMaskedFieldProps extends InputProps {
     value: string;
     requestChange: (newVal: string) => void;
   };
-  onChange?: (e: { target: { value: string } }) => void;
+  onChange?: (e: { target: { id: string, name: string, value: string } }) => void;
   inputRef?: (node: HTMLInputElement | null) => any;
 }
 
@@ -257,11 +259,11 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
   }
 
   private callOnChange(value: string) {
-    const { valueLink, onChange } = this.props;
+    const { id, name, valueLink, onChange } = this.props;
     if (valueLink) {
       valueLink.requestChange(value);
     } else if (onChange) {
-      onChange({ target: { value } });
+      onChange({ target: { id, name, value } });
     }
   }
 
