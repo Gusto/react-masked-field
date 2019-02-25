@@ -25,7 +25,7 @@ describe('MaskedField', () => {
   let container;
   let component;
   let domNode;
-  const props = {};
+  const props = { id: 'masked-field', name: 'masked_field' };
 
   // FIXME:
   // - undo?
@@ -121,6 +121,8 @@ describe('MaskedField', () => {
               expect(props.onChange).to.have.callCount(1);
               expect(props.onChange).to.have.been.calledWithExactly({
                 target: {
+                  id: props.id,
+                  name: props.name,
                   value: '2_/__/____',
                 },
               });
@@ -461,6 +463,8 @@ describe('MaskedField', () => {
               expect(props.onChange).to.have.callCount(1);
               expect(props.onChange).to.have.been.calledWithExactly({
                 target: {
+                  id: props.id,
+                  name: props.name,
                   value: '12/34/5___',
                 },
               });
@@ -962,7 +966,7 @@ describe('MaskedField', () => {
       handleChange = e => {
         const { onChange } = this.props;
         if (onChange) {
-          onChange({ target: { value: e.target.value } });
+          onChange(e);
         }
         this.setState({ value: e.target.value });
       };

@@ -240,11 +240,11 @@ class MaskedField extends React.Component {
   }
 
   callOnChange(value) {
-    const { valueLink, onChange } = this.props;
+    const { id, name, valueLink, onChange } = this.props;
     if (valueLink) {
       valueLink.requestChange(value);
     } else if (onChange) {
-      onChange({ target: { value } });
+      onChange({ target: { id, name, value } });
     }
   }
 
