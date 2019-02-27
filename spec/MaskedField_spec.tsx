@@ -22,24 +22,18 @@ console.error = (message: string) => {
   throw new Error(message);
 };
 
-interface TestProps {
-  mask?: string;
-  value?: string;
+interface TestProps extends MaskedFieldProps {
   onChange?: sinon.SinonSpy;
   onComplete?: sinon.SinonSpy;
   onKeyDown?: sinon.SinonSpy;
   onKeyPress?: sinon.SinonSpy;
-  readOnly?: boolean;
-  placeholder?: string;
-  translations?: MaskedFieldProps['translations'];
-  inputRef?: (node: HTMLInputElement | null) => any;
 }
 
 describe('MaskedField', () => {
   let container: HTMLDivElement;
   let component: ReactWrapper;
   let domNode: HTMLInputElement;
-  const props: TestProps = {};
+  const props: TestProps = { id: 'masked-field', name: 'masked_field' };
 
   // FIXME:
   // - undo?
@@ -130,6 +124,8 @@ describe('MaskedField', () => {
               expect(props.onChange).to.have.callCount(1);
               expect(props.onChange).to.have.been.calledWithExactly({
                 target: {
+                  id: props.id,
+                  name: props.name,
                   value: '2_/__/____',
                 },
               });
@@ -470,6 +466,8 @@ describe('MaskedField', () => {
               expect(props.onChange).to.have.callCount(1);
               expect(props.onChange).to.have.been.calledWithExactly({
                 target: {
+                  id: props.id,
+                  name: props.name,
                   value: '12/34/5___',
                 },
               });
@@ -908,7 +906,7 @@ describe('MaskedField', () => {
       if (props.value && !props.onChange) {
         props.readOnly = true;
       }
-      component = render(<MaskedField {...props} />);
+      component = render(<MaskedField id="masked-field" name="masked_field" {...props} />);
       domNode = inputNode();
     });
 
@@ -987,7 +985,7 @@ describe('MaskedField', () => {
       handleChange: MaskedFieldProps['onChange'] = e => {
         const { onChange } = this.props;
         if (onChange) {
-          onChange({ target: { value: e.target.value } });
+          onChange(e);
         }
         this.setState({ value: e.target.value });
       };
@@ -1003,7 +1001,7 @@ describe('MaskedField', () => {
     });
 
     beforeEach(() => {
-      component = render(<ControlledWrapper {...props} />);
+      component = render(<ControlledWrapper id="masked-field" name="masked_field" {...props} />);
       domNode = inputNode();
     });
 
@@ -1090,7 +1088,7 @@ describe('MaskedField', () => {
     }
 
     beforeEach(() => {
-      component = render(<LinkWrapper mask="99/99/9999" value={initialVal} />);
+      component = render(<LinkWrapper id="id" name="name" mask="99/99/9999" value={initialVal} />);
       domNode = inputNode();
       return simulateFocus();
     });
@@ -1147,7 +1145,7 @@ describe('MaskedField', () => {
         return (
           <div>
             <input onChange={this.onChange} />
-            <MaskedField mask="99-99-9999" />
+            <MaskedField id="masked-field" name="masked_field" mask="99-99-9999" />
           </div>
         );
       }
