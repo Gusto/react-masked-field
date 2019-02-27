@@ -20,8 +20,6 @@ const BLANK_CHAR = '_';
 type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 export interface AlwaysMaskedFieldProps extends InputProps {
-  id: string;
-  name: string;
   mask: string;
   translations?: {
     [char: string]: RegExp;
@@ -32,7 +30,7 @@ export interface AlwaysMaskedFieldProps extends InputProps {
     value: string;
     requestChange: (newVal: string) => void;
   };
-  onChange?: (e: { target: { id: string, name: string, value: string } }) => void;
+  onChange?: (e: { target: { id?: string; name?: string; value: string } }) => void;
   inputRef?: (node: HTMLInputElement | null) => any;
 }
 

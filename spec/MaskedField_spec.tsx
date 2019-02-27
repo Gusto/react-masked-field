@@ -22,19 +22,11 @@ console.error = (message: string) => {
   throw new Error(message);
 };
 
-interface TestProps {
-  id?: string;
-  name?: string;
-  mask?: string;
-  value?: string;
+interface TestProps extends MaskedFieldProps {
   onChange?: sinon.SinonSpy;
   onComplete?: sinon.SinonSpy;
   onKeyDown?: sinon.SinonSpy;
   onKeyPress?: sinon.SinonSpy;
-  readOnly?: boolean;
-  placeholder?: string;
-  translations?: MaskedFieldProps['translations'];
-  inputRef?: (node: HTMLInputElement | null) => any;
 }
 
 describe('MaskedField', () => {
@@ -1096,7 +1088,7 @@ describe('MaskedField', () => {
     }
 
     beforeEach(() => {
-      component = render(<LinkWrapper id='id' name='name' mask="99/99/9999" value={initialVal} />);
+      component = render(<LinkWrapper id="id" name="name" mask="99/99/9999" value={initialVal} />);
       domNode = inputNode();
       return simulateFocus();
     });
