@@ -1,0 +1,16 @@
+{
+  // An array of language ids which should be validated by ESLint
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {
+      "language": "typescriptreact",
+      "autoFix": true,
+    },
+    {
+      "language": "typescript",
+      "autoFix": true,
+    },
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib",
+}

@@ -7,15 +7,11 @@ The `MaskedField` component is a text input field that allows you to restrict an
 ## Example
 
 ```js
-var MaskedField = require('react-masked-field');
+import MaskedField from 'react-masked-field';
 
-function handleComplete(date) {
-  console.log('Date is ' + date);
-}
-
-React.render(
-  <MaskedField mask="99/99/9999" onComplete={handleComplete} />,
-  document.getElementById('demo')
+ReactDOM.render(
+  <MaskedField mask="99/99/9999" onComplete={() => console.log('Date is ' + date)} />,
+  document.getElementById('demo'),
 );
 ```
 
@@ -27,23 +23,13 @@ Install from npm:
 npm install react-masked-field
 ```
 
-A standalone build is also available in the `dist` folder.
-
 ## Props
 
-#### `mask`
-**string** *optional*
+#### `mask?: string`
 
 The mask applied to the value of the field. For each character of the mask that matches a `translation`, the input character will be restricted to the corresponding regular expression. If no mask is provided, it will function like a normal `input` element.
 
-#### `placeholder`
-**string** *optional*  
-**default:** the value of the `mask` prop
-
-This functions just like a normal `input` `placeholder` prop. If no `placeholder` is provided, the `mask` prop will be used as the `placeholder`.
-
-#### `translations`
-**object** *optional*  
+#### `translations?: { [char: string]: RegExp }`
 **default:**
 ```js
 {
@@ -55,10 +41,18 @@ This functions just like a normal `input` `placeholder` prop. If no `placeholder
 
 Additional (or overridden) translations for converting mask characters to regular expressions.
 
-#### `onComplete`
-**function** *optional*
+#### `onComplete?: (val: string) => void`
 
 The `onComplete` event is triggered when the mask has been completely filled. The `value` of the field is passed to the event handler.
+
+#### `inputRef?: (node: HTMLInputElement | null) => any`
+
+A ref passed to the internal `input` element.
+
+#### `placeholder?: string`
+**default:** the value of the `mask` prop
+
+This functions just like a normal `input` `placeholder` prop. If no `placeholder` is provided, the `mask` prop will be used as the `placeholder`.
 
 ### Other props
 In addition to the props above, `MaskedField` should handle all supported `input` props.

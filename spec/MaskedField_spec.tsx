@@ -4,61 +4,70 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import chai from 'chai';
 import sinon from 'sinon';
-import Enzyme, { mount } from 'enzyme';
+import { mount, configure as configureEnzyme, ReactWrapper } from 'enzyme';
+import sinonChai from 'sinon-chai';
 import Adapter from 'enzyme-adapter-react-16';
-import MaskedField from '../src/MaskedField';
+import MaskedField, { MaskedFieldProps } from '../src/index';
 import * as EventUtils from './EventUtils';
 
-Enzyme.configure({ adapter: new Adapter() });
+configureEnzyme({ adapter: new Adapter() });
 
 const { expect } = chai;
-chai.use(require('sinon-chai'));
+chai.use(sinonChai);
 
 // TODO: Move eslint-config-gusto to public npm
 
 // eslint-disable-next-line no-console
-console.error = message => {
+console.error = (message: string) => {
   throw new Error(message);
 };
 
+interface TestProps {
+  mask?: string;
+  value?: string;
+  onChange?: sinon.SinonSpy;
+  onComplete?: sinon.SinonSpy;
+  onKeyDown?: sinon.SinonSpy;
+  onKeyPress?: sinon.SinonSpy;
+  readOnly?: boolean;
+  placeholder?: string;
+  translations?: MaskedFieldProps['translations'];
+  inputRef?: (node: HTMLInputElement | null) => any;
+}
+
 describe('MaskedField', () => {
-  let container;
-  let component;
-  let domNode;
-  const props = {};
+  let container: HTMLDivElement;
+  let component: ReactWrapper;
+  let domNode: HTMLInputElement;
+  const props: TestProps = {};
 
   // FIXME:
   // - undo?
 
   const getField = () => component.find(MaskedField);
-  function getFieldValue() {
-    const input = getField().find('input');
-    return input.getDOMNode().value;
-  }
-
-  function cursorPosShouldEql(pos) {
-    const node = getField()
+  const inputNode = () =>
+    getField()
       .find('input')
-      .getDOMNode();
+      .getDOMNode() as HTMLInputElement;
+  const getFieldValue = () => inputNode().value;
+
+  function cursorPosShouldEql(pos: number) {
+    const node = inputNode();
     expect(node.selectionStart).to.equal(pos);
     expect(node.selectionEnd).to.equal(pos);
   }
 
-  const setSelection = (start, end = start) =>
-    getField()
-      .find('input')
-      .getDOMNode()
-      .setSelectionRange(start, end);
-  const simulateKeyPress = key => EventUtils.simulateKeyPress(getField(), key);
-  const simulateKeyDown = key => EventUtils.simulateKeyDown(getField(), key);
-  const simulatePaste = content => EventUtils.simulateChange(getField(), content);
-  const simulateTyping = content => EventUtils.simulateTyping(getField(), content);
+  const setSelection = (start: number, end = start) => inputNode().setSelectionRange(start, end);
+  const simulateKeyPress = (key: string) => EventUtils.simulateKeyPress(getField(), key);
+  const simulateKeyDown = (key: string) => EventUtils.simulateKeyDown(getField(), key);
+  const simulatePaste = (content: string) => EventUtils.simulateChange(getField(), content);
+  const simulateTyping = (content: string) => EventUtils.simulateTyping(getField(), content);
   const simulateFocus = () => EventUtils.simulateFocus(getField());
   const simulateBlur = () => EventUtils.simulateBlur(getField());
 
-  const render = element => mount(element, { attachTo: container });
+  const render = (element: JSX.Element) => mount(element, { attachTo: container });
 
-  function setupTests(isControlled, additionalTests) {
+  function setupTests(isControlled: boolean, additionalTests: () => void) {
     context('when the field is focused', () => {
       beforeEach(simulateFocus);
 
@@ -81,12 +90,12 @@ describe('MaskedField', () => {
           });
 
           beforeEach(() => {
-            props.onChange.reset();
+            props.onChange!.reset();
           });
 
           afterEach(() => {
-            props.onChange.reset();
-            props.onComplete.reset();
+            props.onChange!.reset();
+            props.onComplete!.reset();
           });
 
           context('the initial cursor position is at a mask index', () => {
@@ -192,7 +201,7 @@ describe('MaskedField', () => {
               });
 
               it('calls the onChange callback', () => {
-                expect(props.onChange.callCount).to.equal(5);
+                expect(props.onChange!.callCount).to.equal(5);
               });
             });
 
@@ -362,7 +371,7 @@ describe('MaskedField', () => {
           });
 
           afterEach(() => {
-            props.onKeyDown.reset();
+            props.onKeyDown!.reset();
           });
 
           beforeEach(() => {
@@ -440,13 +449,13 @@ describe('MaskedField', () => {
             });
 
             beforeEach(() => {
-              props.onChange.reset();
+              props.onChange!.reset();
               simulatePaste('12345');
             });
 
             afterEach(() => {
-              props.onChange.reset();
-              props.onComplete.reset();
+              props.onChange!.reset();
+              props.onComplete!.reset();
             });
 
             it('adds the content to the value', () => {
@@ -583,7 +592,7 @@ describe('MaskedField', () => {
             beforeEach(() => {
               simulateKeyPress('2');
               simulateKeyDown('Backspace');
-              props.onChange.reset();
+              props.onChange!.reset();
               simulateBlur();
             });
 
@@ -677,7 +686,7 @@ describe('MaskedField', () => {
           });
 
           afterEach(() => {
-            props.onKeyPress.reset();
+            props.onKeyPress!.reset();
           });
 
           it("doesn't change the value", () => {
@@ -820,7 +829,7 @@ describe('MaskedField', () => {
           });
 
           beforeEach(() => {
-            props.onChange.reset();
+            props.onChange!.reset();
             simulateTyping('1a2b3c');
           });
 
@@ -900,7 +909,7 @@ describe('MaskedField', () => {
         props.readOnly = true;
       }
       component = render(<MaskedField {...props} />);
-      domNode = component.getDOMNode();
+      domNode = inputNode();
     });
 
     afterEach(() => {
@@ -929,6 +938,22 @@ describe('MaskedField', () => {
           });
         });
       });
+
+      describe('the input ref', () => {
+        let refNode: HTMLInputElement;
+
+        before(() => {
+          props.inputRef = node => {
+            if (node) {
+              refNode = node;
+            }
+          };
+        });
+
+        it('correctly passes the input ref', () => {
+          expect(refNode).to.equal(inputNode());
+        });
+      });
     });
 
     context('when the field is not focused', () => {
@@ -943,7 +968,7 @@ describe('MaskedField', () => {
   });
 
   context('when the component is controlled', () => {
-    class ControlledWrapper extends React.Component {
+    class ControlledWrapper extends React.Component<MaskedFieldProps> {
       static propTypes = {
         value: PropTypes.string,
         onChange: PropTypes.func,
@@ -959,7 +984,7 @@ describe('MaskedField', () => {
         value: this.props.value,
       };
 
-      handleChange = e => {
+      handleChange: MaskedFieldProps['onChange'] = e => {
         const { onChange } = this.props;
         if (onChange) {
           onChange({ target: { value: e.target.value } });
@@ -979,7 +1004,7 @@ describe('MaskedField', () => {
 
     beforeEach(() => {
       component = render(<ControlledWrapper {...props} />);
-      domNode = component.getDOMNode();
+      domNode = inputNode();
     });
 
     setupTests(true, () => {
@@ -993,7 +1018,7 @@ describe('MaskedField', () => {
         });
 
         afterEach(() => {
-          props.onChange.reset();
+          props.onChange!.reset();
         });
 
         context('when the initial value is blank', () => {
@@ -1036,7 +1061,11 @@ describe('MaskedField', () => {
   context('when the component uses ReactLink', () => {
     let initialVal = '';
 
-    class LinkWrapper extends React.Component {
+    interface LinkWrapperProps extends MaskedFieldProps {
+      value: string;
+    }
+
+    class LinkWrapper extends React.Component<LinkWrapperProps, { value?: string }> {
       static propTypes = {
         value: PropTypes.string,
       };
@@ -1054,7 +1083,7 @@ describe('MaskedField', () => {
         const { value } = this.state;
         const valueLink = {
           value,
-          requestChange: val => this.setState({ value: val }),
+          requestChange: (val: string) => this.setState({ value: val }),
         };
         return <MaskedField {...this.props} valueLink={valueLink} />;
       }
@@ -1062,7 +1091,7 @@ describe('MaskedField', () => {
 
     beforeEach(() => {
       component = render(<LinkWrapper mask="99/99/9999" value={initialVal} />);
-      domNode = component.getDOMNode();
+      domNode = inputNode();
       return simulateFocus();
     });
 
@@ -1106,10 +1135,10 @@ describe('MaskedField', () => {
   });
 
   context('when the parent component contains multiple inputs', () => {
-    const inputNode = () => component.find('input').at(0);
+    const plainInputNode = () => component.find('input').at(0);
 
     class Parent extends React.Component {
-      onChange = e => {
+      onChange: React.ChangeEventHandler<HTMLInputElement> = e => {
         // eslint-disable-next-line react/no-unused-state
         this.setState({ value: e.target.value });
       };
@@ -1126,17 +1155,20 @@ describe('MaskedField', () => {
 
     beforeEach(() => {
       component = render(<Parent />);
-      return EventUtils.simulateFocus(inputNode());
+      return EventUtils.simulateFocus(plainInputNode());
     });
 
     context('when the masked field does not have focus', () => {
-      let fieldNode;
+      interface SpiedHTMLInputElement extends HTMLInputElement {
+        setSelectionRange: sinon.SinonSpy;
+      }
+      let fieldNode: SpiedHTMLInputElement;
 
       describe('typing into a sibling input', () => {
         beforeEach(() => {
-          fieldNode = component.find(MaskedField).getDOMNode();
+          fieldNode = component.find(MaskedField).getDOMNode() as SpiedHTMLInputElement;
           sinon.spy(fieldNode, 'setSelectionRange');
-          EventUtils.simulateChange(inputNode(), 'hello');
+          EventUtils.simulateChange(plainInputNode(), 'hello');
         });
 
         afterEach(() => {
