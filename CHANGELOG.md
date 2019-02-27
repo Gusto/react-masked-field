@@ -1,3 +1,8 @@
+## 2.0.1 (Feb 27, 2019)
+
+### Changes
+* Calling onChange will now return an event target that will also include id and name
+
 ## 2.0.0 (Oct 2, 2018)
 
 ### Breaking changes
