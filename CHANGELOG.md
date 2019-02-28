@@ -3,7 +3,7 @@
 ### Changes
 * Calling onChange will now return an event target that will also include id and name
 
-## 2.0.0 (Oct 2, 2018)
+## 2.0.0 (Feb 27, 2019)
 
 ### Breaking changes
 * MaskedField is a stateless functional component now, so a `ref` cannot be passed to it. If you need a ref to the `input` node, use the `inputRef` prop.
