@@ -128,7 +128,7 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
   }
 
   private setSelection(start: number, end = start) {
-    if (this.input === document.activeElement) {
+    if (this.input && this.input === document.activeElement) {
       setSelection(this.input, start, end);
     }
   }
