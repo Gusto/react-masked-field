@@ -98,13 +98,6 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
   }
 
   public componentWillReceiveProps({ value: nextValue }: AlwaysMaskedFieldProps) {
-    // console.log(
-    //   'componentWillReceiveProps',
-    //   `"${nextValue}"`,
-    //   `"${this.props.value}"`,
-    //   `"${this.state.value}"`,
-    // );
-
     if (nextValue && nextValue !== this.bufferString()) {
       const value = this.maskedValue(nextValue);
       this.setValue(value);
@@ -211,7 +204,6 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
 
   private handleChange: React.ChangeEventHandler<HTMLInputElement> = e => {
     const value = this.maskedValue(e.target.value);
-    // console.log('handleChange', `"${value}"`, `"${this.props.value}"`, `"${this.state.value}"`);
     this.setValue(value);
     this.callOnComplete(value);
   };
