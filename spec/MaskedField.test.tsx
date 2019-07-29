@@ -1168,4 +1168,13 @@ describe('MaskedField', () => {
       });
     });
   });
+
+  describe('changing the value prop directly', () => {
+    it('sets the field value correctly', () => {
+      component = render(<MaskedField mask="99/99/9999" value="" />);
+      expect(getFieldValue()).toEqual('');
+      component.setProps({ value: '01012019' });
+      expect(getFieldValue()).toEqual('01/01/2019');
+    });
+  });
 });
