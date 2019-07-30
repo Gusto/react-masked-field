@@ -3,6 +3,9 @@
 ### Bug Fixes
 * Fix passing a new unmasked `value` prop to the field
 
+### Internal changes
+* Tests rewritten using jest
+
 ## 2.0.1 (Feb 27, 2019)
 
 ### Changes
