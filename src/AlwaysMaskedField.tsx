@@ -97,6 +97,14 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
     }
   }
 
+  public componentWillReceiveProps({ value: nextValue }: AlwaysMaskedFieldProps) {
+    if (nextValue && nextValue !== this.bufferString()) {
+      const value = this.maskedValue(nextValue);
+      this.setValue(value);
+      this.callOnComplete(value);
+    }
+  }
+
   public componentDidUpdate() {
     if (this.cursorPos !== -1) {
       this.setSelection(this.cursorPos);
@@ -149,7 +157,7 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
       onFocus(e);
     }
 
-    this.setState({ value: this.buffer.join('') });
+    this.setState({ value: this.bufferString() });
   };
 
   private handleBlur: React.FocusEventHandler<HTMLInputElement> = e => {
@@ -179,7 +187,7 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
         newVal = this.maskedValue(value.substring(end), start);
       } else {
         this.resetBuffer(start, end);
-        newVal = this.buffer.join('');
+        newVal = this.bufferString();
       }
 
       this.setValue(newVal);
@@ -223,6 +231,10 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
     }
 
     return buffer;
+  }
+
+  private bufferString() {
+    return this.buffer.join('');
   }
 
   private isBufferEmpty() {
@@ -312,7 +324,7 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
       }
     }
 
-    return this.buffer.join('');
+    return this.bufferString();
   }
 
   public render() {
