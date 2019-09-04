@@ -1,0 +1,18 @@
+version: 2.1
+
+orbs:
+  gusto: gusto/gusto@0.0.9
+
+jobs:
+  test:
+    executor: gusto/node
+    steps:
+      - gusto/yarn-install
+      - run: yarn lint
+      - run: yarn test
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - test
