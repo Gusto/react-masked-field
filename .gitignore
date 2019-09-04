@@ -6,3 +6,6 @@ scratch
 lib
 compiled
 yarn-error.log
+
+# built CircleCI configs
+.circleci/processed-config.yml

@@ -52,6 +52,7 @@
     "typescript-eslint-parser": "^19.0.0"
   },
   "scripts": {
+    "circle:execute": "circleci config process ./.circleci/config.yml > .circleci/processed-config.yml && circleci local execute -c .circleci/processed-config.yml --job",
     "start": "karma start karma.dev.js",
     "prebuild": "rimraf lib compiled",
     "build": "tsc -p tsconfig.base.json && rollup -c",
