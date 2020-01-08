@@ -299,10 +299,12 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
           if (c === this.buffer[bufferIdx]) {
             bufferIdx += 1;
           } else if (pattern.test(c)) {
-            while (this.buffer[bufferIdx] !== '_') {
+            while (this.buffer[bufferIdx] !== '_' && bufferIdx < this.buffer.length) {
               bufferIdx += 1;
             }
-            this.buffer[bufferIdx] = c;
+            if (this.buffer[bufferIdx] !== undefined) {
+              this.buffer[bufferIdx] = c;
+            }
             break;
           } else if (this.cursorPos > lastPatternIdx) {
             this.cursorPos -= 1;

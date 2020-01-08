@@ -1,3 +1,8 @@
+## 2.0.3 (Jan 08, 2020)
+
+### Bug Fixes
+* Fixes an infinite loop when retroactively adding input
+
 ## 2.0.2 (Feb 27, 2019)
 
 ### Bug Fixes

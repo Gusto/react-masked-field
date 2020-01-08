@@ -258,6 +258,33 @@ describe('MaskedField', () => {
               });
             });
           });
+
+          describe('all characters except first are added, and then first character is added', () => {
+            beforeEach(() => {
+              setSelection(1, 1);
+              simulateKeyPress('2');
+              setSelection(2, 2);
+              simulateKeyPress('2');
+              setSelection(3, 3);
+              simulateKeyPress('2');
+              setSelection(4, 4);
+              simulateKeyPress('2');
+              setSelection(5, 5);
+              simulateKeyPress('2');
+              setSelection(6, 6);
+              simulateKeyPress('2');
+              setSelection(7, 7);
+              simulateKeyPress('2');
+            });
+
+            it('inserts characters correctly and does not infinitely loop', () => {
+              expect(getFieldValue()).toEqual('_2/22/2222');
+
+              setSelection(0, 0);
+              simulateKeyPress('2');
+              expect(getFieldValue()).toEqual('2_/22/2222');
+            });
+          });
         });
 
         describe('pressing the backspace key', () => {
