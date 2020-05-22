@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 ZenPayroll
+ * Copyright (c) 2015-2020 Gusto
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -97,7 +97,7 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
     }
   }
 
-  public componentWillReceiveProps({ value: nextValue }: AlwaysMaskedFieldProps) {
+  public UNSAFE_componentWillReceiveProps({ value: nextValue }: AlwaysMaskedFieldProps) {
     if (nextValue && nextValue !== this.bufferString()) {
       const value = this.maskedValue(nextValue);
       this.setValue(value);
