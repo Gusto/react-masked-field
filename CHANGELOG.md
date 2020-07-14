@@ -2,14 +2,8 @@
 
 ### Internal Changes
 * Refactor use of `componentWillReceiveProps` to avoid React 16.9 deprecation warnings.
-* bump dev dependencies:
-  * @types/enzyme-adapter-react-16
-  * @types/react
-  * @types/react-dom
-  * react & react-dom ~16.12
-* remove direct dev dependencies:
-  * @types/prop-types
-
+* update many devDependencies
+* remove direct devDependencies `@types/prop-types`
 
 ## 2.0.3 (Jan 08, 2020)
 
