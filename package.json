@@ -39,7 +39,7 @@
     "@types/react-dom": "^16.9.8",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.10.0",
-    "eslint-config-gusto": "^9.0.0",
+    "eslint-config-gusto": "~9.2.0",
     "eslint-plugin-typescript": "^0.14.0",
     "jest": "^24.1.0",
     "react": "^16.13.1",

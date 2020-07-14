@@ -1365,7 +1365,7 @@ eslint-config-airbnb@17.1.0:
     object.assign "^4.1.0"
     object.entries "^1.0.4"
 
-eslint-config-gusto@^9.0.0:
+eslint-config-gusto@~9.2.0:
   version "9.2.0"
   resolved "https://registry.yarnpkg.com/eslint-config-gusto/-/eslint-config-gusto-9.2.0.tgz#d7e27b7ff8148682b5ef7c5196f4b9ebc946d273"
   integrity sha512-5G1hq2QEIUZN3iWew33T1+T501CC3nd2f49B/D2ZTPJ8/HbB3DBfcmqnVGrEECSFaYbu2BvC56PCD7Dsv/cNlw==
