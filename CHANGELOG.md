@@ -1,3 +1,8 @@
+## 2.1.0 (July 13, 2020)
+
+### Internal Changes
+* Refactor use of `componentWillReceiveProps` to avoid React 16.9 deprecation warnings.
+
 ## 2.0.3 (Jan 08, 2020)
 
 ### Bug Fixes
