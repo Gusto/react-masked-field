@@ -46,9 +46,9 @@
     "react-dom": "^16.13.1",
     "rimraf": "^3.0.2",
     "rollup": "^0.65.2",
-    "ts-jest": "^24.0.0",
-    "typescript": "^3.3.3333",
-    "typescript-eslint-parser": "^21.0.2"
+    "ts-jest": "^26.1.2",
+    "typescript": "^3.9.6",
+    "typescript-eslint-parser": "~21.0.2"
   },
   "scripts": {
     "circle:execute": "circleci config process ./.circleci/config.yml > .circleci/processed-config.yml && circleci local execute -c .circleci/processed-config.yml --job",
