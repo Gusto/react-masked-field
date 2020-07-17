@@ -1,3 +1,7 @@
+## This CHANGELOG is no longer updated
+
+All changes for versions released after July 17, 2020 are listed in the [releases page for this repo](https://github.com/Gusto/react-masked-field/releases). This file is preserved for versions released before July 17. 2020.
+
 ## 2.0.3 (Jan 08, 2020)
 
 ### Bug Fixes
