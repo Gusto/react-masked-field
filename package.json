@@ -2,7 +2,7 @@
   "name": "react-masked-field",
   "description": "A masked field component built in React",
   "author": "Rylan Collins <rylan@gusto.com>",
-  "version": "2.0.3",
+  "version": "0.0.0-development",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -47,6 +47,7 @@
     "react-dom": "^16.8.3",
     "rimraf": "^2.6.2",
     "rollup": "^0.65.2",
+    "semantic-release": "^17.1.1",
     "ts-jest": "^24.0.0",
     "typescript": "^3.3.3333",
     "typescript-eslint-parser": "^19.0.0"

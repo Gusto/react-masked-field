@@ -10,9 +10,22 @@ jobs:
       - gusto/yarn-install
       - run: yarn lint
       - run: yarn test
+  release:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - gusto/yarn-install
+      - run: npx semantic-release
 
 workflows:
   version: 2
   main:
     jobs:
       - test
+      - release:
+        filters:
+          branches:
+            only: master
+        requires:
+          - test
