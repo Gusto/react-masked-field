@@ -1,9 +1,7 @@
-## 2.1.0 (July 13, 2020)
+## 2.1.0 (July 17, 2020)
 
-### Internal Changes
-* Refactor use of `componentWillReceiveProps` to avoid React 16.9 deprecation warnings.
-* update many devDependencies
-* remove direct devDependencies `@types/prop-types`
+### Features
+* Resolve React 16.9+ lifecycle deprecation by refactoring away `componentWillReceiveProps`.
 
 ## 2.0.3 (Jan 08, 2020)
 
