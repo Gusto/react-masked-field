@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  gusto: gusto/gusto@0.0.9
+  gusto: gusto/gusto@0.0.13
 
 jobs:
   test:
@@ -24,8 +24,8 @@ workflows:
     jobs:
       - test
       - release:
-        filters:
-          branches:
-            only: master
-        requires:
-          - test
+          filters:
+            branches:
+              only: master
+          requires:
+            - test
