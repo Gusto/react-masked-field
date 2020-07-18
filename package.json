@@ -59,7 +59,7 @@
     "build": "tsc -p tsconfig.base.json && rollup -c",
     "test": "jest",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
-    "prepare": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "prop-types": "^15.7.2",
