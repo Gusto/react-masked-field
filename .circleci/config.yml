@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  gusto: gusto/gusto@0.0.9
+  gusto: gusto/gusto@0.0.13
 
 jobs:
   test:
@@ -10,9 +10,19 @@ jobs:
       - gusto/yarn-install
       - run: yarn lint
       - run: yarn test
+  release:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - gusto/yarn-install
+      - run: npx semantic-release
 
 workflows:
   version: 2
   main:
     jobs:
       - test
+      - release:
+          requires:
+            - test
