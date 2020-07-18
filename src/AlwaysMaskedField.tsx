@@ -97,17 +97,15 @@ class AlwaysMaskedField extends React.Component<AlwaysMaskedFieldProps, MaskedFi
     }
   }
 
-  public componentWillReceiveProps({ value: nextValue }: AlwaysMaskedFieldProps) {
-    if (nextValue && nextValue !== this.bufferString()) {
-      const value = this.maskedValue(nextValue);
-      this.setValue(value);
-      this.callOnComplete(value);
-    }
-  }
-
-  public componentDidUpdate() {
+  public componentDidUpdate({ value: prevValue }: AlwaysMaskedFieldProps) {
     if (this.cursorPos !== -1) {
       this.setSelection(this.cursorPos);
+    }
+    const { value } = this.props;
+    if (value && value !== prevValue && value !== this.bufferString()) {
+      const maskedValue = this.maskedValue(value);
+      this.setValue(maskedValue);
+      this.callOnComplete(maskedValue);
     }
   }
 
