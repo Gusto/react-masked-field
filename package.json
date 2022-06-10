@@ -46,7 +46,7 @@
     "react-dom": "^16.13.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.21.0",
-    "semantic-release": "^17.1.1",
+    "semantic-release": "^19.0.3",
     "ts-jest": "^26.1.2",
     "typescript": "^3.9.6",
     "typescript-eslint-parser": "~21.0.2"
