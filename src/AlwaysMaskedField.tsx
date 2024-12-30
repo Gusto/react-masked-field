@@ -27,7 +27,7 @@ export interface AlwaysMaskedFieldProps extends InputProps {
   value?: string;
   onComplete?: (val: string) => void;
   valueLink?: {
-    value: string;
+    value?: string;
     requestChange: (newVal: string) => void;
   };
   onChange?: (e: { target: { id?: string; name?: string; value: string } }) => void;
